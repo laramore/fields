@@ -127,9 +127,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  mixed   $value
      * @param  string  $boolean
      * @param  boolean $not
-     * @return Builder|null
+     * @return Builder|void
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): ?Builder;
+    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false);
 
     /**
      * Add a where condition from this field.
@@ -137,9 +137,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Builder $builder
      * @param  mixed   $value
      * @param  string  $boolean
-     * @return Builder|null
+     * @return Builder|void
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): ?Builder;
+    public function whereNotNull(Builder $builder, $value=null, string $boolean='and');
 
     /**
      * Add a where condition from this field.
@@ -148,9 +148,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder|null
+     * @return Builder|void
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): ?Builder;
+    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false);
 
     /**
      * Add a where condition from this field.
@@ -158,9 +158,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Builder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder|null
+     * @return Builder|void
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): ?Builder;
+    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and');
 
     /**
      * Add a where condition from this field.
@@ -169,7 +169,7 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Operator $operator
      * @param  mixed    $value
      * @param  string   $boolean
-     * @return Builder|null
+     * @return Builder|void
      */
-    public function where(Builder $builder, Operator $operator, $value=null, string $boolean='and'): ?Builder;
+    public function where(Builder $builder, Operator $operator, $value=null, string $boolean='and');
 }
