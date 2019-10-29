@@ -31,7 +31,7 @@ trait OneToOneRelation
     protected $from;
     protected $reversedName;
 
-    protected static $defaultFields = [
+    protected $defaultFields = [
         'id' => [Number::class, (Increment::DEFAULT_INCREMENT | Number::DEFAULT_FIELD)],
     ];
 

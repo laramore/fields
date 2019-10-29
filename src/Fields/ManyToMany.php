@@ -25,7 +25,7 @@ class ManyToMany extends CompositeField
     protected $usePivot;
     protected $pivotClass;
 
-    protected static $defaultFields = [];
+    protected $defaultFields = [];
     protected static $defaultLinks = [
         'reversed' => BelongsToMany::class,
     ];
