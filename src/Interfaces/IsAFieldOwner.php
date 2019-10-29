@@ -38,7 +38,7 @@ interface IsAFieldOwner
     public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
 
     /**
-     * Return the get value for a specific field.
+     * Return the get value for a relation field.
      *
      * @param IsARelationField $field
      * @param IsALaramoreModel $model
@@ -47,7 +47,7 @@ interface IsAFieldOwner
     public function getRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model);
 
     /**
-     * Return the set value for a specific field.
+     * Return the set value for a relation field.
      *
      * @param IsARelationField $field
      * @param IsALaramoreModel $model
@@ -67,7 +67,7 @@ interface IsAFieldOwner
     public function reverbateRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value): bool;
 
     /**
-     * Return the set value for a specific field.
+     * Return generally a Builder after adding to it a condition.
      *
      * @param BaseField            $field
      * @param IsProxied            $builder
@@ -79,7 +79,7 @@ interface IsAFieldOwner
     public function whereFieldAttribute(BaseField $field, IsProxied $builder, $operator=null, $value=null, ...$args);
 
     /**
-     * Return the set value for a specific field.
+     * Return the query with this field as condition.
      *
      * @param BaseField $field
      * @param IsProxied $model
@@ -88,7 +88,7 @@ interface IsAFieldOwner
     public function relateFieldAttribute(BaseField $field, IsProxied $model);
 
     /**
-     * Return the set value for a specific field.
+     * Reset the value with the default value for a specific field.
      *
      * @param BaseField        $field
      * @param IsALaramoreModel $model
@@ -97,7 +97,7 @@ interface IsAFieldOwner
     public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
-     * Return the set value for a specific field.
+     * Transform a value for a specific field.
      *
      * @param BaseField $field
      * @param mixed     $value
@@ -106,7 +106,7 @@ interface IsAFieldOwner
     public function transformFieldAttribute(BaseField $field, $value);
 
     /**
-     * Return the set value for a specific field.
+     * Serialize a value for a specific field.
      *
      * @param BaseField $field
      * @param mixed     $value
@@ -115,7 +115,7 @@ interface IsAFieldOwner
     public function serializeFieldAttribute(BaseField $field, $value);
 
     /**
-     * Return the set value for a specific field.
+     * Check if the value is correct for a specific field.
      *
      * @param BaseField $field
      * @param mixed     $value
@@ -124,7 +124,7 @@ interface IsAFieldOwner
     public function checkFieldAttribute(BaseField $field, $value);
 
     /**
-     * Return the set value for a specific field.
+     * Dry a value for a specific field.
      *
      * @param BaseField $field
      * @param mixed     $value
@@ -133,7 +133,7 @@ interface IsAFieldOwner
     public function dryFieldAttribute(BaseField $field, $value);
 
     /**
-     * Return the set value for a specific field.
+     * Cast a value for a specific field.
      *
      * @param BaseField $field
      * @param mixed     $value
@@ -142,7 +142,7 @@ interface IsAFieldOwner
     public function castFieldAttribute(BaseField $field, $value);
 
     /**
-     * Return the set value for a specific field.
+     * Return the default value for a specific field.
      *
      * @param BaseField $field
      * @return mixed
@@ -150,7 +150,7 @@ interface IsAFieldOwner
     public function defaultFieldAttribute(BaseField $field);
 
     /**
-     * Return the set value for a specific field.
+     * Call a field attribute method that is not basic.
      *
      * @param BaseField $field
      * @param string    $methodName
