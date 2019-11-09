@@ -17,10 +17,19 @@ use Laramore\Eloquent\{
 use Laramore\Interfaces\{
     IsProxied, IsLockable, IsOwnable
 };
-use Laramore\Elements\Operator;
+use Laramore\Elements\{
+    Type, Operator
+};
 
 interface IsAField extends IsLockable, IsOwnable
 {
+    /**
+     * Return the type object of the field.
+     *
+     * @return Type
+     */
+    public function getType(): Type;
+
     /**
      * Indicate if a propery exists.
      *
