@@ -28,30 +28,6 @@ abstract class Field extends BaseField
     protected $attname;
 
     /**
-     * Return the type object of the field.
-     *
-     * @return Type
-     */
-    abstract public function getType(): Type;
-
-    /**
-     * Return a property by its name.
-     *
-     * @param  string  $key
-     * @param  boolean $fail
-     * @return mixed
-     * @throws \ErrorException If no property exists with this name.
-     */
-    public function getProperty(string $key, bool $fail=true)
-    {
-        if ($key === 'type') {
-            return $this->getType();
-        }
-
-        return parent::getProperty($key, $fail);
-    }
-
-    /**
      * Return the main property keys.
      *
      * @return array

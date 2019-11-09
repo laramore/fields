@@ -13,35 +13,16 @@ namespace Laramore\Fields;
 use Illuminate\Support\Facades\Schema;
 use Laramore\Validations\NotBlank;
 use Laramore\Elements\Type;
-use Types;
+use Rules, Types;
 
 class Text extends Field
 {
-    /**
-     * Set of rules.
-     * Common to all string fields.
-     *
-     * @var integer
-     */
-
-    // If the string is a blank value, throw an exception
-    public const NOT_BLANK = 512;
-
-    // Default rules
-    public const DEFAULT_TEXT = (self::NOT_BLANK | self::DEFAULT_FIELD);
-
-    protected static $defaultRules = self::DEFAULT_TEXT;
-
-    public function getType(): Type
-    {
-        return Types::text();
-    }
 
     protected function setValidations()
     {
         parent::setValidations();
 
-        if ($this->hasRule(self::NOT_BLANK)) {
+        if ($this->hasRule(Rules::notBlank())) {
             $this->setValidation(NotBlank::class);
         }
     }

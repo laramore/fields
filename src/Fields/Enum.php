@@ -13,23 +13,13 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Laramore\Elements\{
-    Type, Enum as Element, EnumManager
+    Enum as Element, EnumManager
 };
 use Types;
 
 class Enum extends Field
 {
     protected $elements;
-
-    /**
-     * Return the type object of the field.
-     *
-     * @return Type
-     */
-    public function getType(): Type
-    {
-        return Types::enum();
-    }
 
     public function getPropertyKeys(): array
     {

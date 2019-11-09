@@ -12,6 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Laramore\Elements\Type;
 use Laramore\Interfaces\IsAField;
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
@@ -19,11 +20,13 @@ use Laramore\Traits\{
 use Laramore\Traits\Field\HasRules;
 use Laramore\Proxies\FieldProxy;
 use Laramore\Meta;
-use Laramore\Exceptions\FieldValidationException;
+use Laramore\Exceptions\{
+    FieldValidationException, ConfigException
+};
 use Laramore\Validations\{
     NotNullable, Validation, ValidationErrorBag
 };
-use Closure;
+use Closure, Rules, Types;
 
 abstract class BaseField implements IsAField
 {
@@ -33,62 +36,47 @@ abstract class BaseField implements IsAField
     }
 
     protected $meta;
-    protected $rules;
 
     protected $default;
     protected $unique;
-
-    /**
-     * Set of rules.
-     * Common to all fields.
-     *
-     * @var integer
-     */
-
-    // Indicate that no rules are applied.
-    public const NONE = 0;
-
-    // Indicate that the field accepts nullable values.
-    public const NULLABLE = 1;
-
-    // Except if trying to set a nullable value.
-    public const NOT_NULLABLE = 2;
-
-    // Indicate if it is visible by default.
-    public const VISIBLE = 4;
-
-    // Indicate if it is fillable by default.
-    public const FILLABLE = 8;
-
-    // Indicate if it is required by default.
-    public const REQUIRED = 16;
-
-    // Default rules for any type of field.
-    public const DEFAULT_FIELD = (self::VISIBLE | self::FILLABLE | self::REQUIRED);
-
-    protected static $defaultRules = self::DEFAULT_FIELD;
 
     /**
      * Create a new field with basic rules.
      * The constructor is protected so the field is created writing left to right.
      * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
      *
-     * @param integer|string|array $rules
+     * @param array|null $rules
      */
-    protected function __construct($rules=null)
+    protected function __construct(array $rules=null)
     {
-        $this->addRules($rules ?: static::$defaultRules);
+        $this->addRules($rules ?: $this->getType()->getDefaultRules());
     }
 
     /**
      * Call the constructor and generate the field.
      *
-     * @param  array|integer|null $rules
+     * @param  array|null $rules
      * @return static
      */
-    public static function field($rules=null)
+    public static function field(array $rules=null)
     {
         return new static($rules);
+    }
+
+    /**
+     * Return the type object of the field.
+     *
+     * @return Type
+     */
+    public function getType(): Type
+    {
+        $type = config($name = 'fields.configurations.'.static::class.'.type');
+
+        if (\is_null($type)) {
+            throw new ConfigException($name, ['a valid type'], 'no value');
+        }
+
+        return Types::get($type);
     }
 
     /**
@@ -101,6 +89,10 @@ abstract class BaseField implements IsAField
      */
     public function getProperty(string $key, bool $fail=true)
     {
+        if ($key === 'type') {
+            return $this->getType();
+        }
+
         if ($this->hasProperty($key)) {
             if (\method_exists($this, $method = 'get'.\ucfirst($key))) {
                 return \call_user_func([$this, $method]);
@@ -128,12 +120,12 @@ abstract class BaseField implements IsAField
     {
         $this->needsToBeUnlocked();
 
-        if (\defined($const = 'static::'.\strtoupper(Str::snake($key)))) {
-            if ($key === false) {
-                return $this->removeRule(\constant($const));
-            } else {
-                return $this->addRule(\constant($const));
+        if (Rules::has($snakeKey = Str::snake($key))) {
+            if ($value === false) {
+                return $this->removeRule($snakeKey);
             }
+
+            return $this->addRule($snakeKey);
         }
 
         return $this->forceProperty($key, $value);
@@ -179,7 +171,7 @@ abstract class BaseField implements IsAField
     {
         $this->needsToBeUnlocked();
 
-        $this->removeRule(static::REQUIRED);
+        $this->removeRule(Rules::required());
 
         if (\is_null($value)) {
             $this->nullable();
@@ -244,20 +236,18 @@ abstract class BaseField implements IsAField
     {
         if ($this->hasProperty('default')) {
             if (\is_null($this->default)) {
-                if ($this->hasRule(self::NOT_NULLABLE)) {
+                if ($this->hasRule(Rules::notNullable())) {
                     throw new \LogicException("This field cannot be null and defined as null by default");
-                } else if (!$this->hasRule(self::NULLABLE) && !$this->hasRule(self::REQUIRED)) {
+                } else if (!$this->hasRule(Rules::nullable()) && !$this->hasRule(Rules::required())) {
                     throw new \LogicException("This field cannot be null, defined as null by default and not required");
                 }
-            } else if ($this->hasRule(self::REQUIRED)) {
+            } else if ($this->hasRule(Rules::required())) {
                 throw new \LogicException("This field cannot have a default value and be required");
             }
         }
 
-        if ($this->hasRule(self::NOT_NULLABLE)) {
-            if ($this->hasRule(self::NULLABLE)) {
-                throw new \LogicException("This field cannot be nullable and not nullable or strict on the same time");
-            }
+        if ($this->hasRule(Rules::notNullable()) && $this->hasRule(Rules::nullable())) {
+            throw new \LogicException("This field cannot be nullable and not nullable or strict on the same time");
         }
     }
 
@@ -268,7 +258,7 @@ abstract class BaseField implements IsAField
      */
     protected function setValidations()
     {
-        if ($this->hasRule(self::NOT_NULLABLE)) {
+        if ($this->hasRule(Rules::notNullable())) {
             $this->setValidation(NotNullable::class);
         }
     }

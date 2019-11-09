@@ -14,13 +14,8 @@ use Laramore\Interfaces\IsALaramoreModel;
 use Laramore\Elements\Type;
 use Types;
 
-class Increment extends Number
+class Increment extends Integer
 {
-    // Default rules
-    public const DEFAULT_INCREMENT = (self::VISIBLE | self::NOT_ZERO | self::UNSIGNED | self::POSITIVE | self::CORRECT_SIGN);
-
-    protected static $defaultRules = self::DEFAULT_INCREMENT;
-
     public function getType(): Type
     {
         return Types::increment();

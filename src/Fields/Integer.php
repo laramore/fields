@@ -13,35 +13,13 @@ namespace Laramore\Fields;
 use Illuminate\Database\Eloquent\Model;
 use Laramore\Validations\NotZero;
 use Laramore\Elements\Type;
-use Types;
+use Rules, Types;
 
-class Number extends Field
+class Integer extends Field
 {
-    /**
-     * Set of rules.
-     * Common to all integer fields.
-     *
-     * @var integer
-     */
-    // Indicate the value is unsigned (positive)
-    public const UNSIGNED = 512;
-
-    // Indicate the value is positive
-    public const POSITIVE = self::UNSIGNED;
-
-    // Indicate the value is negative
-    public const NEGATIVITY = 1024;
-    public const NEGATIVE = (self::NEGATIVITY | self::UNSIGNED);
-
-    // Except if the sign value is the wrong one
-    public const CORRECT_SIGN = 2048;
-
-    // Except if the value is 0
-    public const NOT_ZERO = 4096;
-
     public function getType(): Type
     {
-        if ($this->hasRule(self::UNSIGNED)) {
+        if ($this->hasRule(Rules::unsigned())) {
             return Types::unsignedInteger();
         }
 
@@ -58,18 +36,20 @@ class Number extends Field
             }
 
             return $this->negative();
-        } else {
-            // By removing NEGATIVE, we are sure to remove UNSIGNED and NEGATIVITY restriction
-            return $this->removeRule(self::NEGATIVE);
         }
+
+        $this->removeRule(Rules::negative());
+        $this->removeRule(Rules::unsigned());
+
+        return $this;
     }
 
     public function positive()
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(self::POSITIVE);
-        $this->removeRule(self::NEGATIVITY);
+        $this->addRule(Rules::unsigned());
+        $this->removeRule(Rules::negative());
 
         return $this;
     }
@@ -78,7 +58,7 @@ class Number extends Field
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(self::NEGATIVE);
+        $this->addRule(Rules::negative());
 
         return $this;
     }
@@ -87,7 +67,7 @@ class Number extends Field
     {
         parent::setValidations();
 
-        if ($this->hasRule(self::NOT_ZERO)) {
+        if ($this->hasRule(Rules::notZero())) {
             $this->setValidation(NotZero::class);
         }
     }
@@ -108,16 +88,16 @@ class Number extends Field
             return $value;
         }
 
-        if ($this->hasRule(self::UNSIGNED)) {
+        if ($this->hasRule(Rules::unsigned())) {
             $newValue = abs($value);
 
-            if ($this->hasRule(self::NEGATIVITY)) {
+            if ($this->hasRule(Rules::negative())) {
                 $newValue = - $newValue;
             }
 
             // TODO
-            if ($newValue !== $value && $this->hasRule(self::CORRECT_SIGN)) {
-                throw new \Exception('The value must be '.($this->hasRule(self::NEGATIVITY) ? 'negative' : 'positive').' for the field `'.$this->name.'`');
+            if ($newValue !== $value && $this->hasRule(Rules::requireSign())) {
+                throw new \Exception('The value must be '.($this->hasRule(Rules::negative()) ? 'negative' : 'positive').' for the field `'.$this->name.'`');
             }
 
             $value = $newValue;

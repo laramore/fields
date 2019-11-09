@@ -16,7 +16,7 @@ use Illuminate\Support\{
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\{
-    Field, LinkField, Number, Increment
+    Field, LinkField, Integer, Increment
 };
 use Laramore\Interfaces\{
     IsALaramoreModel, IsProxied
@@ -32,7 +32,7 @@ trait OneToOneRelation
     protected $reversedName;
 
     protected $defaultFields = [
-        'id' => [Number::class, (Increment::DEFAULT_INCREMENT | Number::DEFAULT_FIELD)],
+        'id' => Integer::class,
     ];
 
     public function getReversed(): LinkField

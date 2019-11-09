@@ -11,11 +11,13 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
+use Laramore\Elements\Rule;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
 };
 use Laramore\Meta;
+use Rules;
 
 abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARelationField
 {
@@ -28,21 +30,16 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected static $defaultFieldNameTemplate = '${name}_${fieldname}';
     protected static $defaultLinkNameTemplate = '*{modelname}';
 
-    // Default rules for this type of field.
-    public const DEFAULT_COMPOSITE = (self::DEFAULT_FIELD ^ self::REQUIRED);
-
-    protected static $defaultRules = self::DEFAULT_COMPOSITE;
-
     /**
      * Create a new field with basic rules.
      * The constructor is protected so the field is created writing left to right.
      * ex: Foreign::field()->on(User::class) insteadof (new Foreign)->on(User::class).
      *
-     * @param integer|string|array $rules
-     * @param array                $fields Allow the user to define sub fields.
-     * @param array                $links  Allow the user to define sub links.
+     * @param array $rules
+     * @param array $fields Allow the user to define sub fields.
+     * @param array $links  Allow the user to define sub links.
      */
-    protected function __construct($rules=null, array $fields=null, array $links=null)
+    protected function __construct(array $rules=null, array $fields=null, array $links=null)
     {
         parent::__construct($rules);
 
@@ -66,12 +63,12 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Call the constructor and generate the field.
      *
-     * @param  array|integer|null $rules
-     * @param array              $fields Allow the user to define sub fields.
-     * @param array              $links  Allow the user to define sub links.
+     * @param array $rules
+     * @param array $fields Allow the user to define sub fields.
+     * @param array $links  Allow the user to define sub links.
      * @return static
      */
-    public static function field($rules=null, array $fields=null, array $links=null)
+    public static function field(array $rules=null, array $fields=null, array $links=null)
     {
         return new static($rules, $fields, $links);
     }
@@ -270,11 +267,15 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Add a rule to the resource.
      *
-     * @param integer $rule
+     * @param string|Rule $rule
      * @return self
      */
-    protected function addRule(int $rule)
+    protected function addRule($rule)
     {
+		if (\is_string($rule)) {
+            $rule = Rules::get($rule);
+        }
+
         foreach ($this->all() as $field) {
             $field->addRule($rule);
         }
@@ -285,11 +286,15 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Remove a rule from the resource.
      *
-     * @param  integer $rule
+     * @param  string|Rule $rule
      * @return self
      */
-    protected function removeRule(int $rule)
+    protected function removeRule($rule)
     {
+		if (\is_string($rule)) {
+            $rule = Rules::get($rule);
+        }
+
         foreach ($this->all() as $field) {
             $field->removeRule($rule);
         }

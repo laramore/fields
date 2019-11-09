@@ -13,17 +13,10 @@ namespace Laramore\Fields;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Laramore\Elements\Type;
-use Types;
+use Rules, Types;
 
 class Timestamp extends Field
 {
-    protected $useCurrent;
-
-    public function getType(): Type
-    {
-        return Types::timestamp();
-    }
-
     public function getPropertyKeys(): array
     {
         return array_merge(parent::getPropertyKeys(), [
@@ -35,7 +28,7 @@ class Timestamp extends Field
     {
         parent::checkRules();
 
-        if (!($this->hasRule(self::NULLABLE) ^ $this->useCurrent)) {
+        if ($this->hasRule(Rules::nullable()) && $this->hasRule(Rules::useCurrent())) {
             throw new \Exception("This field must be either nullable or set by default as the current date");
         }
     }

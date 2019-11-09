@@ -14,8 +14,4 @@ use Laramore\Interfaces\IsAPrimaryField;
 
 class PrimaryId extends Increment implements IsAPrimaryField
 {
-    // Default rules
-    public const DEFAULT_PRIMARY = (self::NOT_NULLABLE | self::DEFAULT_INCREMENT);
-
-    protected static $defaultRules = self::DEFAULT_PRIMARY;
 }

@@ -13,6 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laramore\Validations\Pattern as PatternValidation;
+use Rules;
 
 class Password extends Pattern
 {
@@ -23,32 +24,6 @@ class Password extends Pattern
     public const REGEX_AT_LEAST_ONE_UPPERCASE = '(?=\S*[A-Z])';
     public const REGEX_AT_LEAST_ONE_NUMBER = '(?=\S*[\d])';
     public const REGEX_AT_LEAST_ONE_SPECIAL = '(?=\S*[\W])';
-
-    // Need one lowercase caracter at least.
-    public const NEED_ONE_LOWERCASE = 32768;
-
-    // Need one uppercase caracter at least.
-    public const NEED_ONE_UPPERCASE = 65536;
-
-    // Need one number caracter at least.
-    public const NEED_ONE_NUMBER = 131072;
-
-    // Need one special caracter at least.
-    public const NEED_ONE_SPECIAL = 262144;
-
-    // Default rules
-    public const DEFAULT_PASSWORD = (self::NEED_ONE_LOWERCASE | self::NEED_ONE_UPPERCASE | self::NEED_ONE_NUMBER | self::DEFAULT_PATTERN ^ self::VISIBLE);
-
-    protected static $defaultRules = self::DEFAULT_PASSWORD;
-
-    protected function checkRules()
-    {
-        parent::checkRules();
-
-        if (!$this->hasRule(self::MATCH_PATTERN)) {
-            throw new \Exception('A password has to follow a pattern');
-        }
-    }
 
     protected function setValidations()
     {
@@ -81,19 +56,19 @@ class Password extends Pattern
             $rules[] = str_replace(['$min', '$max'], $lengths, static::REGEX_MIN_MAX_CARACTER);
         }
 
-        if ($this->hasRule(self::NEED_ONE_LOWERCASE)) {
+        if ($this->hasRule(Rules::needLowercase())) {
             $rules[] = static::REGEX_AT_LEAST_ONE_LOWERCASE;
         }
 
-        if ($this->hasRule(self::NEED_ONE_UPPERCASE)) {
+        if ($this->hasRule(Rules::needUppercase())) {
             $rules[] = static::REGEX_AT_LEAST_ONE_UPPERCASE;
         }
 
-        if ($this->hasRule(self::NEED_ONE_NUMBER)) {
+        if ($this->hasRule(Rules::needNumber())) {
             $rules[] = static::REGEX_AT_LEAST_ONE_NUMBER;
         }
 
-        if ($this->hasRule(self::NEED_ONE_SPECIAL)) {
+        if ($this->hasRule(Rules::needSpecial())) {
             $rules[] = static::REGEX_AT_LEAST_ONE_SPECIAL;
         }
 
