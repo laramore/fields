@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "055f6fa4ba16dd68a8a48b3439084f87",
+    "content-hash": "7275439bded84fdaa989d4c9f326badf",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -340,16 +340,16 @@
         },
         {
             "name": "laramore/types",
-            "version": "v1.0.5",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "ae12d6509dbb0b92ff9a0c8341a21b1b029f3101"
+                "reference": "00924bc4e71fc24107fdc9927565196d9bee5ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/ae12d6509dbb0b92ff9a0c8341a21b1b029f3101",
-                "reference": "ae12d6509dbb0b92ff9a0c8341a21b1b029f3101",
+                "url": "https://api.github.com/repos/laramore/types/zipball/00924bc4e71fc24107fdc9927565196d9bee5ab1",
+                "reference": "00924bc4e71fc24107fdc9927565196d9bee5ab1",
                 "shasum": ""
             },
             "require": {
@@ -369,12 +369,14 @@
             "extra": {
                 "laravel": {
                     "providers": [
+                        "Laramore\\Providers\\RulesProvider",
                         "Laramore\\Providers\\TypesProvider",
                         "Laramore\\Providers\\GrammarTypesProvider",
                         "Laramore\\Providers\\OperatorsProvider"
                     ],
                     "aliases": {
                         "GrammarTypes": "Laramore\\Facades\\GrammarTypes",
+                        "Rules": "Laramore\\Facades\\Rules",
                         "Types": "Laramore\\Facades\\Types",
                         "Operators": "Laramore\\Facades\\Operators",
                         "Op": "Laramore\\Facades\\Operators"
@@ -408,7 +410,7 @@
                 "model",
                 "types"
             ],
-            "time": "2019-10-28T11:57:49+00:00"
+            "time": "2019-11-09T14:21:34+00:00"
         },
         {
             "name": "nastuzzi-samy/reflection-namespace",
