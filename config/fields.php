@@ -12,58 +12,55 @@ return [
     */
 
     'configurations' => [
-        'Laramore\\Fields\\BelongsToMany' => [
+        Laramore\Fields\BelongsToMany::class => [
             'type' => 'link',
         ],
-        'Laramore\\Fields\\Boolean' => [
+        Laramore\Fields\Boolean::class => [
             'type' => 'boolean',
         ],
-        'Laramore\\Fields\\Char' => [
+        Laramore\Fields\Char::class => [
             'type' => 'char',
         ],
-        'Laramore\\Fields\\Email' => [
+        Laramore\Fields\Email::class => [
             'type' => 'email',
         ],
-        'Laramore\\Fields\\Enum' => [
+        Laramore\Fields\Enum::class => [
             'type' => 'enum',
         ],
-        'Laramore\\Fields\\Foreign' => [
+        Laramore\Fields\Foreign::class => [
             'type' => 'composite',
-        ],
-        'Laramore\\Fields\\HasMany' => [
+        Laramore\Fields\HasMany::class => [
             'type' => 'link',
         ],
-        'Laramore\\Fields\\HasManyThrough' => [
+        Laramore\Fields\HasManyThrough::class => [
             'type' => 'link',
         ],
-        'Laramore\\Fields\\HasOne' => [
+        Laramore\Fields\HasOne::class => [
             'type' => 'link',
         ],
-        'Laramore\\Fields\\Increment' => [
+        Laramore\Fields\Increment::class => [
             'type' => 'increment',
         ],
-        'Laramore\\Fields\\Integer' => [
+        Laramore\Fields\Integer::class => [
             'type' => 'integer',
         ],
-        'Laramore\\Fields\\ManyToMany' => [
+        Laramore\Fields\ManyToMany::class => [
+            'type' => 'composite',
+        Laramore\Fields\MorphToOne::class => [
+            'type' => 'composite',
+        Laramore\Fields\OneToOne::class => [
             'type' => 'composite',
         ],
-        'Laramore\\Fields\\MorphToOne' => [
-            'type' => 'composite',
-        ],
-        'Laramore\\Fields\\OneToOne' => [
-            'type' => 'composite',
-        ],
-        'Laramore\\Fields\\Password' => [
+        Laramore\Fields\Password::class => [
             'type' => 'password',
         ],
-        'Laramore\\Fields\\PrimaryId' => [
+        Laramore\Fields\PrimaryId::class => [
             'type' => 'primary_id',
         ],
-        'Laramore\\Fields\\Text' => [
+        Laramore\Fields\Text::class => [
             'type' => 'text',
         ],
-        'Laramore\\Fields\\Timestamp' => [
+        Laramore\Fields\Timestamp::class => [
             'type' => 'timestamp',
         ],
     ],

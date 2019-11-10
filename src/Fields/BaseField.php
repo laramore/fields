@@ -64,16 +64,39 @@ abstract class BaseField implements IsAField
     }
 
     /**
+     * Return the configuration path for this field.
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfigPath(string $path=null)
+    {
+        return 'fields.configurations.'.static::class.(\is_null($path) ? '' : '.'.$path);
+    }
+
+    /**
+     * Return the configuration for this field.
+     *
+     * @param string $path
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getConfig(string $path=null, $default=null)
+    {
+        return config($this->getConfigPath($path), $default);
+    }
+
+    /**
      * Return the type object of the field.
      *
      * @return Type
      */
     public function getType(): Type
     {
-        $type = config($name = 'fields.configurations.'.static::class.'.type');
+        $type = $this->getConfig('type');
 
         if (\is_null($type)) {
-            throw new ConfigException($name, ['a valid type'], 'no value');
+            throw new ConfigException($this->getConfigPath('type'), \array_keys(Types::all()), null);
         }
 
         return Types::get($type);
@@ -99,8 +122,8 @@ abstract class BaseField implements IsAField
             }
 
             return $this->$key;
-        } else if (\defined($const = 'static::'.\strtoupper(Str::snake($key)))) {
-            return $this->hasRule(\constant($const));
+        } else if (Rules::has($snakeKey = Str::snake($key))) {
+            return $this->hasRule($snakeKey);
         }
 
         if ($fail) {
