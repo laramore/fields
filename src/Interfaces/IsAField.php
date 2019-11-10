@@ -90,7 +90,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function __isset(string $key): bool;
 
     /**
-     * Cast the value in the correct format.
+     * Dry the value in a simple format.
      *
      * @param  mixed $value
      * @return mixed
@@ -106,7 +106,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function cast($value);
 
     /**
-     * Cast the value in the correct format.
+     * Transform the value to be used as a correct format.
      *
      * @param  mixed $value
      * @return mixed
@@ -114,7 +114,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function transform($value);
 
     /**
-     * Serialize the value in the correct format.
+     * Serialize the value for outputs.
      *
      * @param  mixed $value
      * @return mixed

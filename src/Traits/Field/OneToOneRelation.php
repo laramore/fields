@@ -31,10 +31,6 @@ trait OneToOneRelation
     protected $from;
     protected $reversedName;
 
-    protected $defaultFields = [
-        'id' => Integer::class,
-    ];
-
     public function getReversed(): LinkField
     {
         return $this->getLink('reversed');

@@ -17,7 +17,6 @@ use Rules, Types;
 
 class Text extends Field
 {
-
     protected function setValidations()
     {
         parent::setValidations();

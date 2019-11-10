@@ -25,10 +25,6 @@ class Foreign extends CompositeField
 {
     use OneToOneRelation;
 
-    protected $defaultLinks = [
-        'reversed' => HasMany::class,
-    ];
-
     public function consume(IsALaramoreModel $model, $value)
     {
         $model->setAttribute($this->getField('id')->attname, $value[$this->to]);

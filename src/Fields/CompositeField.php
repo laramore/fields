@@ -10,8 +10,11 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\Str;
+use Illuminate\Support\{
+	Arr, Str
+};
 use Laramore\Elements\Rule;
+use Laramore\Exceptions\ConfigException;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
@@ -25,10 +28,8 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected $links = [];
     protected $fieldsName = [];
     protected $linksName = [];
-    protected $uniques = [];
 
-    protected static $defaultFieldNameTemplate = '${name}_${fieldname}';
-    protected static $defaultLinkNameTemplate = '*{modelname}';
+    protected $uniques = [];
 
     /**
      * Create a new field with basic rules.
@@ -43,7 +44,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     {
         parent::__construct($rules);
 
-        foreach ($fields ?: $this->defaultFields as $key => $field) {
+        $fields = ($fields ?: $this->getConfig('fields'));
+
+        if (\is_null($fields) || (\count($fields) && !Arr::isAssoc($fields))) {
+            throw new ConfigException($this->getConfigPath('fields'), 'any associative array of fields', $fields);
+        }
+
+        foreach ($fields as $key => $field) {
             if (!\is_string($key)) {
                 throw new \Exception('The composite fields need names');
             }
@@ -51,7 +58,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
             $this->fields[$key] = $this->generateField($field);
         }
 
-        foreach ($links ?: $this->defaultLinks as $key => $link) {
+        $links = ($links ?: $this->getConfig('links'));
+
+        if (\is_null($links) || (\count($links) && !Arr::isAssoc($links))) {
+            throw new ConfigException($this->getConfigPath('links'), 'any associative array of links', $links);
+        }
+
+        foreach ($links ?: $this->getConfig('links') as $key => $link) {
             if (!\is_string($key)) {
                 throw new \Exception('The composite fields need names');
             }
@@ -105,32 +118,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         } else {
             return $link;
         }
-    }
-
-    /**
-     * Define the default field name template.
-     *
-     * @param string $defaultFieldNameTemplate
-     * @return static
-     */
-    public static function setDefaultFieldNameTemplate(string $defaultFieldNameTemplate)
-    {
-        static::$defaultFieldNameTemplate = $defaultFieldNameTemplate;
-
-        return static::class;
-    }
-
-    /**
-     * Define the default link name template.
-     *
-     * @param string $defaultLinkNameTemplate
-     * @return static
-     */
-    public static function setDefaultLinkNameTemplate(string $defaultLinkNameTemplate)
-    {
-        static::$defaultLinkNameTemplate = $defaultLinkNameTemplate;
-
-        return static::class;
     }
 
     /**
@@ -272,7 +259,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function addRule($rule)
     {
-		if (\is_string($rule)) {
+        if (\is_string($rule)) {
             $rule = Rules::get($rule);
         }
 
@@ -291,7 +278,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function removeRule($rule)
     {
-		if (\is_string($rule)) {
+        if (\is_string($rule)) {
             $rule = Rules::get($rule);
         }
 
@@ -353,7 +340,8 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
 
         foreach ($this->fields as $fieldname => $field) {
             $keyValues['fieldname'] = $fieldname;
-            $name = $this->replaceInTemplate(($this->fieldsName[$fieldname] ?? static::$defaultFieldNameTemplate), $keyValues);
+            $template = ($this->fieldsName[$fieldname] ?? $this->getConfig('field_name_template'));
+            $name = $this->replaceInTemplate($template, $keyValues);
             $this->fields[$fieldname] = $field->own($this, $name);
         }
     }
@@ -372,7 +360,8 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
 
         foreach ($this->links as $linkname => $link) {
             $keyValues['linkname'] = $linkname;
-            $name = $this->replaceInTemplate(($this->linksName[$linkname] ?? static::$defaultLinkNameTemplate), $keyValues);
+            $template = ($this->linksName[$linkname] ?? $this->getConfig('link_name_template'));
+            $name = $this->replaceInTemplate($template, $keyValues);
             $this->links[$linkname] = $link->own($this, $name);
         }
     }

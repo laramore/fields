@@ -22,6 +22,7 @@ use Laramore\Elements\{
     Type, Operator
 };
 use Laramore\Validations\Typed;
+use Rules;
 
 abstract class Field extends BaseField
 {
@@ -53,8 +54,8 @@ abstract class Field extends BaseField
             $name = $nameKey[0];
             $key = ($nameKey[1] ?? $name);
 
-            if (\defined($const = 'static::'.\strtoupper(Str::snake($key)))) {
-                if ($this->hasRule(\constant($const))) {
+            if (Rules::has($snakeKey = Str::snake($key))) {
+                if ($this->hasRule($snakeKey)) {
                     $properties[$name] = true;
                 }
             } else if (\method_exists($this, $method = 'get'.\ucfirst($key))) {
