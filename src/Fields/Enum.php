@@ -21,20 +21,6 @@ class Enum extends Field
 {
     protected $elements;
 
-    public function getPropertyKeys(): array
-    {
-        $keys = parent::getPropertyKeys();
-
-        if (!\is_null($index = \array_search('default', $keys))) {
-            unset($keys[$index]);
-        }
-
-        return array_merge($keys, [
-            'allowed:elementsValue',
-            'default:defaultValue',
-        ]);
-    }
-
     protected function setProxies()
     {
         parent::setProxies();

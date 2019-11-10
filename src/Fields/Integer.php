@@ -17,13 +17,18 @@ use Rules, Types;
 
 class Integer extends Field
 {
+    /**
+     * Return the type object of the field.
+     *
+     * @return Type
+     */
     public function getType(): Type
     {
         if ($this->hasRule(Rules::unsigned())) {
-            return Types::unsignedInteger();
+            return Types::get($this->getConfig('unsigned_type'));
         }
 
-        return Types::integer();
+        return $this->resolveType();
     }
 
     public function unsigned(bool $unsigned=true, bool $positive=true)

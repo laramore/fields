@@ -29,46 +29,6 @@ abstract class Field extends BaseField
     protected $attname;
 
     /**
-     * Return the main property keys.
-     *
-     * @return array
-     */
-    public function getPropertyKeys(): array
-    {
-        return [
-            'nullable', 'default', 'unique'
-        ];
-    }
-
-    /**
-     * Return the main properties.
-     *
-     * @return array
-     */
-    public function getProperties(): array
-    {
-        $properties = [];
-
-        foreach ($this->getPropertyKeys() as $property) {
-            $nameKey = explode(':', $property);
-            $name = $nameKey[0];
-            $key = ($nameKey[1] ?? $name);
-
-            if (Rules::has($snakeKey = Str::snake($key))) {
-                if ($this->hasRule($snakeKey)) {
-                    $properties[$name] = true;
-                }
-            } else if (\method_exists($this, $method = 'get'.\ucfirst($key))) {
-                $properties[$name] = \call_user_func([$this, $method]);
-            } else if (!is_null($value = $this->$key)) {
-                $properties[$name] = $value;
-            }
-        }
-
-        return $properties;
-    }
-
-    /**
      * Define the name property.
      *
      * @param  string $name

@@ -340,16 +340,16 @@
         },
         {
             "name": "laramore/types",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "00924bc4e71fc24107fdc9927565196d9bee5ab1"
+                "reference": "438b1944542d698ce55dda0015263e242216070a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/00924bc4e71fc24107fdc9927565196d9bee5ab1",
-                "reference": "00924bc4e71fc24107fdc9927565196d9bee5ab1",
+                "url": "https://api.github.com/repos/laramore/types/zipball/438b1944542d698ce55dda0015263e242216070a",
+                "reference": "438b1944542d698ce55dda0015263e242216070a",
                 "shasum": ""
             },
             "require": {
@@ -410,7 +410,7 @@
                 "model",
                 "types"
             ],
-            "time": "2019-11-09T14:21:34+00:00"
+            "time": "2019-11-10T17:14:02+00:00"
         },
         {
             "name": "nastuzzi-samy/reflection-namespace",

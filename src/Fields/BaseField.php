@@ -13,7 +13,9 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Laramore\Elements\Type;
-use Laramore\Interfaces\IsAField;
+use Laramore\Interfaces\{
+    IsAField, IsConfigurable
+};
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
 };
@@ -28,7 +30,7 @@ use Laramore\Validations\{
 };
 use Closure, Rules, Types;
 
-abstract class BaseField implements IsAField
+abstract class BaseField implements IsAField, IsConfigurable
 {
     use IsOwned, IsLocked, HasProperties, HasRules {
         setOwner as protected setOwnerFromTrait;
@@ -38,6 +40,9 @@ abstract class BaseField implements IsAField
     protected $meta;
 
     protected $default;
+
+    protected $primary;
+    protected $index;
     protected $unique;
 
     /**
@@ -87,11 +92,11 @@ abstract class BaseField implements IsAField
     }
 
     /**
-     * Return the type object of the field.
+     * Return the type derived of this field.
      *
      * @return Type
      */
-    public function getType(): Type
+    protected function resolveType(): Type
     {
         $type = $this->getConfig('type');
 
@@ -100,6 +105,16 @@ abstract class BaseField implements IsAField
         }
 
         return Types::get($type);
+    }
+
+    /**
+     * Return the type object of the field.
+     *
+     * @return Type
+     */
+    public function getType(): Type
+    {
+        return $this->resolveType();
     }
 
     /**

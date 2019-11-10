@@ -26,16 +26,9 @@ class Char extends Text
         $this->maxLength = Schema::getFacadeRoot()::$defaultStringLength;
     }
 
-    public function getLength(): ?int
+    public function getMaxLength(): ?int
     {
         return $this->maxLength;
-    }
-
-    public function getPropertyKeys(): array
-    {
-        return array_merge([
-            'length:maxLength'
-        ], parent::getPropertyKeys());
     }
 
     protected function setValidations()

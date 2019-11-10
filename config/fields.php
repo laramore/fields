@@ -55,6 +55,7 @@ return [
         ],
         Laramore\Fields\Integer::class => [
             'type' => 'integer',
+            'unsigned_type' => 'unsigned_integer',
         ],
         Laramore\Fields\ManyToMany::class => [
             'type' => 'composite',

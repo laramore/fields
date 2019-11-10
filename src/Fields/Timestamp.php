@@ -17,13 +17,6 @@ use Rules, Types;
 
 class Timestamp extends Field
 {
-    public function getPropertyKeys(): array
-    {
-        return array_merge(parent::getPropertyKeys(), [
-            'useCurrent',
-        ]);
-    }
-
     protected function checkRules()
     {
         parent::checkRules();
