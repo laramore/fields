@@ -11,9 +11,38 @@
 namespace Laramore\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laramore\Interfaces\IsALaramoreProvider;
+use Laramore\Traits\Provider\MergesConfig;
 
-class FieldsProvider extends ServiceProvider
+class FieldsProvider extends ServiceProvider implements IsALaramoreProvider
 {
+    use MergesConfig;
+
+    /**
+     * Constraint manager.
+     *
+     * @var ConstraintManager
+     */
+    protected static $manager;
+
+    /**
+     * Before booting, create our definition for migrations.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/fields.php', 'fields',
+        );
+
+        $this->app->singleton('Constraints', function() {
+            return static::getManager();
+        });
+
+        $this->app->booted([$this, 'bootedCallback']);
+    }
+
     /**
      * Publish the config linked to fields.
      *
@@ -27,14 +56,48 @@ class FieldsProvider extends ServiceProvider
     }
 
     /**
-     * Merge the config file for fields.
+     * Return the default values for the manager of this provider.
+     *
+     * @return array
+     */
+    public static function getDefaults(): array
+    {
+        return [];
+    }
+
+    /**
+     * Generate the corresponded manager.
      *
      * @return void
      */
-    public function register()
+    protected static function generateManager()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/fields.php', 'fields',
-        );
+        $class = config('fields.constraints.manager');
+
+        static::$manager = new $class();
+    }
+
+    /**
+     * Return the generated manager for this provider.
+     *
+     * @return object
+     */
+    public static function getManager(): object
+    {
+        if (\is_null(static::$manager)) {
+            static::generateManager();
+        }
+
+        return static::$manager;
+    }
+
+    /**
+     * Lock all managers after booting.
+     *
+     * @return void
+     */
+    public function bootedCallback()
+    {
+        static::getManager()->lock();
     }
 }

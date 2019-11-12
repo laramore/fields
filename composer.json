@@ -36,7 +36,10 @@
         "laravel": {
             "providers": [
                 "Laramore\\Providers\\FieldsProvider"
-            ]
+            ],
+            "aliases": {
+                "Constraints": "Laramore\\Facade\\Constraints"
+            }
         }
     }
 }

@@ -3,12 +3,40 @@
 return [
 
     /*
-        |--------------------------------------------------------------------------
-        | Default rules
-        |--------------------------------------------------------------------------
-        |
-        | This option defines the default rules used in fields.
-        |
+    |--------------------------------------------------------------------------
+    | Default constraints
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default constraints used in fields.
+    |
+    */
+
+    'constraints' => [
+        'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
+
+        'types' => [
+            'primary' => [
+                'class' => Laramore\Fields\Constraint\Primary::class,
+            ],
+            'index' => [
+                'class' => Laramore\Fields\Constraint\Index::class,
+            ],
+            'unique' => [
+                'class' => Laramore\Fields\Constraint\Unique::class,
+            ],
+            'foreign' => [
+                'class' => Laramore\Fields\Constraint\Foreign::class,
+            ],
+        ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default rules
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default rules used in fields.
+    |
     */
 
     'configurations' => [
