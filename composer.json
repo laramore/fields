@@ -38,7 +38,7 @@
                 "Laramore\\Providers\\FieldsProvider"
             ],
             "aliases": {
-                "Constraints": "Laramore\\Facade\\Constraints"
+                "Constraints": "Laramore\\Facades\\Constraints"
             }
         }
     }
