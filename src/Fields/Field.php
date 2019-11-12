@@ -21,11 +21,19 @@ use Laramore\Interfaces\IsProxied;
 use Laramore\Elements\{
     Type, Operator
 };
+use Laramore\Traits\Field\HasFieldConstraints;
 use Laramore\Validations\Typed;
 use Rules;
 
 abstract class Field extends BaseField
 {
+    use HasFieldConstraints;
+
+    /**
+     * Attribute name of this field.
+     *
+     * @var string
+     */
     protected $attname;
 
     /**
@@ -44,6 +52,18 @@ abstract class Field extends BaseField
         }
 
         return $this;
+    }
+
+    /**
+     * Each class locks in a specific way.
+     *
+     * @return void
+     */
+    protected function locking()
+    {
+        parent::locking();
+
+        $this->setConstraints();
     }
 
     /**

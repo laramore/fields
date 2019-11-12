@@ -21,7 +21,7 @@ use Laramore\Fields\{
 use Laramore\Interfaces\{
     IsALaramoreModel, IsProxied
 };
-use Op;
+use Metas, Op;
 
 trait OneToOneRelation
 {
@@ -44,7 +44,7 @@ trait OneToOneRelation
             $this->defineProperty('on', $model);
         } else {
             $this->defineProperty('on', $this->getReversed()->off = $model);
-            $this->to($this->getReversed()->off::getMeta()->getPrimary()->attname);
+            $this->to($this->getReversed()->off::getMeta()->getPrimary()->all()[0]->attname);
         }
 
         if ($reversedName) {
@@ -87,6 +87,11 @@ trait OneToOneRelation
 
         $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
         $this->defineProperty('from', $this->getReversed()->to = $this->getField('id')->attname);
+    }
+
+    protected function setForeigns()
+    {
+        $this->foreign('id', Metas::get($this->on)->get($this->to));
     }
 
     protected function checkRules()

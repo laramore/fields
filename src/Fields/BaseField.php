@@ -37,13 +37,19 @@ abstract class BaseField implements IsAField, IsConfigurable
         setProperty as protected forceProperty;
     }
 
+    /**
+     * Meta that owns this field.
+     *
+     * @var \Laramore\Meta
+     */
     protected $meta;
 
+    /**
+     * Default value of this field.
+     *
+     * @var mixed
+     */
     protected $default;
-
-    protected $primary;
-    protected $index;
-    protected $unique;
 
     /**
      * Create a new field with basic rules.

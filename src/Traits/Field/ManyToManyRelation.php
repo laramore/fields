@@ -43,6 +43,10 @@ trait ManyToManyRelation
         $this->setProxy('updateExistingPivot', ['model']);
     }
 
+    protected function setForeigns()
+    {
+    }
+
     public function cast($value)
     {
         return $this->transform($value);

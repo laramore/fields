@@ -17,7 +17,7 @@ use Laramore\Eloquent\FakePivot;
 use Laramore\Meta;
 use MetaManager;
 
-class ManyToMany extends CompositeField
+class MorphToOne extends CompositeField
 {
     use ManyToManyRelation;
 
@@ -38,7 +38,7 @@ class ManyToMany extends CompositeField
             $this->defineProperty('on', $model);
         } else {
             $this->defineProperty('on', $this->getLink('reversed')->off = $model);
-            $this->to($model::getMeta()->getPrimary()->attname);
+            $this->to($model::getMeta()->getPrimary()->all()[0]->attname);
         }
 
         if ($reversedName) {
@@ -146,7 +146,7 @@ class ManyToMany extends CompositeField
         }
 
         $this->defineProperty('reversedName', $this->getLink('reversed')->name);
-        $this->defineProperty('from', $this->getLink('reversed')->to = $this->getMeta()->getPrimary()->attname);
+        $this->defineProperty('from', $this->getLink('reversed')->to = $this->getMeta()->getPrimary()->all()[0]->attname);
 
         parent::locking();
     }

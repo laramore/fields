@@ -13,6 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\LinkField;
+use Laramore\Fields\Constraint\Unique;
 use Laramore\Eloquent\FakePivot;
 use Laramore\Meta;
 use MetaManager;
@@ -38,7 +39,7 @@ class ManyToMany extends CompositeField
             $this->defineProperty('on', $model);
         } else {
             $this->defineProperty('on', $this->getLink('reversed')->off = $model);
-            $this->to($model::getMeta()->getPrimary()->attname);
+            $this->to($model::getMeta()->getPrimary()->all()[0]->attname);
         }
 
         if ($reversedName) {
@@ -121,8 +122,10 @@ class ManyToMany extends CompositeField
         $this->setProperty('pivotTo', $to);
         $this->setProperty('pivotFrom', $from);
 
-        if ($this->unique) {
-            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom]);
+        if (isset($this->constraints['unique'])) {
+            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], ...$this->constraints['unique']);
+
+            unset($this->constraints['unique']);
         }
     }
 
@@ -146,7 +149,7 @@ class ManyToMany extends CompositeField
         }
 
         $this->defineProperty('reversedName', $this->getLink('reversed')->name);
-        $this->defineProperty('from', $this->getLink('reversed')->to = $this->getMeta()->getPrimary()->attname);
+        $this->defineProperty('from', $this->getLink('reversed')->to = $this->getMeta()->getPrimary()->all()[0]->attname);
 
         parent::locking();
     }
@@ -154,5 +157,34 @@ class ManyToMany extends CompositeField
     public function isOnSelf()
     {
         return $this->on === $this->getMeta()->getModelClass();
+    }
+
+    /**
+     * Define a unique constraint.
+     *
+     * @param  string  $name
+     * @param  string  $class
+     * @param  integer $priority
+     * @return self
+     */
+    public function unique(string $name=null, string $class=null, int $priority=Unique::MEDIUM_PRIORITY)
+    {
+        $this->needsToBeUnlocked();
+
+        if (isset($this->constraints['unique'])) {
+            throw new \LogicException("This field cannot have multiple unique constraints");
+        }
+
+        if (\is_null($class)) {
+            $class = config('fields.constraints.types.unique.class');
+        }
+
+        if (\is_null($this->pivotMeta)) {
+            $this->constraints['unique'] = \func_get_args();
+        } else {
+            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], ...\func_get_args());
+        }
+
+        return $this;
     }
 }

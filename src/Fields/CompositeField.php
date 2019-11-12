@@ -19,17 +19,18 @@ use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
 };
+use Laramore\Traits\Field\HasMultipleFieldConstraints;
 use Laramore\Meta;
 use Rules;
 
 abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARelationField
 {
+    use HasMultipleFieldConstraints;
+
     protected $fields = [];
     protected $links = [];
     protected $fieldsName = [];
     protected $linksName = [];
-
-    protected $uniques = [];
 
     /**
      * Create a new field with basic rules.
@@ -290,30 +291,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     }
 
     /**
-     * Define this composite as unique.
-     *
-     * @return self
-     */
-    public function unique()
-    {
-        $this->needsToBeUnlocked();
-
-        $this->unique[] = $this->getFields();
-
-        return $this;
-    }
-
-    /**
-     * Return the unique fields.
-     *
-     * @return array
-     */
-    public function getUnique(): array
-    {
-        return $this->unique;
-    }
-
-    /**
      * Callaback when the instance is owned.
      *
      * @return void
@@ -373,6 +350,8 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function locking()
     {
+        $this->setConstraints();
+
         $this->lockFields();
         $this->lockLinks();
 
