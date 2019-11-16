@@ -11,7 +11,9 @@
 namespace Laramore\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Laramore\Interfaces\IsALaramoreProvider;
+use Laramore\Interfaces\{
+	IsALaramoreManager, IsALaramoreProvider
+};
 use Laramore\Traits\Provider\MergesConfig;
 
 class FieldsProvider extends ServiceProvider implements IsALaramoreProvider
@@ -21,9 +23,9 @@ class FieldsProvider extends ServiceProvider implements IsALaramoreProvider
     /**
      * Constraint manager.
      *
-     * @var ConstraintManager
+     * @var array
      */
-    protected static $manager;
+    protected static $managers;
 
     /**
      * Before booting, create our definition for migrations.
@@ -68,27 +70,30 @@ class FieldsProvider extends ServiceProvider implements IsALaramoreProvider
     /**
      * Generate the corresponded manager.
      *
-     * @return void
+     * @param  string $key
+     * @return IsALaramoreManager
      */
-    protected static function generateManager()
+    public static function generateManager(string $key): IsALaramoreManager
     {
         $class = config('fields.constraints.manager');
 
-        static::$manager = new $class();
+        return static::$managers[$key] = new $class();
     }
 
     /**
      * Return the generated manager for this provider.
      *
-     * @return object
+     * @return IsALaramoreManager
      */
-    public static function getManager(): object
+    public static function getManager(): IsALaramoreManager
     {
-        if (\is_null(static::$manager)) {
-            static::generateManager();
+		$appHash = \spl_object_hash(app());
+
+        if (!isset(static::$managers[$appHash])) {
+            return static::generateManager($appHash);
         }
 
-        return static::$manager;
+        return static::$managers[$appHash];
     }
 
     /**

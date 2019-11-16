@@ -12,8 +12,9 @@ namespace Laramore\Fields\Constraint;
 
 use Illuminate\Database\Eloquent\Model;
 use Laramore\Observers\BaseManager;
+use Laramore\Interfaces\IsALaramoreManager;
 
-class ConstraintManager extends BaseManager
+class ConstraintManager extends BaseManager implements IsALaramoreManager
 {
     /**
      * Allowed observable sub class.
