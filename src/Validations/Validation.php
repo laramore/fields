@@ -68,7 +68,7 @@ abstract class Validation extends BaseObserver
      */
     public function getCallback(): Closure
     {
-        return [$this, 'isValueValid'];
+        return Closure::fromCallable([$this, 'isValueValid']);
     }
 
     abstract public function isValueValid($value): bool;

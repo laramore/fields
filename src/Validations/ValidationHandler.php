@@ -127,4 +127,20 @@ class ValidationHandler extends BaseHandler
 
         return $bag;
     }
+
+    /**
+     * Need to lock every observer.
+     *
+     * @return void
+     */
+    protected function locking()
+    {
+        foreach ($this->observers as $observers) {
+            foreach ($observers as $observer) {
+                if (!$observer->isLocked()) {
+                    $observer->lock();
+                }
+            }
+        }
+    }
 }
