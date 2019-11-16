@@ -103,7 +103,10 @@ class ManyToMany extends CompositeField
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
         } else {
             // Create dynamically the pivot class (only and first time I use eval, really).
-            eval("namespace $namespaceName; class $pivotClassName extends \Laramore\Eloquent\FakePivot {}");
+            if (!\class_exists($pivotClass)) {
+                eval("namespace $namespaceName; class $pivotClassName extends \Laramore\Eloquent\FakePivot {}");
+            }
+
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
 
             $this->pivotMeta->set(
