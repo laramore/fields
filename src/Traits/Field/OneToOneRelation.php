@@ -30,13 +30,14 @@ trait OneToOneRelation
     protected $off;
     protected $from;
     protected $reversedName;
+    protected $relationName;
 
     public function getReversed(): LinkField
     {
         return $this->getLink('reversed');
     }
 
-    public function on(string $model, string $reversedName=null)
+    public function on(string $model, string $reversedName=null, string $relationName=null)
     {
         $this->needsToBeUnlocked();
 
@@ -49,6 +50,10 @@ trait OneToOneRelation
 
         if ($reversedName) {
             $this->reversedName($reversedName);
+        }
+
+        if ($relationName) {
+            $this->setProperty('relationName', $relationName);
         }
 
         return $this;
@@ -91,7 +96,9 @@ trait OneToOneRelation
 
     protected function setForeigns()
     {
-        $this->foreign('id', Metas::get($this->on)->get($this->to));
+        $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
+
+        $this->foreign('id', Metas::get($this->on)->get($this->to), $relationName);
     }
 
     protected function checkRules()

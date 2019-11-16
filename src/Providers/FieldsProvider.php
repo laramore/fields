@@ -87,7 +87,7 @@ class FieldsProvider extends ServiceProvider implements IsALaramoreProvider
      */
     public static function getManager(): IsALaramoreManager
     {
-		$appHash = \spl_object_hash(app());
+        $appHash = \spl_object_hash(app());
 
         if (!isset(static::$managers[$appHash])) {
             return static::generateManager($appHash);
