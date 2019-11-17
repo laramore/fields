@@ -13,6 +13,7 @@ namespace Laramore\Fields\Constraint;
 use Laramore\Exceptions\LockException;
 use Laramore\Fields\Field;
 use Laramore\Observers\BaseObserver;
+use Event;
 
 abstract class Constraint extends BaseObserver
 {
@@ -31,7 +32,7 @@ abstract class Constraint extends BaseObserver
      * @param integer $priority
      * @param Closure $callback
      */
-    public function __construct(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    protected function __construct(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {
         if (!\is_null($name)) {
             $this->setName($name);
@@ -43,6 +44,21 @@ abstract class Constraint extends BaseObserver
 
         $this->on($fields);
         $this->setPriority($priority);
+    }
+
+    public static function constraint(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    {
+        $creating = Event::until('constraints.creating', static::class, \func_get_args());
+
+        if ($creating === false) {
+            return null;
+        }
+
+        $field = $creating ?: new static($fields, $name, $priority);
+
+        Event::dispatch('constraints.created', $field);
+
+        return $field;
     }
 
     public function getConstraintName(): string
@@ -84,6 +100,27 @@ abstract class Constraint extends BaseObserver
     {
         return $this->all()[0]->getMeta()->getTableName();
     }
+
+    /**
+     * Disallow any modifications after locking the instance.
+     *
+     * @return self
+     */
+    public function lock()
+    {
+        $locking = Event::until('constraints.locking', $this);
+
+        if ($locking === false) {
+            return $this;
+        }
+
+        parent::lock();
+
+        Event::dispatch('constraints.locked', $this);
+
+        return $this;
+    }
+
 
     /**
      * Actions during locking.
