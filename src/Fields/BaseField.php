@@ -28,12 +28,14 @@ use Laramore\Exceptions\{
 use Laramore\Validations\{
     NotNullable, Validation, ValidationErrorBag
 };
-use Closure, Rules, Types;
+use Closure, Rules, Types, Event;
 
 abstract class BaseField implements IsAField, IsConfigurable
 {
     use IsOwned, IsLocked, HasProperties, HasRules {
+        own as protected ownFromTrait;
         setOwner as protected setOwnerFromTrait;
+        lock as protected lockFromTrait;
         setProperty as protected forceProperty;
     }
 
@@ -71,7 +73,17 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public static function field(array $rules=null)
     {
-        return new static($rules);
+        $creating = Event::until('fields.creating', static::class, \func_get_args());
+
+        if ($creating === false) {
+            return null;
+        }
+
+        $field = $creating ?: new static($rules);
+
+        Event::dispatch('fields.created', $field);
+
+        return $field;
     }
 
     /**
@@ -246,6 +258,28 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
+     * Assign a unique owner to this instance.
+     *
+     * @param  object $owner
+     * @param  string $name
+     * @return self
+     */
+    public function own(object $owner, string $name)
+    {
+        $owning = Event::until('fields.owning', $this, $owner, $name);
+
+        if ($owning === false) {
+            return $this;
+        }
+
+        $this->ownFromTrait($owning[0] ?? $owner, $owning[1] ?? $name);
+
+        Event::dispatch('fields.owned', $this);
+
+        return $this;
+    }
+
+    /**
      * Callaback when the instance is owned.
      *
      * @return void
@@ -257,6 +291,26 @@ abstract class BaseField implements IsAField, IsConfigurable
         if (!($owner instanceof Meta) && !($owner instanceof CompositeField)) {
             throw new \LogicException('A field should be owned by a Meta or a CompositeField');
         }
+    }
+
+    /**
+     * Disallow any modifications after locking the instance.
+     *
+     * @return self
+     */
+    public function lock()
+    {
+        $locking = Event::until('fields.locking', $this);
+
+        if ($locking === false) {
+            return $this;
+        }
+
+        $this->lockFromTrait();
+
+        Event::dispatch('fields.locked', $this);
+
+        return $this;
     }
 
     /**
