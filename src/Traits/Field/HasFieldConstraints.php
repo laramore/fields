@@ -44,7 +44,7 @@ trait HasFieldConstraints
             $class = config('fields.constraints.types.primary.class');
         }
 
-        $this->constraints['primary'] = new $class([$this], $name, $priority);
+        $this->constraints['primary'] = $class::constraint([$this], $name, $priority);
 
         return $this;
     }
@@ -69,7 +69,7 @@ trait HasFieldConstraints
             $class = config('fields.constraints.types.index.class');
         }
 
-        $this->constraints['index'] = new $class([$this], $name, $priority);
+        $this->constraints['index'] = $class::constraint([$this], $name, $priority);
 
         return $this;
     }
@@ -94,7 +94,7 @@ trait HasFieldConstraints
             $class = config('fields.constraints.types.unique.class');
         }
 
-        $this->constraints['unique'] = new $class([$this], $name, $priority);
+        $this->constraints['unique'] = $class::constraint([$this], $name, $priority);
 
         return $this;
     }
@@ -119,7 +119,7 @@ trait HasFieldConstraints
             $class = config('fields.constraints.types.foreign.class');
         }
 
-        $this->constraints['foreign'] = new $class([$this, $field], $name, $priority);
+        $this->constraints['foreign'] = $class::constraint([$this, $field], $name, $priority);
 
         return $this;
     }

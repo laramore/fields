@@ -48,7 +48,7 @@ trait HasMultipleFieldConstraints
             $this->getFields()[0]->primary(\func_get_args());
         }
 
-        $this->constraints['primary'] = new $class(\array_values($this->getFields()), $name, $priority);
+        $this->constraints['primary'] = $class::constraint(\array_values($this->getFields()), $name, $priority);
 
         return $this;
     }
@@ -77,7 +77,7 @@ trait HasMultipleFieldConstraints
             $this->getFields()[0]->index(\func_get_args());
         }
 
-        $this->constraints['index'] = new $class(\array_values($this->getFields()), $name, $priority);
+        $this->constraints['index'] = $class::constraint(\array_values($this->getFields()), $name, $priority);
 
         return $this;
     }
@@ -106,7 +106,7 @@ trait HasMultipleFieldConstraints
             $this->getFields()[0]->unique(\func_get_args());
         }
 
-        $this->constraints['unique'] = new $class(\array_values($this->getFields()), $name, $priority);
+        $this->constraints['unique'] = $class::constraint(\array_values($this->getFields()), $name, $priority);
 
         return $this;
     }
