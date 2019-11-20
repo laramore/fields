@@ -121,7 +121,6 @@ abstract class Constraint extends BaseObserver
         return $this;
     }
 
-
     /**
      * Actions during locking.
      *

@@ -272,7 +272,7 @@ abstract class BaseField implements IsAField, IsConfigurable
             return $this;
         }
 
-        $this->ownFromTrait($owning[0] ?? $owner, $owning[1] ?? $name);
+        $this->ownFromTrait(($owning[0] ?? $owner), ($owning[1] ?? $name));
 
         Event::dispatch('fields.owned', $this);
 
@@ -333,7 +333,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     protected function checkRules()
     {
         if ($this->hasProperty('default')) {
-            if (\is_null($this->default)) {
+            if (\is_null($this->getProperty('default'))) {
                 if ($this->hasRule(Rules::notNullable())) {
                     throw new \LogicException("This field cannot be null and defined as null by default");
                 } else if (!$this->hasRule(Rules::nullable()) && !$this->hasRule(Rules::required())) {

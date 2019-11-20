@@ -184,18 +184,6 @@ trait HasFields
     }
 
     /**
-     * Reset the value with the default value for a specific field.
-     *
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
-     * @return mixed
-     */
-    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model)
-    {
-        return $model->setRawAttribute($field->attname, $field->getOwner()->defaultFieldAttribute($field));
-    }
-
-    /**
      * Transform a value for a specific field.
      *
      * @param BaseField $field
@@ -264,6 +252,18 @@ trait HasFields
     public function defaultFieldAttribute(BaseField $field)
     {
         return $field->getProperty('default', false);
+    }
+
+    /**
+     * Reset the value with the default value for a specific field.
+     *
+     * @param BaseField        $field
+     * @param IsALaramoreModel $model
+     * @return mixed
+     */
+    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model)
+    {
+        return $model->setRawAttribute($field->attname, $field->getOwner()->defaultFieldAttribute($field));
     }
 
     /**
