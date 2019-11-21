@@ -35,10 +35,13 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Laramore\\Providers\\FieldsProvider"
+                "Laramore\\Providers\\FieldsProvider",
+                "Laramore\\Providers\\ConstraintsProvider",
+                "Laramore\\Providers\\ProxiesProvider"
             ],
             "aliases": {
-                "Constraints": "Laramore\\Facades\\Constraints"
+                "Constraints": "Laramore\\Facades\\Constraints",
+                "Proxies": "Laramore\\Facades\\Proxies"
             }
         }
     }
