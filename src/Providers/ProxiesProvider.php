@@ -31,11 +31,21 @@ class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
      */
     public function register()
     {
-        $this->app->singleton('Fields', function() {
+        $this->app->singleton('Proxies', function() {
             return static::getManager();
         });
 
         $this->app->booted([$this, 'bootedCallback']);
+    }
+
+    /**
+     * Publish the config linked to fields.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Nothing to publish as it is already done in FieldsProvider.
     }
 
     /**

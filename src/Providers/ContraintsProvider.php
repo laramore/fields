@@ -39,6 +39,16 @@ class ConstraintsProvider extends ServiceProvider implements IsALaramoreProvider
     }
 
     /**
+     * Publish the config linked to fields.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Nothing to publish as it is already done in FieldsProvider.
+    }
+
+    /**
      * Return the default values for the manager of this provider.
      *
      * @return array

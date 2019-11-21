@@ -10,10 +10,12 @@
 
 namespace Laramore\Proxies;
 
-use Laramore\Interfaces\IsALaramoreModel;
+use Laramore\Interfaces\{
+    IsALaramoreManager, IsALaramoreModel
+};
 use Laramore\Observers\BaseManager;
 
-class ProxyManager extends BaseManager
+class ProxyManager extends BaseManager implements IsALaramoreManager
 {
     /**
      * Allowed observable sub class.

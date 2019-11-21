@@ -28,7 +28,12 @@ class MultiProxy extends BaseProxy
         parent::__construct($name, $name, $data);
     }
 
-    public function getMethodName()
+    /**
+     * Return the field method name that is used for this proxy.
+     *
+     * @return string
+     */
+    public function getMethodName(): string
     {
         return $this->getName();
     }

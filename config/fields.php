@@ -56,7 +56,7 @@ return [
     'proxies' => [
         'enabled' => true,
 
-        'manager' => Laramore\Proxies\ProxyManger::class,
+        'manager' => Laramore\Proxies\ProxyManager::class,
 
         'default' => [
             'targets' => [ProxyHandler::MODEL_TYPE],
