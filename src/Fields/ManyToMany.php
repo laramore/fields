@@ -67,7 +67,7 @@ class ManyToMany extends CompositeField
     {
         $this->needsToBeUnlocked();
 
-        $this->linksName['reversed'] = $reversedName ?: '*{modelname}';
+        $this->linksName['reversed'] = $reversedName ?: '+{modelname}';
 
         return $this;
     }

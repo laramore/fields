@@ -32,14 +32,6 @@ class Increment extends Integer
         return $keys;
     }
 
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('increment', ['instance', 'value']);
-        $this->setProxy('descrement', ['instance', 'value']);
-    }
-
     public function increment(IsALaramoreModel $model, int $value, int $increment=1)
     {
         return $model->setAttribute($this->attname, ($value + $increment));

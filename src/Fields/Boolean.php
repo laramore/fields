@@ -15,14 +15,6 @@ use Types;
 
 class Boolean extends Field
 {
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('is', ['value']);
-        $this->setProxy('isNot', ['value']);
-    }
-
     public function dry($value)
     {
         return $this->transform($value);

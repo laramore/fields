@@ -233,26 +233,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     }
 
     /**
-     * Remplace in template with values.
-     *
-     * @param  string $template
-     * @param  array  $keyValues
-     * @return string
-     */
-    protected function replaceInTemplate(string $template, array $keyValues): string
-    {
-        foreach ($keyValues as $varName => $value) {
-            $template = \str_replace('*{'.$varName.'}', Str::plural($value),
-                \str_replace('^{'.$varName.'}', \ucwords($value),
-                    \str_replace('${'.$varName.'}', $value, $template)
-                )
-            );
-        }
-
-        return $template;
-    }
-
-    /**
      * Add a rule to the resource.
      *
      * @param string|Rule $rule

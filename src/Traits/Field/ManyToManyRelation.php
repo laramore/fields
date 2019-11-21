@@ -31,18 +31,6 @@ trait ManyToManyRelation
     protected $pivotTo;
     protected $pivotFrom;
 
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('attach', ['model']);
-        $this->setProxy('detach', ['model']);
-        $this->setProxy('sync', ['model']);
-        $this->setProxy('toggle', ['model']);
-        $this->setProxy('syncWithoutDetaching', ['model']);
-        $this->setProxy('updateExistingPivot', ['model']);
-    }
-
     protected function setForeigns()
     {
     }

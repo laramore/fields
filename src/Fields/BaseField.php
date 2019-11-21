@@ -321,7 +321,6 @@ abstract class BaseField implements IsAField, IsConfigurable
     protected function locking()
     {
         $this->checkRules();
-        $this->setValidations();
         $this->setProxies();
     }
 
@@ -350,30 +349,57 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
-     * Define all validations.
-     *
-     * @return void
-     */
-    protected function setValidations()
-    {
-        if ($this->hasRule(Rules::notNullable())) {
-            $this->setValidation(NotNullable::class);
-        }
-    }
-
-    /**
      * Define all proxies for this field.
      *
      * @return void
      */
     protected function setProxies()
     {
-        $this->setProxy('getErrors', [], ['model'], $this->generateProxyMethodName('get', 'errors'));
-        $this->setProxy('isValid', [], ['model'], $this->generateProxyMethodName('is', 'valid'));
-        $this->setProxy('relate', ['instance'], ['model', 'builder'], Str::camel($this->name));
-        $this->setProxy('where', ['instance'], ['builder']);
-        $this->setProxy('whereNull', ['instance'], ['builder'], $this->generateProxyMethodName('doesntHave'));
-        $this->setProxy('whereNotNull', ['instance'], ['builder'], $this->generateProxyMethodName('has'));
+        $class = config('fields.proxies.classes.field');
+        $proxies = $this->getConfig('proxies');
+
+        if (!config('fields.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
+            return;
+        }
+
+        $proxyHandler = $this->getMeta()->getProxyHandler();
+        $default = config('fields.proxies.default');
+
+        foreach ($proxies as $methodName => $data) {
+            if (\is_null($data)) {
+                continue;
+            }
+
+            $data = \array_merge($default, $data);
+            $name = $this->replaceInTemplate($data['name_template'], [
+                'methodname' => $methodName,
+                'fieldname' => Str::camel($this->name),
+            ]);
+
+            $proxyHandler->add(new $class($name, $this, $methodName, $data['requirements'], $data['targets']));
+        }
+    }
+
+    /**
+     * Remplace in template with values.
+     *
+     * @param  string $template
+     * @param  array  $keyValues
+     * @return string
+     */
+    protected function replaceInTemplate(string $template, array $keyValues): string
+    {
+        foreach ($keyValues as $varName => $value) {
+            $template = \str_replace('*{'.$varName.'}', \ucwords(Str::plural($value)),
+                \str_replace('+{'.$varName.'}', Str::plural($value),
+                    \str_replace('^{'.$varName.'}', \ucwords($value),
+                        \str_replace('${'.$varName.'}', $value, $template)
+                    )
+                )
+            );
+        }
+
+        return $template;
     }
 
     /**
@@ -430,37 +456,6 @@ abstract class BaseField implements IsAField, IsConfigurable
         }
 
         return $validation;
-    }
-
-    /**
-     * Define one proxy.
-     *
-     * @param string $methodName
-     * @param array  $injections
-     * @param array  $on
-     * @param string $proxyName
-     * @return FieldProxy
-     */
-    protected function setProxy(string $methodName, array $injections=[], array $on=['model'], string $proxyName=null)
-    {
-        $name = ($proxyName ?? $this->generateProxyMethodName($methodName));
-        $proxy = new FieldProxy($name, $this, $methodName, $injections, $on);
-
-        $this->getMeta()->getProxyHandler()->add($proxy);
-
-        return $proxy;
-    }
-
-    /**
-     * Generate a proxy name.
-     *
-     * @param  string $firstPart
-     * @param  string $secondPart
-     * @return string
-     */
-    protected function generateProxyMethodName(string $firstPart, string $secondPart=''): string
-    {
-        return $firstPart.\ucfirst(Str::camel($this->name)).\ucfirst($secondPart);
     }
 
     /**

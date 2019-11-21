@@ -25,16 +25,25 @@ class Enum extends Field
     {
         parent::setProxies();
 
-        $this->setProxy('getElements', [], ['model'], $this->generateProxyMethodName('get', 'elements'));
-        $this->setProxy('getElementsValue', [], ['model'], Str::pluralStudly($this->generateProxyMethodName('get')));
-        $this->setProxy('is', ['value']);
-        $this->setProxy('isNot', ['value']);
+        $conf = config('fields.proxies');
+        $class = config('fields.proxies.classes.field');
+        $data = \array_merge($conf['default'], $this->getConfig('elements.proxy'));
 
-        foreach ($this->getElements()->all() as $value) {
-            $this->setProxy('is', ['value'], ['model'], $this->generateProxyMethodName('is'.Str::studly($value->name)))
-                ->setCallback(function ($element) use ($value) {
+        if ($conf['enabled'] && $data['enabled']) {
+            $proxyHandler = $this->getMeta()->getProxyHandler();
+
+            foreach ($this->getElements()->all() as $value) {
+                $name = $this->replaceInTemplate($this->getConfig('elements.proxy.name_template'), [
+                    'methodname' => 'is',
+                    'elementname' => Str::camel((string) $value),
+                    'fieldname' => Str::camel($this->name),
+                ]);
+
+                $proxyHandler->add($proxy = new $class($name, $this, 'is', $data['requirements'], $data['targets']));
+                $proxy->setCallback(function ($element) use ($value) {
                     return $this->is($value, $element);
                 });
+            }
         }
     }
 

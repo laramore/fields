@@ -34,14 +34,6 @@ class Password extends Pattern
         $this->setValidation(PatternValidation::class)->type('password');
     }
 
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('hash', []);
-        $this->setProxy('isCorrect', ['value'], ['model'], $this->generateProxyMethodName('is', 'correct'));
-    }
-
     protected function generatePattern()
     {
         return '/^\S*'.implode('', $this->getRegexRules()).'\S*$/';

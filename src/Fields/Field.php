@@ -67,19 +67,6 @@ abstract class Field extends BaseField
     }
 
     /**
-     * Define all validations.
-     *
-     * @return void
-     */
-    protected function setValidations()
-    {
-        parent::setValidations();
-
-        // TODO.
-        // $this->setValidation(Typed::class)->type($this->getType());.
-    }
-
-    /**
      * Add a where condition from this field.
      *
      * @param  Builder $builder

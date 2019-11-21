@@ -40,13 +40,6 @@ class Char extends Text
         }
     }
 
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('resize', []);
-    }
-
     public function maxLength(int $maxLength)
     {
         $this->needsToBeUnlocked();

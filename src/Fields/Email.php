@@ -52,13 +52,6 @@ class Email extends Pattern
         $this->setValidation(PatternValidation::class)->type('email');
     }
 
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('fix', []);
-    }
-
     public function transform($value)
     {
         $value = parent::transform($value);
