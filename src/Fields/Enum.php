@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laramore\Elements\{
     Enum as Element, EnumManager
 };
-use Types;
+use Laramore\Facades\Types;
 
 class Enum extends Field
 {

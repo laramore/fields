@@ -15,13 +15,15 @@ use Illuminate\Support\{
 };
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
+use Laramore\Facades\{
+    Metas, Operators
+};
 use Laramore\Fields\{
     Field, LinkField, Integer, Increment
 };
 use Laramore\Interfaces\{
     IsALaramoreModel, IsProxied
 };
-use Metas, Op;
 
 trait OneToOneRelation
 {

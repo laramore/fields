@@ -14,10 +14,10 @@ use Illuminate\Support\Collection;
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\CompositeField;
+use Laramore\Facades\Operations;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
 };
-use Op;
 
 class HasManyThrough extends LinkField
 {
@@ -105,9 +105,9 @@ class HasManyThrough extends LinkField
         return $builder->doesntHave($this->name, $boolean, $callback);
     }
 
-    public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=null, \Closure $callback=null)
+    public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Op::supOrEq()), ($count ?? 1), $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operations::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
@@ -128,7 +128,7 @@ class HasManyThrough extends LinkField
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
-        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? count($value)), function ($query) use ($attname, $value) {
+        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)), function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
         });
     }

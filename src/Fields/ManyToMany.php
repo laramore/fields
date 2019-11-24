@@ -16,7 +16,6 @@ use Laramore\Fields\LinkField;
 use Laramore\Fields\Constraint\Unique;
 use Laramore\Eloquent\FakePivot;
 use Laramore\Meta;
-use MetaManager;
 
 class ManyToMany extends CompositeField
 {

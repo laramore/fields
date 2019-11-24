@@ -12,13 +12,17 @@ namespace Laramore\Fields;
 
 use Laramore\Interfaces\IsALaramoreModel;
 use Laramore\Elements\Type;
-use Types;
 
 class Increment extends Integer
 {
+    /**
+     * Return the type object of the field.
+     *
+     * @return Type
+     */
     public function getType(): Type
     {
-        return Types::increment();
+        return $this->resolveType();
     }
 
     public function getPropertyKeys(): array

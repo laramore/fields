@@ -17,7 +17,6 @@ use Laramore\Fields\CompositeField;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
 };
-use Op;
 
 class HasMany extends HasOne
 {
@@ -57,7 +56,7 @@ class HasMany extends HasOne
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
-        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? count($value)), function ($query) use ($attname, $value) {
+        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)), function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
         });
     }

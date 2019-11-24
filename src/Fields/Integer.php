@@ -12,7 +12,9 @@ namespace Laramore\Fields;
 
 use Illuminate\Database\Eloquent\Model;
 use Laramore\Elements\Type;
-use Rules, Types;
+use Laramore\Facades\{
+    Rules, Types
+};
 
 class Integer extends Field
 {

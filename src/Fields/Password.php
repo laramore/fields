@@ -12,7 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Rules;
+use Laramore\Facades\Rules;
 
 class Password extends Pattern
 {

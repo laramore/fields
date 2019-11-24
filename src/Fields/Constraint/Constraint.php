@@ -10,10 +10,10 @@
 
 namespace Laramore\Fields\Constraint;
 
+use Illuminate\Support\Facades\Event;
 use Laramore\Exceptions\LockException;
 use Laramore\Fields\Field;
 use Laramore\Observers\BaseObserver;
-use Event;
 
 abstract class Constraint extends BaseObserver
 {
@@ -25,12 +25,11 @@ abstract class Constraint extends BaseObserver
     protected $constraintName;
 
     /**
-     * An observer needs at least a name and a Closure.
+     * An observer needs at least a name.
      *
      * @param array   $fields
      * @param string  $name
      * @param integer $priority
-     * @param Closure $callback
      */
     protected function __construct(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {

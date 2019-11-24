@@ -12,7 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
-use Rules;
+use Laramore\Facades\Rules;
 
 class Char extends Text
 {

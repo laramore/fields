@@ -12,7 +12,11 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Laramore\Elements\Type;
+use Laramore\Facades\{
+    Rules, Types
+};
 use Laramore\Interfaces\{
     IsAField, IsConfigurable
 };
@@ -24,7 +28,7 @@ use Laramore\Traits\HasLockedMacros;
 use Laramore\Proxies\FieldProxy;
 use Laramore\Meta;
 use Laramore\Exceptions\ConfigException;
-use Closure, Rules, Types, Event;
+use Closure;
 
 abstract class BaseField implements IsAField, IsConfigurable
 {

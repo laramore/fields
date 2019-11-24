@@ -21,8 +21,10 @@ use Laramore\Interfaces\IsProxied;
 use Laramore\Elements\{
     Type, Operator
 };
+use Laramore\Facades\{
+    Rules, Operations
+};
 use Laramore\Traits\Field\HasFieldConstraints;
-use Rules;
 
 abstract class Field extends BaseField
 {
@@ -148,11 +150,11 @@ abstract class Field extends BaseField
     public function relate(IsProxied $instance)
     {
         if ($instance instanceof Model) {
-            return $this->where($instance, Op::equal(), $instance->getAttribute($this->attname));
+            return $this->where($instance, Operations::equal(), $instance->getAttribute($this->attname));
         }
 
         if ($instance instanceof Builder) {
-            return $this->where($instance, Op::equal(), $instance->getModel()->getAttribute($this->attname));
+            return $this->where($instance, Operations::equal(), $instance->getModel()->getAttribute($this->attname));
         }
     }
 }

@@ -12,8 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Laramore\Elements\Type;
-use Rules, Types;
+use Laramore\Facades\Rules;
 
 class Timestamp extends Field
 {

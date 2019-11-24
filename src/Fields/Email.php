@@ -11,7 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
-use Rules;
+use Laramore\Facades\Rules;
 
 class Email extends Pattern
 {

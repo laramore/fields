@@ -15,7 +15,6 @@ use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\LinkField;
 use Laramore\Eloquent\FakePivot;
 use Laramore\Meta;
-use MetaManager;
 
 class MorphToOne extends CompositeField
 {

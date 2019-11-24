@@ -14,12 +14,12 @@ use Illuminate\Support\{
     Collection, Str
 };
 use Laramore\Elements\Operator;
+use Laramore\Facades\Operators;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\Field;
 use Laramore\Interfaces\{
     IsALaramoreModel, IsProxied
 };
-use Op;
 
 trait ManyToManyRelation
 {
@@ -99,9 +99,9 @@ trait ManyToManyRelation
         return $builder->doesntHave($this->name, $boolean, $callback);
     }
 
-    public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=null, \Closure $callback=null)
+    public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Op::supOrEq()), ($count ?? 1), $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operators::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)

@@ -11,8 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
-use Laramore\Elements\Type;
-use Rules, Types;
 
 class Text extends Field
 {

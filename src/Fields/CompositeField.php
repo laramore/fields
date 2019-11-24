@@ -15,13 +15,13 @@ use Illuminate\Support\{
 };
 use Laramore\Elements\Rule;
 use Laramore\Exceptions\ConfigException;
+use Laramore\Facades\Rules;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
 };
 use Laramore\Traits\Field\HasMultipleFieldConstraints;
 use Laramore\Meta;
-use Rules;
 
 abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARelationField
 {

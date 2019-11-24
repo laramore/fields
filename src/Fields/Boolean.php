@@ -11,7 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Database\Eloquent\Model;
-use Types;
+use Laramore\Facades\Types;
 
 class Boolean extends Field
 {
