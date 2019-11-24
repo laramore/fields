@@ -2,27 +2,6 @@
 
 use Laramore\Proxies\ProxyHandler;
 
-$commonProxies = [
-    'relate' => [
-        'name_template' => '${fieldname}',
-        'requirements' => ['instance'],
-    ],
-    'where' => [
-        'requirements' => ['instance'],
-        'targets' => [ProxyHandler::BUILDER_TYPE],
-    ],
-    'whereNull' => [
-        'name_template' => 'doesntHave^{fieldname}',
-        'requirements' => ['instance'],
-        'targets' => [ProxyHandler::BUILDER_TYPE],
-    ],
-    'whereNotNull' => [
-        'name_template' => 'has^{fieldname}',
-        'requirements' => ['instance'],
-        'targets' => [ProxyHandler::BUILDER_TYPE],
-    ],
-];
-
 return [
 
     /*
@@ -53,19 +32,47 @@ return [
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default proxies
+    |--------------------------------------------------------------------------
+    |
+    | This option defines all proxy configurations.
+    |
+    */
+
     'proxies' => [
         'enabled' => true,
 
         'manager' => Laramore\Proxies\ProxyManager::class,
 
-        'default' => [
+        'class' => Laramore\Proxies\FieldProxy::class,
+
+        'configurations' => [
             'targets' => [ProxyHandler::MODEL_TYPE],
             'requirements' => [],
             'name_template' => '${methodname}^{fieldname}',
         ],
 
-        'classes' => [
-            'field' => Laramore\Proxies\FieldProxy::class,
+        'common' => [
+            'relate' => [
+                'name_template' => '${fieldname}',
+                'requirements' => ['instance'],
+            ],
+            'where' => [
+                'requirements' => ['instance'],
+                'targets' => [ProxyHandler::BUILDER_TYPE],
+            ],
+            'whereNull' => [
+                'name_template' => 'doesntHave^{fieldname}',
+                'requirements' => ['instance'],
+                'targets' => [ProxyHandler::BUILDER_TYPE],
+            ],
+            'whereNotNull' => [
+                'name_template' => 'has^{fieldname}',
+                'requirements' => ['instance'],
+                'targets' => [ProxyHandler::BUILDER_TYPE],
+            ],
         ],
     ],
 
@@ -81,7 +88,7 @@ return [
     'configurations' => [
         Laramore\Fields\BelongsToMany::class => [
             'type' => 'link',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'attach' => [
                     'requirements' => ['instance'],
                 ],
@@ -100,31 +107,31 @@ return [
                 'updateExistingPivot' => [
                     'requirements' => ['instance'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\Boolean::class => [
             'type' => 'boolean',
             'type' => 'link',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'is' => [
                     'requirements' => ['value'],
                 ],
                 'isNot' => [
                     'requirements' => ['value'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\Char::class => [
             'type' => 'char',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'resize' => [],
-            ]),
+            ],
         ],
         Laramore\Fields\Email::class => [
             'type' => 'email',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'fix' => [],
-            ]),
+            ],
             'patterns' => [
                 'username' => '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*/iD',
                 'domain' => '/^(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD',
@@ -140,7 +147,7 @@ return [
                     'requirements' => ['value'],
                 ],
             ],
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'getElements' => [
                     'name_template' => 'get^{fieldname}Elements',
                 ],
@@ -153,7 +160,7 @@ return [
                 'isNot' => [
                     'requirements' => ['value'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\Foreign::class => [
             'type' => 'composite',
@@ -168,11 +175,11 @@ return [
             ],
             'field_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\HasMany::class => [
             'type' => 'link',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'attach' => [
                     'requirements' => ['instance'],
                 ],
@@ -191,11 +198,11 @@ return [
                 'updateExistingPivot' => [
                     'requirements' => ['instance'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\HasManyThrough::class => [
             'type' => 'link',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'attach' => [
                     'requirements' => ['instance'],
                 ],
@@ -214,24 +221,24 @@ return [
                 'updateExistingPivot' => [
                     'requirements' => ['instance'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\HasOne::class => [
             'type' => 'link',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\Increment::class => [
             'type' => 'increment',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'increment' => [
                     'requirements' => ['instance', 'value'],
                 ],
-            ]),
+            ],
         ],
         Laramore\Fields\Integer::class => [
             'type' => 'integer',
             'unsigned_type' => 'unsigned_integer',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\ManyToMany::class => [
             'type' => 'composite',
@@ -241,7 +248,7 @@ return [
             ],
             'field_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\MorphToOne::class => [
             'type' => 'composite',
@@ -251,7 +258,7 @@ return [
             ],
             'field_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\OneToOne::class => [
             'type' => 'composite',
@@ -266,18 +273,18 @@ return [
             ],
             'field_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\Password::class => [
             'type' => 'password',
-            'proxies' => \array_merge($commonProxies, [
+            'proxies' => [
                 'resize' => [],
                 'hash' => [],
                 'isCorrect' => [
                     'name_template' => 'is^{fieldname}Correct',
                     'requirements' => ['value'],
                 ],
-            ]),
+            ],
             'patterns' => [
                 'min_max_part' => '(?=\S{$min,$max})',
                 'one_lowercase_part' => '(?=\S*[a-z])',
@@ -288,15 +295,15 @@ return [
         ],
         Laramore\Fields\PrimaryId::class => [
             'type' => 'primary_id',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\Text::class => [
             'type' => 'text',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
         Laramore\Fields\Timestamp::class => [
             'type' => 'timestamp',
-            'proxies' => \array_merge($commonProxies, []),
+            'proxies' => [],
         ],
     ],
 

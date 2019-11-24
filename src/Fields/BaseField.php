@@ -357,15 +357,15 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     protected function setProxies()
     {
-        $class = config('fields.proxies.classes.field');
-        $proxies = $this->getConfig('proxies');
+        $class = config('fields.proxies.class');
+        $proxies = \array_merge(config('fields.proxies.common'), $this->getConfig('proxies'));
 
         if (!config('fields.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
             return;
         }
 
         $proxyHandler = $this->getMeta()->getProxyHandler();
-        $default = config('fields.proxies.default');
+        $default = config('fields.proxies.configurations');
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {
