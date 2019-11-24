@@ -12,7 +12,6 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Laramore\Validations\Pattern as PatternValidation;
 use Rules;
 
 class Password extends Pattern

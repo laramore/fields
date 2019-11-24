@@ -122,14 +122,6 @@ interface IsAField extends IsLockable, IsOwnable
     public function serialize($value);
 
     /**
-     * Cast the value in the correct format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function check($value);
-
-    /**
      * Add a where condition from this field.
      *
      * @param  Builder $builder

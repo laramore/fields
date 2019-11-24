@@ -11,7 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
-use Laramore\Validations\Pattern as PatternValidation;
 use Rules;
 
 class Email extends Pattern

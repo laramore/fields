@@ -10,8 +10,6 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Validations\Pattern as PatternValidation;
-
 abstract class Pattern extends Char
 {
     abstract public function getPattern(): string;

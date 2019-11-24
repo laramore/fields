@@ -12,7 +12,6 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
-use Laramore\Validations\Length;
 use Rules;
 
 class Char extends Text
@@ -24,20 +23,6 @@ class Char extends Text
         parent::__construct($rules);
 
         $this->maxLength = Schema::getFacadeRoot()::$defaultStringLength;
-    }
-
-    public function getMaxLength(): ?int
-    {
-        return $this->maxLength;
-    }
-
-    protected function setValidations()
-    {
-        parent::setValidations();
-
-        if (!\is_null($this->maxLength)) {
-            $this->setValidation(Length::class)->maxLength($this->maxLength);
-        }
     }
 
     public function maxLength(int $maxLength)

@@ -11,21 +11,11 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
-use Laramore\Validations\NotBlank;
 use Laramore\Elements\Type;
 use Rules, Types;
 
 class Text extends Field
 {
-    protected function setValidations()
-    {
-        parent::setValidations();
-
-        if ($this->hasRule(Rules::notBlank())) {
-            $this->setValidation(NotBlank::class);
-        }
-    }
-
     public function dry($value)
     {
         return $this->transform($value);

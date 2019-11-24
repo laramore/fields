@@ -22,7 +22,6 @@ use Laramore\Elements\{
     Type, Operator
 };
 use Laramore\Traits\Field\HasFieldConstraints;
-use Laramore\Validations\Typed;
 use Rules;
 
 abstract class Field extends BaseField

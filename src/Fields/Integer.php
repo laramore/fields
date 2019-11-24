@@ -11,7 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Database\Eloquent\Model;
-use Laramore\Validations\NotZero;
 use Laramore\Elements\Type;
 use Rules, Types;
 
@@ -66,15 +65,6 @@ class Integer extends Field
         $this->addRule(Rules::negative());
 
         return $this;
-    }
-
-    protected function setValidations()
-    {
-        parent::setValidations();
-
-        if ($this->hasRule(Rules::notZero())) {
-            $this->setValidation(NotZero::class);
-        }
     }
 
     public function dry($value)
