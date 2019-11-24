@@ -19,22 +19,7 @@ class Password extends Pattern
 {
     protected $minLength = 8;
 
-    public const REGEX_MIN_MAX_CARACTER = '(?=\S{$min,$max})';
-    public const REGEX_AT_LEAST_ONE_LOWERCASE = '(?=\S*[a-z])';
-    public const REGEX_AT_LEAST_ONE_UPPERCASE = '(?=\S*[A-Z])';
-    public const REGEX_AT_LEAST_ONE_NUMBER = '(?=\S*[\d])';
-    public const REGEX_AT_LEAST_ONE_SPECIAL = '(?=\S*[\W])';
-
-    protected function setValidations()
-    {
-        $this->setProperty('pattern', $this->generatePattern());
-
-        parent::setValidations();
-
-        $this->setValidation(PatternValidation::class)->type('password');
-    }
-
-    protected function generatePattern()
+    public function getPattern(): string
     {
         return '/^\S*'.implode('', $this->getRegexRules()).'\S*$/';
     }
@@ -42,26 +27,27 @@ class Password extends Pattern
     protected function getRegexRules()
     {
         $rules = [];
+        $patterns = $this->getConfig('patterns');
 
         if (!\is_null($this->minLength) || !\is_null($this->maxLength)) {
             $lengths = [$this->minLength ?: '', $this->maxLength ?: ''];
-            $rules[] = str_replace(['$min', '$max'], $lengths, static::REGEX_MIN_MAX_CARACTER);
+            $rules[] = str_replace(['$min', '$max'], $lengths, $patterns['min_max_part']);
         }
 
         if ($this->hasRule(Rules::needLowercase())) {
-            $rules[] = static::REGEX_AT_LEAST_ONE_LOWERCASE;
+            $rules[] = $patterns['one_lowercase_part'];
         }
 
         if ($this->hasRule(Rules::needUppercase())) {
-            $rules[] = static::REGEX_AT_LEAST_ONE_UPPERCASE;
+            $rules[] = $patterns['one_uppercase_part'];
         }
 
         if ($this->hasRule(Rules::needNumber())) {
-            $rules[] = static::REGEX_AT_LEAST_ONE_NUMBER;
+            $rules[] = $patterns['one_number_part'];
         }
 
         if ($this->hasRule(Rules::needSpecial())) {
-            $rules[] = static::REGEX_AT_LEAST_ONE_SPECIAL;
+            $rules[] = $patterns['one_special_part'];
         }
 
         return $rules;
@@ -69,15 +55,21 @@ class Password extends Pattern
 
     public function transform($value)
     {
-        return $this->hash(parent::transform($value));
+        $value = parent::transform($value);
+
+        if (\is_null($value)) {
+            return $value;
+        }
+
+        return $this->hash($value);
     }
 
-    public function hash($value)
+    public function hash(string $value)
     {
         return Hash::make($value);
     }
 
-    public function isCorrect($value, $password=null, bool $expected=true)
+    public function isCorrect(string $value, string $password=null, bool $expected=true)
     {
         return Hash::check($password, $value) === $expected;
     }

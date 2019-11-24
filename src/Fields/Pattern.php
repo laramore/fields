@@ -14,12 +14,10 @@ use Laramore\Validations\Pattern as PatternValidation;
 
 abstract class Pattern extends Char
 {
-    protected $pattern;
+    abstract public function getPattern(): string;
 
-    protected function setValidations()
+    public function getFlags()
     {
-        parent::setValidations();
-
-        $this->setValidation(PatternValidation::class)->pattern($this->pattern);
+        return null;
     }
 }
