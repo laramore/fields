@@ -20,6 +20,7 @@ use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
 };
 use Laramore\Traits\Field\HasRules;
+use Laramore\Traits\HasLockedMacros;
 use Laramore\Proxies\FieldProxy;
 use Laramore\Meta;
 use Laramore\Exceptions\{
@@ -32,11 +33,13 @@ use Closure, Rules, Types, Event;
 
 abstract class BaseField implements IsAField, IsConfigurable
 {
-    use IsOwned, IsLocked, HasProperties, HasRules {
+    use IsOwned, IsLocked, HasLockedMacros, HasProperties, HasRules {
         own as protected ownFromTrait;
         setOwner as protected setOwnerFromTrait;
         lock as protected lockFromTrait;
         setProperty as protected forceProperty;
+        HasLockedMacros::__call as protected callMacro;
+        HasProperties::__call as protected callProperty;
     }
 
     /**
@@ -433,29 +436,19 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
-     * Define or edit one validation.
+     * Return a property, or set one.
      *
-     * @param string  $validationClass
-     * @param integer $priority
-     * @return Validation
+     * @param  string $method
+     * @param  array  $args
+     * @return mixed
      */
-    protected function setValidation(string $validationClass, int $priority=null)
+    public function __call(string $method, array $args)
     {
-        $handler = $this->getMeta()->getValidationHandler();
-
-        if ($handler->has($this->name, $name = $validationClass::getStaticName())) {
-            $validation = $handler->get($this->name, $name);
-        } else {
-            if (\is_null($priority)) {
-                $validation = new $validationClass($this);
-            } else {
-                $validation = new $validationClass($this, $priority);
-            }
-
-            $handler->add($validation);
+        if (static::hasMacro($method)) {
+            return $this->callMacro($method, $args);
         }
 
-        return $validation;
+        return $this->callProperty($method, $args);
     }
 
     /**

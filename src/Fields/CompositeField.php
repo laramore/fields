@@ -565,6 +565,10 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     public function __call(string $method, array $args)
     {
+        if (static::hasMacro($method)) {
+            return $this->callMacro($method, $args);
+        }
+
         if (\preg_match('/^(.*)FieldAttribute$/', $method, $matches)) {
             return $this->callFieldAttributeMethod(\array_shift($args), $matches[1], $args);
         }

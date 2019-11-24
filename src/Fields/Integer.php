@@ -100,11 +100,6 @@ class Integer extends Field
                 $newValue = - $newValue;
             }
 
-            // TODO
-            if ($newValue !== $value && $this->hasRule(Rules::requireSign())) {
-                throw new \Exception('The value must be '.($this->hasRule(Rules::negative()) ? 'negative' : 'positive').' for the field `'.$this->name.'`');
-            }
-
             $value = $newValue;
         }
 
