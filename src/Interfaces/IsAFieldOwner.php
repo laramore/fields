@@ -115,15 +115,6 @@ interface IsAFieldOwner
     public function serializeFieldAttribute(BaseField $field, $value);
 
     /**
-     * Check if the value is correct for a specific field.
-     *
-     * @param BaseField $field
-     * @param mixed     $value
-     * @return mixed
-     */
-    public function checkFieldAttribute(BaseField $field, $value);
-
-    /**
      * Dry a value for a specific field.
      *
      * @param BaseField $field

@@ -26,8 +26,8 @@ class Enum extends Field
         parent::setProxies();
 
         $conf = config('fields.proxies');
-        $class = config('fields.proxies.classes.field');
-        $data = \array_merge($conf['default'], $this->getConfig('elements.proxy'));
+        $class = config('fields.proxies.class');
+        $data = \array_merge($conf['configurations'], $this->getConfig('elements.proxy'));
 
         if ($conf['enabled'] && $data['enabled']) {
             $proxyHandler = $this->getMeta()->getProxyHandler();
