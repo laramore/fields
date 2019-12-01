@@ -244,10 +244,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
             $rule = Rules::get($rule);
         }
 
-        foreach ($this->all() as $field) {
-            $field->addRule($rule);
-        }
-
         return parent::addRule($rule);
     }
 
@@ -261,10 +257,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     {
         if (\is_string($rule)) {
             $rule = Rules::get($rule);
-        }
-
-        foreach ($this->all() as $field) {
-            $field->removeRule($rule);
         }
 
         return parent::removeRule($rule);

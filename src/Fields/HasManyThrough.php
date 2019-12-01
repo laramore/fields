@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\CompositeField;
-use Laramore\Facades\Operations;
+use Laramore\Facades\Operators;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
 };
@@ -107,7 +107,7 @@ class HasManyThrough extends LinkField
 
     public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Operations::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operators::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)

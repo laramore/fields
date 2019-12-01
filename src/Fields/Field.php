@@ -22,7 +22,7 @@ use Laramore\Elements\{
     Type, Operator
 };
 use Laramore\Facades\{
-    Rules, Operations
+    Rules, Operators
 };
 use Laramore\Traits\Field\HasFieldConstraints;
 
@@ -150,11 +150,11 @@ abstract class Field extends BaseField
     public function relate(IsProxied $instance)
     {
         if ($instance instanceof Model) {
-            return $this->where($instance, Operations::equal(), $instance->getAttribute($this->attname));
+            return $this->where($instance, Operators::equal(), $instance->getAttribute($this->attname));
         }
 
         if ($instance instanceof Builder) {
-            return $this->where($instance, Operations::equal(), $instance->getModel()->getAttribute($this->attname));
+            return $this->where($instance, Operators::equal(), $instance->getModel()->getAttribute($this->attname));
         }
     }
 }
