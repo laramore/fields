@@ -1,6 +1,6 @@
 <?php
 /**
- * Create an Observer to add a \Closure on a specific model event.
+ * A proxy defines the field to use with which method to call.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -14,8 +14,13 @@ use Laramore\Fields\BaseField;
 use Laramore\Traits\IsLocked;
 use Closure;
 
-class FieldProxy extends BaseProxy
+class Proxy extends BaseProxy
 {
+    /**
+     * The field to use for the call.
+     * 
+     * @var BaseField
+     */
     protected $field;
 
     /**
@@ -48,11 +53,22 @@ class FieldProxy extends BaseProxy
         return $this;
     }
 
-    public function getField()
+    /**
+     * Return the proxy field.
+     *
+     * @return BaseField
+     */
+    public function getField(): BaseField
     {
         return $this->field;
     }
 
+    /**
+     * Resolve one time the callback and save it so it can be callable.
+     *
+     * @param mixed ...$args
+     * @return mixed
+     */
     public function resolveCallback(...$args)
     {
         $field = $this->getField();

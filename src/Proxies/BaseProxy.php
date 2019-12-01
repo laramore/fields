@@ -17,7 +17,18 @@ use Closure;
 
 abstract class BaseProxy extends BaseObserver
 {
+    /**
+     * The method to call.
+     *
+     * @var string
+     */
     protected $methodName;
+
+    /**
+     * List of all variables to inject.
+     *
+     * @var array
+     */
     protected $injections;
 
     /**
