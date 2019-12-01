@@ -11,7 +11,9 @@
 namespace Laramore\Fields;
 
 use Laramore\Meta;
-use Laramore\Interfaces\IsARelationField;
+use Laramore\Interfaces\{
+    IsAnOwner, IsARelationField
+};
 use Laramore\Fields\{
     BaseField, CompositeField
 };
@@ -21,12 +23,12 @@ abstract class LinkField extends BaseField implements IsARelationField
     /**
      * Set the owner.
      *
-     * @param object $owner
+     * @param IsAnOwner $owner
      * @return void
      */
-    protected function setOwner(object $owner)
+    protected function setOwner(IsAnOwner $owner)
     {
-        if (is_null($this->off)) {
+        if (\is_null($this->off)) {
             throw new \Exception('You need to specify `off`');
         }
 

@@ -16,7 +16,7 @@ use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel, IsARelationField
 };
 
-interface IsAFieldOwner
+interface IsAFieldOwner extends IsAnOwner
 {
     /**
      * Return the get value for a specific field.

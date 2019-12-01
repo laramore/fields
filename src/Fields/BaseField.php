@@ -18,7 +18,7 @@ use Laramore\Facades\{
     Rules, Types
 };
 use Laramore\Interfaces\{
-    IsAField, IsConfigurable
+    IsAField, IsConfigurable, IsAnOwner
 };
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
@@ -257,10 +257,10 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Set the owner.
      *
-     * @param object $owner
+     * @param IsAnOwner $owner
      * @return void
      */
-    protected function setOwner(object $owner)
+    protected function setOwner(IsAnOwner $owner)
     {
         $this->setOwnerFromTrait($owner);
 
@@ -276,11 +276,11 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Assign a unique owner to this instance.
      *
-     * @param  object $owner
+     * @param  IsAnOwner $owner
      * @param  string $name
      * @return self
      */
-    public function own(object $owner, string $name)
+    public function own(IsAnOwner $owner, string $name)
     {
         $name = static::parseName($name);
 
