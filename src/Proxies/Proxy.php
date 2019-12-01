@@ -18,7 +18,7 @@ class Proxy extends BaseProxy
 {
     /**
      * The field to use for the call.
-     * 
+     *
      * @var BaseField
      */
     protected $field;

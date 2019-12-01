@@ -57,7 +57,7 @@ abstract class Field extends BaseField
     protected function setName(string $name, string $attname=null)
     {
         parent::setName($name);
-        
+
         // If no attribute name have been set by the user, define ours based on the name.
         if (\is_null($this->attname)) {
             $this->setAttname(static::parseAttname($name));
