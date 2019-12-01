@@ -96,7 +96,9 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function getConfigPath(string $path=null)
     {
-        return 'fields.configurations.'.static::class.(\is_null($path) ? '' : '.'.$path);
+        $name = Str::snake((new \ReflectionClass($this))->getShortName());
+        
+        return 'fields.configurations.'.$name.(\is_null($path) ? '' : '.'.$path);
     }
 
     /**

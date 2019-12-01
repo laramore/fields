@@ -46,7 +46,7 @@ return [
 
         'manager' => Laramore\Proxies\ProxyManager::class,
 
-        'class' => Laramore\Proxies\FieldProxy::class,
+        'class' => Laramore\Proxies\Proxy::class,
 
         'configurations' => [
             'targets' => [ProxyHandler::MODEL_TYPE],
@@ -86,7 +86,7 @@ return [
     */
 
     'configurations' => [
-        Laramore\Fields\BelongsToMany::class => [
+        'belongs_to_many' => [
             'type' => 'link',
             'proxies' => [
                 'attach' => [
@@ -109,7 +109,7 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\Boolean::class => [
+        'boolean' => [
             'type' => 'boolean',
             'type' => 'link',
             'proxies' => [
@@ -121,13 +121,13 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\Char::class => [
+        'char' => [
             'type' => 'char',
             'proxies' => [
                 'resize' => [],
             ],
         ],
-        Laramore\Fields\Email::class => [
+        'Email' => [
             'type' => 'email',
             'proxies' => [
                 'fix' => [],
@@ -138,7 +138,7 @@ return [
                 'email' => '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD',
             ]
         ],
-        Laramore\Fields\Enum::class => [
+        'enum' => [
             'type' => 'enum',
             'elements' => [
                 'proxy' => [
@@ -162,7 +162,7 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\Foreign::class => [
+        'foreign' => [
             'type' => 'composite',
             'fields' => [
                 'id' => [
@@ -177,7 +177,7 @@ return [
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
-        Laramore\Fields\HasMany::class => [
+        'has_many' => [
             'type' => 'link',
             'proxies' => [
                 'attach' => [
@@ -200,7 +200,7 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\HasManyThrough::class => [
+        'has_many_through' => [
             'type' => 'link',
             'proxies' => [
                 'attach' => [
@@ -223,11 +223,11 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\HasOne::class => [
+        'has_one' => [
             'type' => 'link',
             'proxies' => [],
         ],
-        Laramore\Fields\Increment::class => [
+        'increment' => [
             'type' => 'increment',
             'proxies' => [
                 'increment' => [
@@ -235,12 +235,12 @@ return [
                 ],
             ],
         ],
-        Laramore\Fields\Integer::class => [
+        'integer' => [
             'type' => 'integer',
             'unsigned_type' => 'unsigned_integer',
             'proxies' => [],
         ],
-        Laramore\Fields\ManyToMany::class => [
+        'many_to_many' => [
             'type' => 'composite',
             'fields' => [],
             'links' => [
@@ -250,7 +250,7 @@ return [
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
-        Laramore\Fields\MorphToOne::class => [
+        'morph_to_one' => [
             'type' => 'composite',
             'fields' => [],
             'links' => [
@@ -260,7 +260,7 @@ return [
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
-        Laramore\Fields\OneToOne::class => [
+        'one_to_one' => [
             'type' => 'composite',
             'fields' => [
                 'id' => [
@@ -275,7 +275,7 @@ return [
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
-        Laramore\Fields\Password::class => [
+        'password' => [
             'type' => 'password',
             'proxies' => [
                 'resize' => [],
@@ -293,15 +293,15 @@ return [
                 'one_special_part' => '(?=\S*[\W])',
             ]
         ],
-        Laramore\Fields\PrimaryId::class => [
+        'primary_id' => [
             'type' => 'primary_id',
             'proxies' => [],
         ],
-        Laramore\Fields\Text::class => [
+        'text' => [
             'type' => 'text',
             'proxies' => [],
         ],
-        Laramore\Fields\Timestamp::class => [
+        'timestamp' => [
             'type' => 'timestamp',
             'proxies' => [],
         ],
