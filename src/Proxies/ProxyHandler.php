@@ -42,14 +42,13 @@ class ProxyHandler extends BaseHandler
             $multiProxy = $this->get($name);
 
             if (!($multiProxy instanceof MultiProxy)) {
-                dump($multiProxy);
                 throw new \LogicException("Conflict between field method names [$name]");
             }
         } else {
             \array_push($proxys, $multiProxy = new MultiProxy($name));
         }
 
-        $multiProxy->on($proxy);
+        $multiProxy->addProxy($proxy);
 
         return $this;
     }

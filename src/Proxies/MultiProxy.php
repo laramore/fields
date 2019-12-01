@@ -1,6 +1,6 @@
 <?php
 /**
- * Create an Observer to add a \Closure on a specific model event.
+ * Groupe multiple proxies and use one of them based on the first argument.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -16,6 +16,13 @@ use Closure;
 
 class MultiProxy extends BaseProxy
 {
+    /**
+     * List of all proxies that this multi proxy can lead.
+     *
+     * @var array
+     */
+    protected $proxies = [];
+
     /**
      * An observer needs at least a name and a Closure.
      *
@@ -36,6 +43,25 @@ class MultiProxy extends BaseProxy
     public function getMethodName(): string
     {
         return $this->getName();
+    }
+
+    public function addProxy(Proxy $proxy)
+    {
+        $this->proxies[$proxy->getField()->getName()] = $proxy;
+
+        $this->observed = \array_unique(\array_merge($this->all(), $proxy->all()));
+
+        return $this;
+    }
+
+    public function getProxy(string $fieldname)
+    {
+        return $this->proxies[$fieldname];
+    }
+
+    public function hasProxy(string $fieldname)
+    {
+        return isset($this->proxies[$fieldname]);
     }
 
     /**
