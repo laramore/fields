@@ -11,12 +11,9 @@
 namespace Laramore\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Laramore\Traits\Provider\MergesConfig;
 
 class FieldsProvider extends ServiceProvider
 {
-    use MergesConfig;
-
     /**
      * Before booting, create our definition for migrations.
      *
