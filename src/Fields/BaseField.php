@@ -23,8 +23,9 @@ use Laramore\Interfaces\{
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
 };
-use Laramore\Traits\Field\HasRules;
-use Laramore\Traits\HasLockedMacros;
+use Laramore\Traits\{
+    HasRules, HasLockedMacros
+};
 use Laramore\Proxies\FieldProxy;
 use Laramore\Meta;
 use Laramore\Exceptions\ConfigException;
@@ -97,7 +98,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     public function getConfigPath(string $path=null)
     {
         $name = Str::snake((new \ReflectionClass($this))->getShortName());
-        
+
         return 'fields.configurations.'.$name.(\is_null($path) ? '' : '.'.$path);
     }
 
