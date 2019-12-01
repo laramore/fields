@@ -283,7 +283,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected function ownFields()
     {
         $keyValues = [
-            'modelname' => strtolower($this->getMeta()->getModelClassName()),
+            'modelname' => static::parseName($this->getMeta()->getModelClassName()),
             'name' => $this->name,
         ];
 
@@ -303,7 +303,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected function ownLinks()
     {
         $keyValues = [
-            'modelname' => strtolower($this->getMeta()->getModelClassName()),
+            'modelname' => static::parseName($this->getMeta()->getModelClassName()),
             'name' => $this->name,
         ];
 

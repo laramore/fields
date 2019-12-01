@@ -38,18 +38,29 @@ abstract class Field extends BaseField
     protected $attname;
 
     /**
+     * Parse the attribute attname.
+     *
+     * @param  string $attname
+     * @return string
+     */
+    public static function parseAttname(string $attname): string
+    {
+        return Str::snake($attname);
+    }
+
+    /**
      * Define the name property.
      *
      * @param  string $name
      * @return self
      */
-    protected function setName(string $name)
+    protected function setName(string $name, string $attname=null)
     {
         parent::setName($name);
-
-        // The attribute name is by default the same as the field name.
-        if (is_null($this->attname)) {
-            $this->attname = Str::snake($name);
+        
+        // If no attribute name have been set by the user, define ours based on the name.
+        if (\is_null($this->attname)) {
+            $this->setAttname(static::parseAttname($name));
         }
 
         return $this;

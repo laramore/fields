@@ -243,6 +243,17 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
+     * Parse the attribute name.
+     *
+     * @param  string $name
+     * @return string
+     */
+    public static function parseName(string $name): string
+    {
+        return Str::camel($name);
+    }
+
+    /**
      * Set the owner.
      *
      * @param object $owner
@@ -270,6 +281,8 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function own(object $owner, string $name)
     {
+        $name = static::parseName($name);
+
         $owning = Event::until('fields.owning', $this, $owner, $name);
 
         if ($owning === false) {
