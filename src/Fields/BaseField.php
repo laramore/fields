@@ -277,7 +277,7 @@ abstract class BaseField implements IsAField, IsConfigurable
      * Assign a unique owner to this instance.
      *
      * @param  IsAnOwner $owner
-     * @param  string $name
+     * @param  string    $name
      * @return self
      */
     public function own(IsAnOwner $owner, string $name)

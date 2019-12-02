@@ -127,7 +127,7 @@ return [
                 'resize' => [],
             ],
         ],
-        'Email' => [
+        'email' => [
             'type' => 'email',
             'proxies' => [
                 'fix' => [],
