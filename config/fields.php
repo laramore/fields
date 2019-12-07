@@ -111,7 +111,6 @@ return [
         ],
         'boolean' => [
             'type' => 'boolean',
-            'type' => 'link',
             'proxies' => [
                 'is' => [
                     'requirements' => ['value'],
