@@ -54,14 +54,19 @@ class MultiProxy extends BaseProxy
         return $this;
     }
 
+    public function hasProxy(string $fieldname)
+    {
+        return isset($this->proxies[$fieldname]);
+    }
+
     public function getProxy(string $fieldname)
     {
         return $this->proxies[$fieldname];
     }
 
-    public function hasProxy(string $fieldname)
+    public function getProxies()
     {
-        return isset($this->proxies[$fieldname]);
+        return $this->proxies;
     }
 
     /**
