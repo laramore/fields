@@ -33,7 +33,7 @@ class Enum extends Field
             $proxyHandler = $this->getMeta()->getProxyHandler();
 
             foreach ($this->getElements()->all() as $value) {
-                $name = $this->replaceInTemplate($this->getConfig('elements.proxy.name_template'), [
+                $name = static::replaceInTemplate($this->getConfig('elements.proxy.name_template'), [
                     'methodname' => 'is',
                     'elementname' => Str::camel((string) $value),
                     'fieldname' => Str::camel($this->name),

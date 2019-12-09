@@ -290,7 +290,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         foreach ($this->fields as $fieldname => $field) {
             $keyValues['fieldname'] = $fieldname;
             $template = ($this->fieldsName[$fieldname] ?? $this->getConfig('field_name_template'));
-            $name = $this->replaceInTemplate($template, $keyValues);
+            $name = static::replaceInTemplate($template, $keyValues);
             $this->fields[$fieldname] = $field->own($this, $name);
         }
     }
@@ -310,7 +310,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         foreach ($this->links as $linkname => $link) {
             $keyValues['linkname'] = $linkname;
             $template = ($this->linksName[$linkname] ?? $this->getConfig('link_name_template'));
-            $name = $this->replaceInTemplate($template, $keyValues);
+            $name = static::replaceInTemplate($template, $keyValues);
             $this->links[$linkname] = $link->own($this, $name);
         }
     }

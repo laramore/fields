@@ -11,7 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Laramore\Elements\Type;
 use Laramore\Facades\{
@@ -26,10 +25,8 @@ use Laramore\Traits\{
 use Laramore\Traits\{
     HasRules, HasLockedMacros
 };
-use Laramore\Proxies\FieldProxy;
 use Laramore\Meta;
 use Laramore\Exceptions\ConfigException;
-use Closure;
 
 abstract class BaseField implements IsAField, IsConfigurable
 {
@@ -193,6 +190,17 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
+     * Parse the name value.
+     *
+     * @param  string $name
+     * @return string
+     */
+    public static function parseName(string $name): string
+    {
+        return static::replaceInTemplate(config('fields.name_template'), compact('name'));
+    }
+
+    /**
      * Define the name of the field.
      *
      * @param  string $name
@@ -241,17 +249,6 @@ abstract class BaseField implements IsAField, IsConfigurable
         $this->defineProperty('default', $value);
 
         return $this;
-    }
-
-    /**
-     * Parse the attribute name.
-     *
-     * @param  string $name
-     * @return string
-     */
-    public static function parseName(string $name): string
-    {
-        return Str::camel($name);
     }
 
     /**
@@ -389,7 +386,7 @@ abstract class BaseField implements IsAField, IsConfigurable
             }
 
             $data = \array_merge($default, $data);
-            $name = $this->replaceInTemplate($data['name_template'], [
+            $name = static::replaceInTemplate($data['name_template'], [
                 'methodname' => $methodName,
                 'fieldname' => Str::camel($this->name),
             ]);
@@ -405,16 +402,15 @@ abstract class BaseField implements IsAField, IsConfigurable
      * @param  array  $keyValues
      * @return string
      */
-    protected function replaceInTemplate(string $template, array $keyValues): string
+    public static function replaceInTemplate(string $template, array $keyValues): string
     {
-        foreach ($keyValues as $varName => $value) {
-            $template = \str_replace('*{'.$varName.'}', \ucwords(Str::plural($value)),
-                \str_replace('+{'.$varName.'}', Str::plural($value),
-                    \str_replace('^{'.$varName.'}', \ucwords($value),
-                        \str_replace('${'.$varName.'}', $value, $template)
-                    )
-                )
-            );
+        foreach ($keyValues as $key => $value) {
+            $template = \str_replace([
+                '${'.$key.'}', '+{'.$key.'}', '^{'.$key.'}', '*{'.$key.'}', '_{'.$key.'}', '-{'.$key.'}',
+            ], [
+                $value, Str::plural($value), \ucwords($value), \ucwords(Str::plural($value)),
+                Str::snake($value), Str::camel($value)
+            ], $template);
         }
 
         return $template;
@@ -464,5 +460,15 @@ abstract class BaseField implements IsAField, IsConfigurable
         }
 
         return $this->callProperty($method, $args);
+    }
+
+    /**
+     * Return the native value of this field.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getProperty('name');
     }
 }

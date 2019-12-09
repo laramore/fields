@@ -45,7 +45,7 @@ abstract class Field extends BaseField
      */
     public static function parseAttname(string $attname): string
     {
-        return Str::snake($attname);
+        return static::replaceInTemplate(config('fields.attname_template'), compact('attname'));
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class Field extends BaseField
      * @param  string $name
      * @return self
      */
-    protected function setName(string $name, string $attname=null)
+    protected function setName(string $name, string $attname = null)
     {
         parent::setName($name);
 
@@ -167,5 +167,15 @@ abstract class Field extends BaseField
         if ($instance instanceof Builder) {
             return $this->where($instance, Operators::equal(), $instance->getModel()->getAttribute($this->attname));
         }
+    }
+
+    /**
+     * Return the native value of this field.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getProperty('attname');
     }
 }

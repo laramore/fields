@@ -6,6 +6,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Name templates for the fields generation
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the template used to generate the name and the
+    | attribute name, if existant, of a field.
+    |
+    */
+
+    'name_template' => '-{name}',
+    'attname_template' => '_{attname}',
+
+    /*
+    |--------------------------------------------------------------------------
     | Default constraints
     |--------------------------------------------------------------------------
     |
