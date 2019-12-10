@@ -90,10 +90,10 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Generate a field by its class name.
      *
-     * @param  array|string|Field $field
-     * @return Field
+     * @param  array|string|AttributeField $field
+     * @return AttributeField
      */
-    protected function generateField($field): Field
+    protected function generateField($field): AttributeField
     {
         if (\is_array($field)) {
             return \array_shift($field)::field(...$field);
@@ -136,9 +136,9 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * Return the field with the given name.
      *
      * @param  string $name
-     * @return Field
+     * @return AttributeField
      */
-    public function getField(string $name): Field
+    public function getField(string $name): AttributeField
     {
         if ($this->hasField($name)) {
             return $this->getFields()[$name];
@@ -172,7 +172,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * Return the link with the given name.
      *
      * @param  string $name
-     * @return Field
+     * @return AttributeField
      */
     public function getLink(string $name)
     {
@@ -208,7 +208,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * Return the field or link with the given name.
      *
      * @param  string $name
-     * @return Field
+     * @return AttributeField
      */
     public function get(string $name)
     {

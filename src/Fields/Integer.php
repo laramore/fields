@@ -16,7 +16,7 @@ use Laramore\Facades\{
     Rules, Types
 };
 
-class Integer extends Field
+class Integer extends AttributeField
 {
     /**
      * Return the type object of the field.

@@ -10,7 +10,7 @@
 
 namespace Laramore\Traits\Field;
 
-use Laramore\Fields\Field;
+use Laramore\Fields\AttributeField;
 use Laramore\Fields\Constraint\{
     Primary, Index, Unique, Foreign
 };
@@ -102,12 +102,13 @@ trait HasFieldConstraints
     /**
      * Define a unique constraint.
      *
+     * @param  AttributeField $field
      * @param  string  $name
      * @param  string  $class
      * @param  integer $priority
      * @return self
      */
-    public function foreign(Field $field, string $name=null, string $class=null, int $priority=Foreign::MEDIUM_PRIORITY)
+    public function foreign(AttributeField $field, string $name=null, string $class=null, int $priority=Foreign::MEDIUM_PRIORITY)
     {
         $this->needsToBeUnlocked();
 

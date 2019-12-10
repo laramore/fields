@@ -17,7 +17,7 @@ use Laramore\Elements\{
 };
 use Laramore\Facades\Types;
 
-class Enum extends Field
+class Enum extends AttributeField
 {
     protected $elements;
 

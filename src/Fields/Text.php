@@ -12,7 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
 
-class Text extends Field
+class Text extends AttributeField
 {
     public function dry($value)
     {

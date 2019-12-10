@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a basic field.
+ * Define an attribute field.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -26,7 +26,7 @@ use Laramore\Facades\{
 };
 use Laramore\Traits\Field\HasFieldConstraints;
 
-abstract class Field extends BaseField
+abstract class AttributeField extends BaseField
 {
     use HasFieldConstraints;
 

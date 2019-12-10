@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Laramore\Facades\Rules;
 
-class Timestamp extends Field
+class Timestamp extends AttributeField
 {
     protected function checkRules()
     {

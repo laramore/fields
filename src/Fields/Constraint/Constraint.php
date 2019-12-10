@@ -12,7 +12,7 @@ namespace Laramore\Fields\Constraint;
 
 use Illuminate\Support\Facades\Event;
 use Laramore\Exceptions\LockException;
-use Laramore\Fields\Field;
+use Laramore\Fields\AttributeField;
 use Laramore\Observers\BaseObserver;
 
 abstract class Constraint extends BaseObserver
@@ -69,7 +69,7 @@ abstract class Constraint extends BaseObserver
     {
         $tableName = $this->getMainTableName();
 
-        return $tableName.'_'.implode('_', \array_map(function (Field $field) {
+        return $tableName.'_'.implode('_', \array_map(function (AttributeField $field) {
             return $field->getAttname();
         }, $this->getFields())).'_'.$this->constraintName;
     }
@@ -90,7 +90,7 @@ abstract class Constraint extends BaseObserver
 
     public function getTableNames()
     {
-        return \array_unique(\array_map(function (Field $field) {
+        return \array_unique(\array_map(function (AttributeField $field) {
             return $field->getMeta()->getTableName();
         }, $this->all()));
     }

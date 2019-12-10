@@ -16,7 +16,7 @@ use Illuminate\Support\{
 use Laramore\Elements\Operator;
 use Laramore\Facades\Operators;
 use Laramore\Eloquent\Builder;
-use Laramore\Fields\Field;
+use Laramore\Fields\AttributeField;
 use Laramore\Interfaces\{
     IsALaramoreModel, IsProxied
 };

@@ -10,20 +10,12 @@
 
 namespace Laramore\Traits\Field;
 
-use Illuminate\Support\{
-    Collection, Str
-};
+use Illuminate\Support\Collection;
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
-use Laramore\Facades\{
-    Metas, Operators
-};
-use Laramore\Fields\{
-    Field, LinkField, Integer, Increment
-};
-use Laramore\Interfaces\{
-    IsALaramoreModel, IsProxied
-};
+use Laramore\Facades\Metas;
+use Laramore\Fields\LinkField;
+use Laramore\Interfaces\IsALaramoreModel;
 
 trait OneToOneRelation
 {

@@ -11,7 +11,7 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Exceptions\LockException;
-use Laramore\Fields\Field;
+use Laramore\Fields\AttributeField;
 
 class Foreign extends Constraint
 {
@@ -34,12 +34,12 @@ class Foreign extends Constraint
         }
     }
 
-    public function getOffField(): Field
+    public function getOffField(): AttributeField
     {
         return $this->all()[0];
     }
 
-    public function getOnField(): Field
+    public function getOnField(): AttributeField
     {
         return $this->all()[1];
     }
