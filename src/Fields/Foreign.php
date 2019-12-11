@@ -27,7 +27,7 @@ class Foreign extends CompositeField
 
     public function consume(IsALaramoreModel $model, $value)
     {
-        $model->setAttribute($this->getField('id')->attname, $value[$this->to]);
+        $model->setAttribute($this->getAttribute('id')->attname, $value[$this->to]);
 
         return $value;
     }

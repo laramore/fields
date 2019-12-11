@@ -54,7 +54,7 @@ abstract class AttributeField extends BaseField
      * @param  string $name
      * @return self
      */
-    protected function setName(string $name, string $attname = null)
+    protected function setName(string $name, string $attname=null)
     {
         parent::setName($name);
 
@@ -64,6 +64,17 @@ abstract class AttributeField extends BaseField
         }
 
         return $this;
+    }
+
+    /**
+     * Return the native value of this field.
+     * Commonly, its attname.
+     *
+     * @return string
+     */
+    public function getNative(): string
+    {
+        return $this->attname;
     }
 
     /**
@@ -167,15 +178,5 @@ abstract class AttributeField extends BaseField
         if ($instance instanceof Builder) {
             return $this->where($instance, Operators::equal(), $instance->getModel()->getAttribute($this->attname));
         }
-    }
-
-    /**
-     * Return the native value of this field.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getProperty('attname');
     }
 }
