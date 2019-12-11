@@ -46,21 +46,6 @@ abstract class LinkField extends BaseField implements IsARelationField
     {
         parent::owned();
 
-        $this->getMeta()->set($this->name, $this);
-
-    }
-
-    /**
-     * Check all properties and rules before locking the field.
-     *
-     * @return void
-     */
-    protected function checkRules()
-    {
-        parent::checkRules();
-
-        if ($this->hasProperty('attname')) {
-            throw new \Exception('The attribute name property cannot be set for a link field');
-        }
+        $this->getMeta()->setLink($this->name, $this);
     }
 }

@@ -103,9 +103,9 @@ trait HasFieldConstraints
      * Define a unique constraint.
      *
      * @param  AttributeField $field
-     * @param  string  $name
-     * @param  string  $class
-     * @param  integer $priority
+     * @param  string         $name
+     * @param  string         $class
+     * @param  integer        $priority
      * @return self
      */
     public function foreign(AttributeField $field, string $name=null, string $class=null, int $priority=Foreign::MEDIUM_PRIORITY)

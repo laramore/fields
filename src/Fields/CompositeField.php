@@ -10,9 +10,7 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\{
-	Arr, Str
-};
+use Illuminate\Support\Arr;
 use Laramore\Elements\Rule;
 use Laramore\Exceptions\ConfigException;
 use Laramore\Facades\Rules;
@@ -21,15 +19,37 @@ use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
 };
 use Laramore\Traits\Field\HasMultipleFieldConstraints;
-use Laramore\Meta;
 
 abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARelationField
 {
     use HasMultipleFieldConstraints;
 
-    protected $fields = [];
+    /**
+     * Attribute fields managed by this composite fields.
+     *
+     * @var array
+     */
+    protected $attributes = [];
+
+    /**
+     * Link fields managed by this composite fields.
+     *
+     * @var array
+     */
     protected $links = [];
-    protected $fieldsName = [];
+
+    /**
+     * Name of each attribute fields.
+     *
+     * @var array
+     */
+    protected $attributesName = [];
+
+    /**
+     * Name of each link fields.
+     *
+     * @var array
+     */
     protected $linksName = [];
 
     /**
@@ -38,25 +58,25 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * ex: Foreign::field()->on(User::class) insteadof (new Foreign)->on(User::class).
      *
      * @param array $rules
-     * @param array $fields Allow the user to define sub fields.
-     * @param array $links  Allow the user to define sub links.
+     * @param array $attributes Allow the user to define sub fields.
+     * @param array $links      Allow the user to define sub links.
      */
-    protected function __construct(array $rules=null, array $fields=null, array $links=null)
+    protected function __construct(array $rules=null, array $attributes=null, array $links=null)
     {
         parent::__construct($rules);
 
-        $fields = ($fields ?: $this->getConfig('fields'));
+        $attributes = ($attributes ?: $this->getConfig('attributes'));
 
-        if (\is_null($fields) || (\count($fields) && !Arr::isAssoc($fields))) {
-            throw new ConfigException($this->getConfigPath('fields'), 'any associative array of fields', $fields);
+        if (\is_null($attributes) || (\count($attributes) && !Arr::isAssoc($attributes))) {
+            throw new ConfigException($this->getConfigPath('attributes'), 'any associative array of fields', $attributes);
         }
 
-        foreach ($fields as $key => $field) {
+        foreach ($attributes as $key => $attribute) {
             if (!\is_string($key)) {
-                throw new \Exception('The composite fields need names');
+                throw new \Exception('Attibute fields need names');
             }
 
-            $this->fields[$key] = $this->generateField($field);
+            $this->attributes[$key] = $this->generateAttribute($attribute);
         }
 
         $links = ($links ?: $this->getConfig('links'));
@@ -67,7 +87,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
 
         foreach ($links ?: $this->getConfig('links') as $key => $link) {
             if (!\is_string($key)) {
-                throw new \Exception('The composite fields need names');
+                throw new \Exception('Link fields need names');
             }
 
             $this->links[$key] = $this->generateLink($link);
@@ -78,29 +98,29 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * Call the constructor and generate the field.
      *
      * @param array $rules
-     * @param array $fields Allow the user to define sub fields.
-     * @param array $links  Allow the user to define sub links.
+     * @param array $attributes Allow the user to define sub fields.
+     * @param array $links      Allow the user to define sub links.
      * @return static
      */
-    public static function field(array $rules=null, array $fields=null, array $links=null)
+    public static function field(array $rules=null, array $attributes=null, array $links=null)
     {
-        return new static($rules, $fields, $links);
+        return new static($rules, $attributes, $links);
     }
 
     /**
      * Generate a field by its class name.
      *
-     * @param  array|string|AttributeField $field
+     * @param  array|string|AttributeField $attribute
      * @return AttributeField
      */
-    protected function generateField($field): AttributeField
+    protected function generateAttribute($attribute): AttributeField
     {
-        if (\is_array($field)) {
-            return \array_shift($field)::field(...$field);
-        } else if (\is_string($field)) {
-            return $field::field();
+        if (\is_array($attribute)) {
+            return \array_shift($attribute)::field(...$attribute);
+        } else if (\is_string($attribute)) {
+            return $attribute::field();
         } else {
-            return $field;
+            return $attribute;
         }
     }
 
@@ -127,9 +147,9 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param  string $name
      * @return boolean
      */
-    public function hasField(string $name): bool
+    public function hasAttribute(string $name): bool
     {
-        return isset($this->getFields()[$name]);
+        return isset($this->getAttributes()[$name]);
     }
 
     /**
@@ -138,23 +158,23 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param  string $name
      * @return AttributeField
      */
-    public function getField(string $name): AttributeField
+    public function getAttribute(string $name): AttributeField
     {
-        if ($this->hasField($name)) {
-            return $this->getFields()[$name];
+        if ($this->hasAttribute($name)) {
+            return $this->getAttributes()[$name];
         } else {
             throw new \Exception($name.' field does not exist');
         }
     }
 
     /**
-     * Return all sub fields.
+     * Return all sub attributes.
      *
      * @return array
      */
-    public function getFields()
+    public function getAttributes()
     {
-        return $this->fields;
+        return $this->attributes;
     }
 
     /**
@@ -199,35 +219,35 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param  string $name
      * @return boolean
      */
-    public function has(string $name)
+    public function hasField(string $name)
     {
-        return isset($this->all()[$name]);
+        return isset($this->getFields()[$name]);
     }
 
     /**
      * Return the field or link with the given name.
      *
      * @param  string $name
-     * @return AttributeField
+     * @return Field
      */
-    public function get(string $name)
+    public function getField(string $name)
     {
-        if ($this->has($name)) {
-            return $this->all()[$name];
+        if ($this->hasField($name)) {
+            return $this->getFields()[$name];
         } else {
             throw new \Exception($name.' real or link field does not exist');
         }
     }
 
     /**
-     * Return all sub fields and links.
+     * Return getFields sub attributes and links.
      *
      * @return array
      */
-    public function all()
+    public function getFields()
     {
         return array_merge(
-	        $this->fields,
+	        $this->attributes,
 	        $this->links
         );
     }
@@ -242,6 +262,10 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     {
         if (\is_string($rule)) {
             $rule = Rules::get($rule);
+        }
+
+        foreach ($this->getAttributes() as $attribute) {
+            $attribute->addRule($rule);
         }
 
         return parent::addRule($rule);
@@ -259,6 +283,10 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
             $rule = Rules::get($rule);
         }
 
+        foreach ($this->getAttributes() as $attribute) {
+            $attribute->removeRule($rule);
+        }
+
         return parent::removeRule($rule);
     }
 
@@ -271,27 +299,27 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     {
         parent::owned();
 
-        $this->ownFields();
+        $this->ownAttributes();
         $this->ownLinks();
     }
 
     /**
-     * Own each sub fields.
+     * Own each sub attributes.
      *
      * @return void
      */
-    protected function ownFields()
+    protected function ownAttributes()
     {
         $keyValues = [
             'modelname' => static::parseName($this->getMeta()->getModelClassName()),
             'name' => $this->name,
         ];
 
-        foreach ($this->fields as $fieldname => $field) {
-            $keyValues['fieldname'] = $fieldname;
-            $template = ($this->fieldsName[$fieldname] ?? $this->getConfig('field_name_template'));
+        foreach ($this->attributes as $attributename => $attribute) {
+            $keyValues['fieldname'] = $attributename;
+            $template = ($this->attributesName[$attributename] ?? $this->getConfig('attribute_name_template'));
             $name = static::replaceInTemplate($template, $keyValues);
-            $this->fields[$fieldname] = $field->own($this, $name);
+            $this->attributes[$attributename] = $attribute->own($this, $name);
         }
     }
 
@@ -308,7 +336,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         ];
 
         foreach ($this->links as $linkname => $link) {
-            $keyValues['linkname'] = $linkname;
+            $keyValues['fieldname'] = $linkname;
             $template = ($this->linksName[$linkname] ?? $this->getConfig('link_name_template'));
             $name = static::replaceInTemplate($template, $keyValues);
             $this->links[$linkname] = $link->own($this, $name);
@@ -327,7 +355,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         $this->lockFields();
         $this->lockLinks();
 
-        if ((count($this->fields) + count($this->links)) === 0) {
+        if ((count($this->attributes) + count($this->links)) === 0) {
             throw new \Exception('A composite field needs at least one field or link');
         }
 
@@ -335,14 +363,14 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     }
 
     /**
-     * Lock each sub fields.
+     * Lock each sub attributes.
      *
      * @return void
      */
     protected function lockFields()
     {
-        foreach ($this->fields as $field) {
-            $field->lock();
+        foreach ($this->attributes as $attribute) {
+            $attribute->lock();
         }
     }
 
@@ -361,191 +389,191 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Return the get value for a specific field.
      *
-     * @param BaseField        $field
+     * @param BaseField        $attribute
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getFieldAttribute(BaseField $field, IsALaramoreModel $model)
+    public function getValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model)
     {
-        return $this->getOwner()->getFieldAttribute($field, $model);
+        return $this->getOwner()->getValueFieldAttribute($attribute, $model);
     }
 
     /**
      * Return the set value for a specific field.
      *
-     * @param BaseField        $field
+     * @param BaseField        $attribute
      * @param IsALaramoreModel $model
      * @param mixed            $value
      * @return mixed
      */
-    public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value)
+    public function setValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model, $value)
     {
-        return $this->getOwner()->setFieldAttribute($field, $model, $value);
+        return $this->getOwner()->setValueFieldAttribute($attribute, $model, $value);
+    }
+
+    /**
+     * Reset the value with the default value for a specific field.
+     *
+     * @param BaseField        $attribute
+     * @param IsALaramoreModel $model
+     * @return mixed
+     */
+    public function resetValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model)
+    {
+        return $this->getOwner()->resetValueFieldAttribute($attribute, $model);
     }
 
     /**
      * Return the get value for a relation field.
      *
-     * @param IsARelationField $field
+     * @param IsARelationField $attribute
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model)
+    public function getRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model)
     {
-        return $this->getOwner()->getRelationFieldAttribute($field, $model);
+        return $this->getOwner()->getRelationFieldAttribute($attribute, $model);
     }
 
     /**
      * Return the set value for a relation field.
      *
-     * @param IsARelationField $field
+     * @param IsARelationField $attribute
      * @param IsALaramoreModel $model
      * @param mixed            $value
      * @return mixed
      */
-    public function setRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value)
+    public function setRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model, $value)
     {
-        return $this->getOwner()->setRelationFieldAttribute($field, $model, $value);
+        return $this->getOwner()->setRelationFieldAttribute($attribute, $model, $value);
     }
 
     /**
      * Reverbate a saved relation value for a specific field.
      *
-     * @param IsARelationField $field
+     * @param IsARelationField $attribute
      * @param IsALaramoreModel $model
      * @param mixed            $value
      * @return boolean
      */
-    public function reverbateRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value): bool
+    public function reverbateRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model, $value): bool
     {
-        return $this->getOwner()->reverbateRelationFieldAttribute($field, $model, $value);
+        return $this->getOwner()->reverbateRelationFieldAttribute($attribute, $model, $value);
     }
 
     /**
      * Return generally a Builder after adding to it a condition.
      *
-     * @param BaseField            $field
+     * @param BaseField            $attribute
      * @param IsProxied            $builder
      * @param Operator|string|null $operator
      * @param mixed                $value
      * @param mixed                ...$args
      * @return mixed
      */
-    public function whereFieldAttribute(BaseField $field, IsProxied $builder, $operator=null, $value=null, ...$args)
+    public function whereFieldAttribute(BaseField $attribute, IsProxied $builder, $operator=null, $value=null, ...$args)
     {
         if (func_num_args() === 3) {
-            return $this->getOwner()->whereFieldAttribute($field, $builder, $operator);
+            return $this->getOwner()->whereFieldAttribute($attribute, $builder, $operator);
         }
 
-        return $this->getOwner()->whereFieldAttribute($field, $builder, $operator, $value, ...$args);
+        return $this->getOwner()->whereFieldAttribute($attribute, $builder, $operator, $value, ...$args);
     }
 
     /**
      * Return the query with this field as condition.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param IsProxied $model
      * @return mixed
      */
-    public function relateFieldAttribute(BaseField $field, IsProxied $model)
+    public function relateFieldAttribute(BaseField $attribute, IsProxied $model)
     {
-        return $this->getOwner()->relateFieldAttribute($field, $model);
-    }
-
-    /**
-     * Reset the value with the default value for a specific field.
-     *
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
-     * @return mixed
-     */
-    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model)
-    {
-        return $this->getOwner()->resetFieldAttribute($field, $model);
+        return $this->getOwner()->relateFieldAttribute($attribute, $model);
     }
 
     /**
      * Transform a value for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param mixed     $value
      * @return mixed
      */
-    public function transformFieldAttribute(BaseField $field, $value)
+    public function transformFieldAttribute(BaseField $attribute, $value)
     {
-        return $this->getOwner()->transformFieldAttribute($field, $value);
+        return $this->getOwner()->transformFieldAttribute($attribute, $value);
     }
 
     /**
      * Serialize a value for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param mixed     $value
      * @return mixed
      */
-    public function serializeFieldAttribute(BaseField $field, $value)
+    public function serializeFieldAttribute(BaseField $attribute, $value)
     {
-        return $this->getOwner()->serializeFieldAttribute($field, $value);
+        return $this->getOwner()->serializeFieldAttribute($attribute, $value);
     }
 
     /**
      * Check if the value is correct for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param mixed     $value
      * @return mixed
      */
-    public function checkFieldAttribute(BaseField $field, $value)
+    public function checkFieldAttribute(BaseField $attribute, $value)
     {
-        return $this->getOwner()->checkFieldAttribute($field, $value);
+        return $this->getOwner()->checkFieldAttribute($attribute, $value);
     }
 
     /**
      * Dry a value for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param mixed     $value
      * @return mixed
      */
-    public function dryFieldAttribute(BaseField $field, $value)
+    public function dryFieldAttribute(BaseField $attribute, $value)
     {
-        return $this->getOwner()->dryFieldAttribute($field, $value);
+        return $this->getOwner()->dryFieldAttribute($attribute, $value);
     }
 
     /**
      * Cast a value for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @param mixed     $value
      * @return mixed
      */
-    public function castFieldAttribute(BaseField $field, $value)
+    public function castFieldAttribute(BaseField $attribute, $value)
     {
-        return $this->getOwner()->castFieldAttribute($field, $value);
+        return $this->getOwner()->castFieldAttribute($attribute, $value);
     }
 
     /**
      * Return the default value for a specific field.
      *
-     * @param BaseField $field
+     * @param BaseField $attribute
      * @return mixed
      */
-    public function defaultFieldAttribute(BaseField $field)
+    public function defaultFieldAttribute(BaseField $attribute)
     {
-        return $this->getOwner()->defaultFieldAttribute($field);
+        return $this->getOwner()->defaultFieldAttribute($attribute);
     }
 
     /**
      * Call a field attribute method that is not basic.
      *
-     * @param  BaseField $field
+     * @param  BaseField $attribute
      * @param  string    $methodName
      * @param  array     $args
      * @return mixed
      */
-    public function callFieldAttributeMethod(BaseField $field, string $methodName, array $args)
+    public function callFieldAttributeMethod(BaseField $attribute, string $methodName, array $args)
     {
-        return $this->getOwner()->callFieldAttributeMethod($field, $methodName, $args);
+        return $this->getOwner()->callFieldAttributeMethod($attribute, $methodName, $args);
     }
 
     /**

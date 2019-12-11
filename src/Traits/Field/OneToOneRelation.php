@@ -39,7 +39,7 @@ trait OneToOneRelation
             $this->defineProperty('on', $model);
         } else {
             $this->defineProperty('on', $this->getReversed()->off = $model);
-            $this->to($this->getReversed()->off::getMeta()->getPrimary()->all()[0]->attname);
+            $this->to($this->getReversed()->off::getMeta()->getPrimary()->getAttribute()->attname);
         }
 
         if ($reversedName) {
@@ -85,14 +85,14 @@ trait OneToOneRelation
         parent::owned();
 
         $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
-        $this->defineProperty('from', $this->getReversed()->to = $this->getField('id')->attname);
+        $this->defineProperty('from', $this->getReversed()->to = $this->getAttribute('id')->attname);
     }
 
     protected function setForeigns()
     {
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
 
-        $this->foreign('id', Metas::get($this->on)->get($this->to), $relationName);
+        $this->foreign('id', Metas::get($this->on)->getAttribute($this->to), $relationName);
     }
 
     protected function checkRules()
@@ -147,7 +147,7 @@ trait OneToOneRelation
 
     public function whereNull(Builder $builder, $value=null, $boolean='and', $not=false)
     {
-        $builder->getQuery()->whereNull($this->attname, $boolean, $not);
+        $builder->getQuery()->whereNull($this->getAttribute('id')->attname, $boolean, $not);
 
         return $builder;
     }
@@ -161,7 +161,7 @@ trait OneToOneRelation
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
     {
-        $builder->getQuery()->whereIn($this->getField('id')->attname, $value, $boolean, $not);
+        $builder->getQuery()->whereIn($this->getAttribute('id')->attname, $value, $boolean, $not);
 
         return $builder;
     }
@@ -177,7 +177,7 @@ trait OneToOneRelation
             return $this->whereIn($builder, $value, $boolean, ($operator === Op::notIn()));
         }
 
-        $builder->getQuery()->where($this->getField('id')->attname, $operator, $value, $boolean);
+        $builder->getQuery()->where($this->getAttribute('id')->attname, $operator, $value, $boolean);
 
         return $builder;
     }

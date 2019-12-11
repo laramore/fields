@@ -27,25 +27,25 @@ abstract class Constraint extends BaseObserver
     /**
      * An observer needs at least a name.
      *
-     * @param array   $fields
-     * @param string  $name
-     * @param integer $priority
+     * @param array<AttributeField> $attributes
+     * @param string                $name
+     * @param integer               $priority
      */
-    protected function __construct(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    protected function __construct(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {
         if (!\is_null($name)) {
             $this->setName($name);
         }
 
-        if (\count($fields) === 0) {
+        if (\count($attributes) === 0) {
             throw new \LogicException('A constraints works on at least one field');
         }
 
-        $this->on($fields);
+        $this->on($attributes);
         $this->setPriority($priority);
     }
 
-    public static function constraint(array $fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
 
@@ -53,7 +53,7 @@ abstract class Constraint extends BaseObserver
             return null;
         }
 
-        $field = $creating ?: new static($fields, $name, $priority);
+        $field = $creating ?: new static($attributes, $name, $priority);
 
         Event::dispatch('constraints.created', $field);
 
@@ -98,6 +98,11 @@ abstract class Constraint extends BaseObserver
     public function getMainTableName()
     {
         return $this->all()[0]->getMeta()->getTableName();
+    }
+
+    public function isComposed(): bool
+    {
+        return $this->count() > 1;
     }
 
     /**

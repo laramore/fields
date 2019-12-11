@@ -114,11 +114,11 @@ trait HasMultipleFieldConstraints
     /**
      * Define a unique constraint.
      *
-     * @param  string  $fieldName
-     * @param  AttributeField   $field
-     * @param  string  $name
-     * @param  string  $class
-     * @param  integer $priority
+     * @param  string         $fieldName
+     * @param  AttributeField $field
+     * @param  string         $name
+     * @param  string         $class
+     * @param  integer        $priority
      * @return self
      */
     protected function foreign(string $fieldName, AttributeField $field, string $name=null, string $class=null, int $priority=Foreign::MEDIUM_PRIORITY)
