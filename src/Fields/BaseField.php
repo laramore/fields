@@ -149,6 +149,8 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         if ($key === 'type') {
             return $this->getType();
+        } else if ($key === 'native') {
+            return $this->getNative();
         }
 
         if ($this->hasProperty($key)) {
@@ -217,6 +219,29 @@ abstract class BaseField implements IsAField, IsConfigurable
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * Return the native value of this field.
+     * Commonly, its name.
+     *
+     * @return string
+     */
+    public function getNative(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Return the fully qualified name.
+     *
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        $this->needsToBeOwned();
+
+        return $this->getMeta()->getTableName().'.'.$this->getNative();
     }
 
     /**
@@ -349,17 +374,21 @@ abstract class BaseField implements IsAField, IsConfigurable
         if ($this->hasProperty('default')) {
             if (\is_null($this->getProperty('default'))) {
                 if ($this->hasRule(Rules::notNullable())) {
-                    throw new \LogicException("This field cannot be null and defined as null by default");
+                    throw new \LogicException("The field `{$this->getFullName()}` cannot be null and defined as null by default");
                 } else if (!$this->hasRule(Rules::nullable()) && !$this->hasRule(Rules::required())) {
-                    throw new \LogicException("This field cannot be null, defined as null by default and not required");
+                    throw new \LogicException("The field `{$this->getFullName()}` cannot be null, defined as null by default and not required");
                 }
             } else if ($this->hasRule(Rules::required())) {
-                throw new \LogicException("This field cannot have a default value and be required");
+                throw new \LogicException("The field `{$this->getFullName()}` cannot have a default value and be required");
             }
         }
 
+        if (!$this->hasRule(Rules::fillable()) && $this->hasRule(Rules::required())) {
+            throw new \LogicException("The field `{$this->getFullName()}` must be fillable if it is required");
+        }
+
         if ($this->hasRule(Rules::notNullable()) && $this->hasRule(Rules::nullable())) {
-            throw new \LogicException("This field cannot be nullable and not nullable or strict on the same time");
+            throw new \LogicException("The field `{$this->getFullName()}` cannot be nullable and not nullable on the same time");
         }
     }
 
@@ -469,6 +498,6 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function __toString()
     {
-        return $this->getProperty('name');
+        return $this->getNative();
     }
 }
