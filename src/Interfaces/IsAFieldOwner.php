@@ -25,7 +25,7 @@ interface IsAFieldOwner extends IsAnOwner
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getFieldAttribute(BaseField $field, IsALaramoreModel $model);
+    public function getValueFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
      * Return the set value for a specific field.
@@ -35,7 +35,16 @@ interface IsAFieldOwner extends IsAnOwner
      * @param mixed            $value
      * @return mixed
      */
-    public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
+    public function setValueFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
+
+    /**
+     * Reset the value with the default value for a specific field.
+     *
+     * @param BaseField        $field
+     * @param IsALaramoreModel $model
+     * @return mixed
+     */
+    public function resetValueFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
      * Return the get value for a relation field.
@@ -77,24 +86,6 @@ interface IsAFieldOwner extends IsAnOwner
      * @return mixed
      */
     public function whereFieldAttribute(BaseField $field, IsProxied $builder, $operator=null, $value=null, ...$args);
-
-    /**
-     * Return the query with this field as condition.
-     *
-     * @param BaseField $field
-     * @param IsProxied $model
-     * @return mixed
-     */
-    public function relateFieldAttribute(BaseField $field, IsProxied $model);
-
-    /**
-     * Reset the value with the default value for a specific field.
-     *
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
-     * @return mixed
-     */
-    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
      * Transform a value for a specific field.

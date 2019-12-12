@@ -26,13 +26,11 @@ class MultiProxy extends BaseProxy
     /**
      * An observer needs at least a name and a Closure.
      *
-     * @param string  $name
-     * @param integer $priority
-     * @param array   $data
+     * @param string $name
      */
-    public function __construct(string $name, array $data=[])
+    public function __construct(string $name)
     {
-        parent::__construct($name, $name, $data);
+        parent::__construct($name, $name, []);
     }
 
     /**

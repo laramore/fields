@@ -324,16 +324,16 @@
         },
         {
             "name": "laramore/base",
-            "version": "v0.2.5",
+            "version": "v0.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/base.git",
-                "reference": "6375473d2e4d3c2e0e2c3d5b4c9d4bae08b690a3"
+                "reference": "84e4298f1ac49ded2a57e23eb2478cdb17ed4341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/base/zipball/6375473d2e4d3c2e0e2c3d5b4c9d4bae08b690a3",
-                "reference": "6375473d2e4d3c2e0e2c3d5b4c9d4bae08b690a3",
+                "url": "https://api.github.com/repos/laramore/base/zipball/84e4298f1ac49ded2a57e23eb2478cdb17ed4341",
+                "reference": "84e4298f1ac49ded2a57e23eb2478cdb17ed4341",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "owned",
                 "unlock"
             ],
-            "time": "2019-12-05T23:35:50+00:00"
+            "time": "2019-12-11T14:20:56+00:00"
         },
         {
             "name": "laramore/types",

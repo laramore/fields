@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'name_template' => '-{name}',
+    'name_template' => '_{name}',
     'attname_template' => '_{attname}',
 
     /*
@@ -76,13 +76,11 @@ return [
                 'requirements' => ['instance'],
                 'targets' => [ProxyHandler::BUILDER_TYPE],
             ],
-            'whereNull' => [
-                'name_template' => 'doesntHave^{fieldname}',
+            'doesntHave' => [
                 'requirements' => ['instance'],
                 'targets' => [ProxyHandler::BUILDER_TYPE],
             ],
-            'whereNotNull' => [
-                'name_template' => 'has^{fieldname}',
+            'has' => [
                 'requirements' => ['instance'],
                 'targets' => [ProxyHandler::BUILDER_TYPE],
             ],
@@ -176,16 +174,16 @@ return [
         ],
         'foreign' => [
             'type' => 'composite',
-            'fields' => [
+            'attributes' => [
                 'id' => [
                     Laramore\Fields\Integer::class,
-                    ['visible', 'fillable', 'not_zero', 'unsigned', 'require_sign'],
+                    ['visible', 'fillable', 'required', 'not_zero', 'unsigned', 'require_sign'],
                 ],
             ],
             'links' => [
                 'reversed' => Laramore\Fields\HasMany::class,
             ],
-            'field_name_template' => '${name}_${fieldname}',
+            'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
@@ -254,27 +252,27 @@ return [
         ],
         'many_to_many' => [
             'type' => 'composite',
-            'fields' => [],
+            'attributes' => [],
             'links' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
-            'field_name_template' => '${name}_${fieldname}',
+            'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
         'morph_to_one' => [
             'type' => 'composite',
-            'fields' => [],
+            'attributes' => [],
             'links' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
-            'field_name_template' => '${name}_${fieldname}',
+            'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
         'one_to_one' => [
             'type' => 'composite',
-            'fields' => [
+            'attributes' => [
                 'id' => [
                     Laramore\Fields\Integer::class,
                     ['visible', 'fillable', 'not_zero', 'unsigned', 'require_sign'],
@@ -283,7 +281,7 @@ return [
             'links' => [
                 'reversed' => Laramore\Fields\HasOne::class,
             ],
-            'field_name_template' => '${name}_${fieldname}',
+            'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
