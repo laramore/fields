@@ -10,6 +10,8 @@
 
 namespace Laramore\Fields\Constraint;
 
+use Laramore\Fields\AttributeField;
+
 class Primary extends Constraint
 {
     /**
@@ -20,13 +22,13 @@ class Primary extends Constraint
     protected $constraintName = 'primary';
 
     /**
-     * Indicate if the primary key is a composed key.
+     * Return the first field of this constraint.
      *
-     * @return boolean
+     * @return AttributeField
      */
-    public function isComposed(): bool
+    public function getAttribute(): AttributeField
     {
-        return $this->count() > 1;
+        return $this->all()[0];
     }
 
     /**
@@ -34,9 +36,9 @@ class Primary extends Constraint
      *
      * @return string
      */
-    public function getAttribute(): string
+    public function getAttname(): string
     {
-        return $this->all()[0]->attname;
+        return $this->getAttribute()->attname;
     }
 
     /**
@@ -44,7 +46,7 @@ class Primary extends Constraint
      *
      * @return array
      */
-    public function getAttributes(): array
+    public function getAttnames(): array
     {
         return \array_map(function ($field) {
             return $field->attname;
