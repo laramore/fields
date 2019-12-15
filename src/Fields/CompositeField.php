@@ -310,15 +310,8 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function ownAttributes()
     {
-        $keyValues = [
-            'modelname' => static::parseName($this->getMeta()->getModelClassName()),
-            'name' => $this->name,
-        ];
-
         foreach ($this->attributes as $attributename => $attribute) {
-            $keyValues['fieldname'] = $attributename;
-            $template = ($this->attributesName[$attributename] ?? $this->getConfig('attribute_name_template'));
-            $name = static::replaceInTemplate($template, $keyValues);
+            $name = $this->replaceInFieldTemplate(($this->attributesName[$attributename] ?? $this->getConfig('attribute_name_template')), $attributename);
             $this->attributes[$attributename] = $attribute->own($this, $name);
         }
     }
@@ -330,17 +323,21 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function ownLinks()
     {
-        $keyValues = [
-            'modelname' => static::parseName($this->getMeta()->getModelClassName()),
-            'name' => $this->name,
-        ];
-
         foreach ($this->links as $linkname => $link) {
-            $keyValues['fieldname'] = $linkname;
-            $template = ($this->linksName[$linkname] ?? $this->getConfig('link_name_template'));
-            $name = static::replaceInTemplate($template, $keyValues);
+            $name = $this->replaceInFieldTemplate(($this->linksName[$linkname] ?? $this->getConfig('link_name_template')), $linkname);
             $this->links[$linkname] = $link->own($this, $name);
         }
+    }
+
+    protected function replaceInFieldTemplate(string $template, string $fieldname)
+    {
+        $keyValues = [
+            'modelname' => static::parseName($this->getMeta()->getModelClassName()),
+            'fieldname' => $fieldname,
+            'name' => $this->getName(),
+        ];
+
+        return static::replaceInTemplate($template, $keyValues);
     }
 
     /**
