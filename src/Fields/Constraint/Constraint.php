@@ -22,7 +22,7 @@ abstract class Constraint extends BaseObserver
      *
      * @var string
      */
-    protected $constraintName;
+    protected $constraintName = 'constraint';
 
     /**
      * An observer needs at least a name.

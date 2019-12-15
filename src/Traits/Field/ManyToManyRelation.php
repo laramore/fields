@@ -32,10 +32,6 @@ trait ManyToManyRelation
     protected $pivotFrom;
     protected $pivotName;
 
-    protected function setForeigns()
-    {
-    }
-
     public function cast($value)
     {
         return $this->transform($value);

@@ -137,9 +137,5 @@ trait HasMultipleFieldConstraints
         foreach ($this->constraints as $constraint) {
             $handler->add($constraint);
         }
-
-        $this->setForeigns();
     }
-
-    abstract protected function setForeigns();
 }

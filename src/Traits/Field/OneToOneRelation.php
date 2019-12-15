@@ -93,8 +93,10 @@ trait OneToOneRelation
         $this->defineProperty('from', $this->getReversed()->to = $this->getAttribute('id')->attname);
     }
 
-    protected function setForeigns()
+    protected function setConstraints()
     {
+        parent::setConstraints();
+        
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
 
         $this->foreign('id', Metas::get($this->on)->getAttribute($this->to), $relationName);
