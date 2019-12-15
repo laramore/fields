@@ -190,7 +190,6 @@ return [
         ],
         'has_many' => [
             'type' => 'link',
-            'pivot_as' => 'pivot',
             'proxies' => [
                 'attach' => [
                     'requirements' => ['instance'],
@@ -258,9 +257,10 @@ return [
             'links' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
-            'pivot_as_template' => 'pivot',
-            'reversed_pivot_as_template' => 'pivot',
+            'pivot_name_template' => 'pivot',
+            'reversed_pivot_name_template' => 'pivot',
             'self_reversed_name_template' => 'reversed_+{name}',
+            'self_pivot_reversed_name_template' => 'reversed_+{modelname}',
             'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [

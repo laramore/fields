@@ -30,6 +30,7 @@ trait ManyToManyRelation
     protected $pivotMeta;
     protected $pivotTo;
     protected $pivotFrom;
+    protected $pivotName;
 
     protected function setForeigns()
     {
@@ -94,7 +95,7 @@ trait ManyToManyRelation
     public function relate(IsProxied $model)
     {
         return $model->belongsToMany($this->on, $this->getPivotMeta()->getTableName(), $this->pivotTo->from, $this->pivotFrom->from, $this->to, $this->from, $this->name)
-            ->withPivot($this->getPivotAttributes())->using($this->getPivotMeta()->getModelClass());
+            ->withPivot($this->getPivotAttributes())->using($this->getPivotMeta()->getModelClass())->as($this->pivotName);
     }
 
     public function whereNull(Builder $builder, $value=null, $boolean='and', $not=false, \Closure $callback=null)

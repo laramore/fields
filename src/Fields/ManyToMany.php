@@ -12,22 +12,31 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
 use Laramore\Exceptions\ConfigException;
-use Laramore\Interfaces\IsProxied;
 use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\LinkField;
 use Laramore\Fields\Constraint\Unique;
 
 class ManyToMany extends CompositeField
 {
-    use ManyToManyRelation {
-        ManyToManyRelation::relate as protected relateWithoutPivotAs;
-    }
+    use ManyToManyRelation;
 
     protected $reversedName;
     protected $usePivot;
     protected $pivotClass;
-    protected $pivotAs;
-    protected $reversedPivotAs;
+    protected $reversedPivotName;
+
+    public function pivotName(string $pivotName, string $reversedPivotName=null)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->defineProperty('pivotName', $pivotName);
+
+        if (!\is_null($reversedPivotName)) {
+            $this->setProperty('reversedPivotName', $reversedPivotName);
+        }
+
+        return $this;
+    }
 
     /**
      * Create a new field with basic rules.
@@ -40,16 +49,16 @@ class ManyToMany extends CompositeField
     {
         parent::__construct($rules);
 
-        $this->pivotAs = $this->getConfig('pivot_as_template');
+        $this->pivotName = $this->getConfig('pivot_name_template');
 
-        if (\is_null($this->pivotAs)) {
-            throw new ConfigException($this->getConfigPath('pivot_as_template'), ['any string name'], null);
+        if (\is_null($this->pivotName)) {
+            throw new ConfigException($this->getConfigPath('pivot_name_template'), ['any string name'], null);
         }
 
-        $this->reversedPivotAs = $this->getConfig('reversed_pivot_as_template');
+        $this->reversedPivotName = $this->getConfig('reversed_pivot_name_template');
 
-        if (\is_null($this->reversedPivotAs)) {
-            throw new ConfigException($this->getConfigPath('reversed_pivot_as_template'), ['any string name'], null);
+        if (\is_null($this->reversedPivotName)) {
+            throw new ConfigException($this->getConfigPath('reversed_pivot_name_template'), ['any string name'], null);
         }
     }
 
@@ -117,11 +126,14 @@ class ManyToMany extends CompositeField
         $offMeta = $this->getMeta();
         $onMeta = $this->on::getMeta();
         $onTable = $onMeta->getTableName();
-        $offName = $offMeta->getModelClassName();
-        $onName = Str::singular($this->name);
+        $offName = Str::snake($offMeta->getModelClassName());
+        $onName = Str::snake(Str::singular($this->name));
         $namespaceName = 'App\\Pivots';
         $pivotClassName = ucfirst($offName).ucfirst($onName);
         $pivotClass = "$namespaceName\\$pivotClassName";
+
+        $this->pivotName = $this->replaceInFieldTemplate($this->pivotName, $offName);
+        $this->reversedPivotName = $this->replaceInFieldTemplate($this->reversedPivotName, $onName);
 
         if ($this->usePivot) {
             if ($this->pivotClass) {
@@ -137,17 +149,20 @@ class ManyToMany extends CompositeField
 
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
 
-            $this->pivotAs = $this->replaceInFieldTemplate($this->pivotAs, $offName);
-            $this->reversedPivotAs = $this->replaceInFieldTemplate($this->reversedPivotAs, $onName);
-
             $this->pivotMeta->setComposite(
                 $offName,
-                Foreign::field()->on($this->getMeta()->getModelClass())->reversedName($this->pivotAs)
+                Foreign::field()->on($this->getMeta()->getModelClass())
             );
+
+            $offField = Foreign::field()->on($this->on);
+
+            if ($this->isOnSelf()) {
+                $offField->reversedName($this->getConfig('self_pivot_reversed_name_template'));
+            }
 
             $this->pivotMeta->setComposite(
                 $onName,
-                Foreign::field()->on($this->on)->reversedName($this->reversedPivotAs)
+                $offField
             );
         }
 
@@ -220,10 +235,5 @@ class ManyToMany extends CompositeField
         }
 
         return $this;
-    }
-
-    public function relate(IsProxied $model)
-    {
-        return $this->relateWithoutPivotAs($model)->as($this->pivotAs);
     }
 }

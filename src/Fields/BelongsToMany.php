@@ -26,8 +26,9 @@ class BelongsToMany extends LinkField
     {
         parent::owned();
 
-        $this->defineProperty('pivotMeta', $this->getOwner()->pivotMeta);
-        $this->defineProperty('pivotTo', $this->getOwner()->pivotTo);
-        $this->defineProperty('pivotFrom', $this->getOwner()->pivotFrom);
+        $this->defineProperty('pivotMeta', $this->getReversed()->pivotMeta);
+        $this->defineProperty('pivotTo', $this->getReversed()->pivotFrom);
+        $this->defineProperty('pivotFrom', $this->getReversed()->pivotTo);
+        $this->defineProperty('pivotName', $this->getReversed()->reversedPivotName);
     }
 }
