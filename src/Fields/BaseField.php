@@ -304,6 +304,8 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function own(IsAnOwner $owner, string $name)
     {
+        $this->needsToBeUnlocked();
+
         $name = static::parseName($name);
 
         $owning = Event::until('fields.owning', $this, $owner, $name);
@@ -340,6 +342,8 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function lock()
     {
+        $this->needsToBeOwned();
+
         $locking = Event::until('fields.locking', $this);
 
         if ($locking === false) {
@@ -435,9 +439,9 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         foreach ($keyValues as $key => $value) {
             $template = \str_replace([
-                '${'.$key.'}', '+{'.$key.'}', '^{'.$key.'}', '*{'.$key.'}', '_{'.$key.'}', '-{'.$key.'}',
+                '${'.$key.'}', '#{'.$key.'}', '+{'.$key.'}', '^{'.$key.'}', '*{'.$key.'}', '_{'.$key.'}', '-{'.$key.'}',
             ], [
-                $value, Str::plural($value), \ucwords($value), \ucwords(Str::plural($value)),
+                $value, Str::singular($value), Str::plural($value), \ucwords($value), \ucwords(Str::plural($value)),
                 Str::snake($value), Str::camel($value)
             ], $template);
         }
