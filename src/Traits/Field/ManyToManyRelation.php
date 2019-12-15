@@ -82,12 +82,19 @@ trait ManyToManyRelation
         return $this->relate($model)->getResults();
     }
 
+    public function getPivotAttributes(): array
+    {
+        return \array_map(function (AttributeField $field) {
+            return $field->attname;
+        }, \array_filter(\array_values($this->getPivotMeta()->getAttributes()), function (AttributeField $field) {
+            return $field->visible;
+        }));
+    }
+
     public function relate(IsProxied $model)
     {
-        return $model->belongsToMany($this->on, $this->pivotMeta->getTableName(), $this->pivotTo->from, $this->pivotFrom->from, $this->to, $this->from, $this->name)
-            ->withPivot(...\array_map(function (Field $field) {
-                return $field->attname;
-            }, \array_values($this->pivotMeta->getFields())));
+        return $model->belongsToMany($this->on, $this->getPivotMeta()->getTableName(), $this->pivotTo->from, $this->pivotFrom->from, $this->to, $this->from, $this->name)
+            ->withPivot($this->getPivotAttributes())->using($this->getPivotMeta()->getModelClass());
     }
 
     public function whereNull(Builder $builder, $value=null, $boolean='and', $not=false, \Closure $callback=null)
@@ -134,12 +141,12 @@ trait ManyToManyRelation
 
         foreach ($value as $element) {
             if ($element instanceof $this->on) {
-                $collections->add($element);
+                $collections->push($element);
             } else {
-                $collections->add($element = $this->transformToModel($element));
+                $collections->push($element = $this->transformToModel($element));
             }
 
-            $element->setAttribute($relationName, $model);
+            $element->setRelation($relationName, $model);
         }
 
         return $collections;

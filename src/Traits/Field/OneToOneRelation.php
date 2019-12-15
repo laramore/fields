@@ -13,7 +13,9 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Collection;
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
-use Laramore\Facades\Metas;
+use Laramore\Facades\{
+    Metas, Operators
+};
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\IsALaramoreModel;
 
@@ -43,7 +45,9 @@ trait OneToOneRelation
         }
 
         if ($reversedName) {
-            $this->reversedName($reversedName);
+            $this->setProperty('reversedName', $reversedName);
+        } else if ($model === 'self') {
+            $this->reversedName($this->getConfig('self_reversed_name_template'));
         }
 
         if ($relationName) {
@@ -69,9 +73,10 @@ trait OneToOneRelation
 
     public function reversedName(string $reversedName=null)
     {
+        $this->needsToBeUnowned();
         $this->needsToBeUnlocked();
 
-        $this->linksName['reversed'] = $reversedName ?: '+{modelname}';
+        $this->linksName['reversed'] = $reversedName;
 
         return $this;
     }
@@ -174,7 +179,7 @@ trait OneToOneRelation
     public function where(Builder $builder, Operator $operator=null, $value=null, $boolean='and')
     {
         if ($operator->needs === 'collection') {
-            return $this->whereIn($builder, $value, $boolean, ($operator === Op::notIn()));
+            return $this->whereIn($builder, $value, $boolean, ($operator === Operators::notIn()));
         }
 
         $builder->getQuery()->where($this->getAttribute('id')->attname, $operator, $value, $boolean);

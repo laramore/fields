@@ -183,12 +183,14 @@ return [
             'links' => [
                 'reversed' => Laramore\Fields\HasMany::class,
             ],
+            'self_reversed_name_template' => 'reversed_+{name}',
             'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
             'proxies' => [],
         ],
         'has_many' => [
             'type' => 'link',
+            'pivot_as' => 'pivot',
             'proxies' => [
                 'attach' => [
                     'requirements' => ['instance'],
@@ -256,9 +258,16 @@ return [
             'links' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
+            'pivot_as_template' => 'pivot',
+            'reversed_pivot_as_template' => 'pivot',
+            'self_reversed_name_template' => 'reversed_+{name}',
             'attribute_name_template' => '${name}_${fieldname}',
             'link_name_template' => '+{modelname}',
-            'proxies' => [],
+            'proxies' => [
+                'attach' => [
+                    'requirements' => ['instance'],
+                ],
+            ],
         ],
         'morph_to_one' => [
             'type' => 'composite',

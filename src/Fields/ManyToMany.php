@@ -11,19 +11,47 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
+use Laramore\Exceptions\ConfigException;
+use Laramore\Interfaces\IsProxied;
 use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\LinkField;
 use Laramore\Fields\Constraint\Unique;
-use Laramore\Eloquent\FakePivot;
-use Laramore\Meta;
 
 class ManyToMany extends CompositeField
 {
-    use ManyToManyRelation;
+    use ManyToManyRelation {
+        ManyToManyRelation::relate as protected relateWithoutPivotAs;
+    }
 
     protected $reversedName;
     protected $usePivot;
     protected $pivotClass;
+    protected $pivotAs;
+    protected $reversedPivotAs;
+
+    /**
+     * Create a new field with basic rules.
+     * The constructor is protected so the field is created writing left to right.
+     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
+     *
+     * @param array|null $rules
+     */
+    protected function __construct(array $rules=null)
+    {
+        parent::__construct($rules);
+
+        $this->pivotAs = $this->getConfig('pivot_as_template');
+
+        if (\is_null($this->pivotAs)) {
+            throw new ConfigException($this->getConfigPath('pivot_as_template'), ['any string name'], null);
+        }
+
+        $this->reversedPivotAs = $this->getConfig('reversed_pivot_as_template');
+
+        if (\is_null($this->reversedPivotAs)) {
+            throw new ConfigException($this->getConfigPath('reversed_pivot_as_template'), ['any string name'], null);
+        }
+    }
 
     public function getReversed(): LinkField
     {
@@ -43,6 +71,8 @@ class ManyToMany extends CompositeField
 
         if ($reversedName) {
             $this->reversedName($reversedName);
+        } else if ($model === 'self') {
+            $this->reversedName($this->getConfig('self_reversed_name_template'));
         }
 
         return $this;
@@ -62,11 +92,12 @@ class ManyToMany extends CompositeField
         return $this;
     }
 
-    public function reversedName(string $reversedName=null)
+    public function reversedName(string $reversedName)
     {
         $this->needsToBeUnlocked();
+        $this->needsToBeUnowned();
 
-        $this->linksName['reversed'] = $reversedName ?: '+{modelname}';
+        $this->linksName['reversed'] = $reversedName;
 
         return $this;
     }
@@ -85,11 +116,9 @@ class ManyToMany extends CompositeField
     {
         $offMeta = $this->getMeta();
         $onMeta = $this->on::getMeta();
-        $offTable = $offMeta->getTableName();
         $onTable = $onMeta->getTableName();
         $offName = $offMeta->getModelClassName();
         $onName = Str::singular($this->name);
-
         $namespaceName = 'App\\Pivots';
         $pivotClassName = ucfirst($offName).ucfirst($onName);
         $pivotClass = "$namespaceName\\$pivotClassName";
@@ -108,15 +137,17 @@ class ManyToMany extends CompositeField
 
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
 
+            $this->pivotAs = $this->replaceInFieldTemplate($this->pivotAs, $offName);
+            $this->reversedPivotAs = $this->replaceInFieldTemplate($this->reversedPivotAs, $onName);
+
             $this->pivotMeta->setComposite(
                 $offName,
-                // TODO: TEMPLATE
-                Foreign::field()->on($this->getMeta()->getModelClass())->reversedName('pivot'.ucfirst($onTable))
+                Foreign::field()->on($this->getMeta()->getModelClass())->reversedName($this->pivotAs)
             );
 
             $this->pivotMeta->setComposite(
                 $onName,
-                Foreign::field()->on($this->on)->reversedName('pivot'.ucfirst($this->name))
+                Foreign::field()->on($this->on)->reversedName($this->reversedPivotAs)
             );
         }
 
@@ -189,5 +220,10 @@ class ManyToMany extends CompositeField
         }
 
         return $this;
+    }
+
+    public function relate(IsProxied $model)
+    {
+        return $this->relateWithoutPivotAs($model)->as($this->pivotAs);
     }
 }

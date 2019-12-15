@@ -13,7 +13,6 @@ namespace Laramore\Fields;
 use Illuminate\Support\Collection;
 use Laramore\Elements\Operator;
 use Laramore\Eloquent\Builder;
-use Laramore\Fields\CompositeField;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
 };
