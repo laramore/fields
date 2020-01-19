@@ -8,9 +8,8 @@
  * @license MIT
  */
 
-namespace Laramore\Proxies;
+namespace Laramore\Fields\Proxy;
 
-use Illuminate\Database\Eloquent\Model;
 use Laramore\Observers\{
     BaseHandler, BaseObserver
 };
@@ -30,8 +29,8 @@ class ProxyHandler extends BaseHandler
     /**
      * Add an observer to a list of observers.
      *
-     * @param BaseObserver $proxy
-     * @param array        $proxys
+     * @param BaseProxy $proxy
+     * @param array     $proxys
      * @return self
      */
     protected function push(BaseObserver $proxy, array &$proxys)

@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace Laramore\Proxies;
+namespace Laramore\Fields\Proxy;
 
 use Laramore\Interfaces\{
     IsALaramoreManager, IsALaramoreModel

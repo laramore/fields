@@ -8,11 +8,7 @@
  * @license MIT
  */
 
-namespace Laramore\Proxies;
-
-use Laramore\Fields\BaseField;
-use Laramore\Traits\IsLocked;
-use Closure;
+namespace Laramore\Fields\Proxy;
 
 class MultiProxy extends BaseProxy
 {

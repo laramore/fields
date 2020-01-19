@@ -8,12 +8,9 @@
  * @license MIT
  */
 
-namespace Laramore\Proxies;
+namespace Laramore\Fields\Proxy;
 
-use Laramore\Fields\BaseField;
-use Laramore\Traits\IsLocked;
 use Laramore\Observers\BaseObserver;
-use Closure;
 
 abstract class BaseProxy extends BaseObserver
 {
