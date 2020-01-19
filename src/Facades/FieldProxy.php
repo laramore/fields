@@ -1,6 +1,7 @@
 <?php
 /**
- * Add a facade for the Proxies.
+ * Add a facade for the manager FieldProxy.
+ * It handles all proxies for each models.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,7 +13,7 @@ namespace Laramore\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Proxies extends Facade
+class FieldProxy extends Facade
 {
     /**
      * Give the name of the accessor.
@@ -21,6 +22,6 @@ class Proxies extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Proxies';
+        return 'field_proxy';
     }
 }

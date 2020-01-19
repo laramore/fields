@@ -1,6 +1,7 @@
 <?php
 /**
- * Add a facade for the Constraints.
+ * Add a facade for the manager FieldConstraint.
+ * It handles all constraints for each models.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,7 +13,7 @@ namespace Laramore\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Constraints extends Facade
+class FieldConstraint extends Facade
 {
     /**
      * Give the name of the accessor.
@@ -21,6 +22,6 @@ class Constraints extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Constraints';
+        return 'field_constraint';
     }
 }
