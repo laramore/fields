@@ -12,5 +12,5 @@ namespace Laramore\Elements;
 
 class EnumManager extends ElementManager
 {
-    protected $elementClass = Enum::class;
+    protected $elementClass = EnumElement::class;
 }

@@ -10,7 +10,7 @@
 
 namespace Laramore\Elements;
 
-class Enum extends Element
+class EnumElement extends Element
 {
     /**
      * Create an enum with a specific name.
