@@ -1,7 +1,5 @@
 <?php
 
-use Laramore\Proxies\ProxyHandler;
-
 return [
 
     /*
@@ -16,76 +14,6 @@ return [
 
     'name_template' => '_{name}',
     'attname_template' => '_{attname}',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default constraints
-    |--------------------------------------------------------------------------
-    |
-    | This option defines the default constraints used in fields.
-    |
-    */
-
-    'constraints' => [
-        'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
-
-        'types' => [
-            'primary' => [
-                'class' => Laramore\Fields\Constraint\Primary::class,
-            ],
-            'index' => [
-                'class' => Laramore\Fields\Constraint\Index::class,
-            ],
-            'unique' => [
-                'class' => Laramore\Fields\Constraint\Unique::class,
-            ],
-            'foreign' => [
-                'class' => Laramore\Fields\Constraint\Foreign::class,
-            ],
-        ]
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default proxies
-    |--------------------------------------------------------------------------
-    |
-    | This option defines all proxy configurations.
-    |
-    */
-
-    'proxies' => [
-        'enabled' => true,
-
-        'manager' => Laramore\Proxies\ProxyManager::class,
-
-        'class' => Laramore\Proxies\Proxy::class,
-
-        'configurations' => [
-            'targets' => [ProxyHandler::MODEL_TYPE],
-            'requirements' => [],
-            'name_template' => '${methodname}^{fieldname}',
-        ],
-
-        'common' => [
-            'relate' => [
-                'name_template' => '${fieldname}',
-                'requirements' => ['instance'],
-            ],
-            'where' => [
-                'requirements' => ['instance'],
-                'targets' => [ProxyHandler::BUILDER_TYPE],
-            ],
-            'doesntHave' => [
-                'requirements' => ['instance'],
-                'targets' => [ProxyHandler::BUILDER_TYPE],
-            ],
-            'has' => [
-                'requirements' => ['instance'],
-                'targets' => [ProxyHandler::BUILDER_TYPE],
-            ],
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------
