@@ -1,6 +1,6 @@
 <?php
 /**
- * Load and prepare proxies.
+ * Load and prepare constraints.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -11,19 +11,14 @@
 namespace Laramore\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Container\Container;
 use Laramore\Interfaces\{
 	IsALaramoreManager, IsALaramoreProvider
 };
+use Laramore\Facades\FieldConstraint;
 
-class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
+class FieldConstraintProvider extends ServiceProvider implements IsALaramoreProvider
 {
-    /**
-     * Field manager.
-     *
-     * @var array
-     */
-    protected static $managers;
-
     /**
      * Before booting, create our definition for migrations.
      *
@@ -31,8 +26,12 @@ class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
      */
     public function register()
     {
-        $this->app->singleton('Proxies', function() {
-            return static::getManager();
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/field/constraints.php', 'field.constraints',
+        );
+
+        $this->app->singleton('field_constraint', function() {
+            return static::generateManager();
         });
 
         $this->app->booted([$this, 'bootedCallback']);
@@ -45,7 +44,9 @@ class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
      */
     public function boot()
     {
-        // Nothing to publish as it is already done in FieldsProvider.
+        $this->publishes([
+            __DIR__.'/../../config/field/constraints.php' => $this->app->make('path.config').DIRECTORY_SEPARATOR.'field/constraints.php',
+        ]);
     }
 
     /**
@@ -61,30 +62,13 @@ class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
     /**
      * Generate the corresponded manager.
      *
-     * @param  string $key
      * @return IsALaramoreManager
      */
-    public static function generateManager(string $key): IsALaramoreManager
+    public static function generateManager(): IsALaramoreManager
     {
-        $class = config('fields.proxies.manager');
+        $class = Container::getInstance()->config->get('field.constraints.manager');
 
-        return static::$managers[$key] = new $class();
-    }
-
-    /**
-     * Return the generated manager for this provider.
-     *
-     * @return IsALaramoreManager
-     */
-    public static function getManager(): IsALaramoreManager
-    {
-        $appHash = \spl_object_hash(app());
-
-        if (!isset(static::$managers[$appHash])) {
-            return static::generateManager($appHash);
-        }
-
-        return static::$managers[$appHash];
+        return new $class(static::getDefaults());
     }
 
     /**
@@ -94,6 +78,6 @@ class ProxiesProvider extends ServiceProvider implements IsALaramoreProvider
      */
     public function bootedCallback()
     {
-        static::getManager()->lock();
+        FieldConstraint::lock();
     }
 }

@@ -13,7 +13,7 @@ namespace Laramore\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laramore\Traits\Provider\MergesConfig;
 
-class FieldsProvider extends ServiceProvider
+class FieldProvider extends ServiceProvider
 {
     use MergesConfig;
 
@@ -25,7 +25,7 @@ class FieldsProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/fields.php', 'fields',
+            __DIR__.'/../../config/field.php', 'field',
         );
     }
 
@@ -37,7 +37,7 @@ class FieldsProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/fields.php' => config_path('fields.php'),
+            __DIR__.'/../../config/field.php' => $this->app->make('path.config').DIRECTORY_SEPARATOR.'field.php',
         ]);
     }
 }
