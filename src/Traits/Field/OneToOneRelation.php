@@ -11,10 +11,10 @@
 namespace Laramore\Traits\Field;
 
 use Illuminate\Support\Collection;
-use Laramore\Elements\Operator;
+use Laramore\Elements\OperatorElement;
 use Laramore\Eloquent\Builder;
 use Laramore\Facades\{
-    Metas, Operators
+    Metas, Operator
 };
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\IsALaramoreModel;
@@ -96,7 +96,7 @@ trait OneToOneRelation
     protected function setConstraints()
     {
         parent::setConstraints();
-        
+
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
 
         $this->foreign('id', Metas::get($this->on)->getAttribute($this->to), $relationName);
@@ -178,10 +178,10 @@ trait OneToOneRelation
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, Operator $operator=null, $value=null, $boolean='and')
+    public function where(Builder $builder, OperatorElement $operator=null, $value=null, $boolean='and')
     {
         if ($operator->needs === 'collection') {
-            return $this->whereIn($builder, $value, $boolean, ($operator === Operators::notIn()));
+            return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));
         }
 
         $builder->getQuery()->where($this->getAttribute('id')->attname, $operator, $value, $boolean);

@@ -10,11 +10,9 @@
 
 namespace Laramore\Traits\Field;
 
-use Illuminate\Support\{
-    Collection, Str
-};
-use Laramore\Elements\Operator;
-use Laramore\Facades\Operators;
+use Illuminate\Support\Collection;
+use Laramore\Elements\OperatorElement;
+use Laramore\Facades\Operator;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\AttributeField;
 use Laramore\Interfaces\{
@@ -105,7 +103,7 @@ trait ManyToManyRelation
 
     public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Operators::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
@@ -122,7 +120,7 @@ trait ManyToManyRelation
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, Operator $operator, $value=null, $boolean='and', int $count=null)
+    public function where(Builder $builder, OperatorElement $operator, $value=null, $boolean='and', int $count=null)
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 

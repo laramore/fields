@@ -41,7 +41,7 @@ trait HasMultipleFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('fields.constraints.types.primary.class');
+            $class = config('field.constraints.types.primary.class');
         }
 
         if (\count($this->getFields()) === 1) {
@@ -70,7 +70,7 @@ trait HasMultipleFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('fields.constraints.types.index.class');
+            $class = config('field.constraints.types.index.class');
         }
 
         if (\count($this->getFields()) === 1) {
@@ -99,7 +99,7 @@ trait HasMultipleFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('fields.constraints.types.unique.class');
+            $class = config('field.constraints.types.unique.class');
         }
 
         if (\count($this->getFields()) === 1) {
