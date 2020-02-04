@@ -52,7 +52,7 @@ class FieldProxyProvider extends ServiceProvider implements IsALaramoreProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/field/proxies.php' => $this->app->make('path.config').DIRECTORY_SEPARATOR.'field/proxies.php',
+            __DIR__.'/../../config/field/proxies.php' => $this->app->make('path.config').'/field/proxies.php',
         ]);
     }
 

@@ -45,7 +45,7 @@ class FieldConstraintProvider extends ServiceProvider implements IsALaramoreProv
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/field/constraints.php' => $this->app->make('path.config').DIRECTORY_SEPARATOR.'field/constraints.php',
+            __DIR__.'/../../config/field/constraints.php' => $this->app->make('path.config').'/field/constraints.php',
         ]);
     }
 

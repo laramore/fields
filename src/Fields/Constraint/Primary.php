@@ -44,7 +44,7 @@ class Primary extends Constraint
     /**
      * Return all attribute names.
      *
-     * @return array
+     * @return array<AttributeField>
      */
     public function getAttnames(): array
     {

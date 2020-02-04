@@ -29,8 +29,8 @@ class ProxyHandler extends BaseHandler
     /**
      * Add an observer to a list of observers.
      *
-     * @param BaseProxy $proxy
-     * @param array     $proxys
+     * @param BaseObserver        $proxy
+     * @param array<BaseObserver> $proxys
      * @return self
      */
     protected function push(BaseObserver $proxy, array &$proxys)
@@ -56,6 +56,7 @@ class ProxyHandler extends BaseHandler
      * Return if an observe exists with the given name.
      *
      * @param  string $name
+     * @param  string $instanceType
      * @return boolean
      */
     public function has(string $name, string $instanceType=null): bool
@@ -73,6 +74,7 @@ class ProxyHandler extends BaseHandler
      * Return the first observer with the given name.
      *
      * @param  string $name
+     * @param  string $instanceType
      * @return BaseObserver
      */
     public function get(string $name, string $instanceType=null)

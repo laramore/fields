@@ -34,11 +34,21 @@ class Foreign extends Constraint
         }
     }
 
+    /**
+     * Return the attribute that points to another.
+     *
+     * @return AttributeField
+     */
     public function getOffField(): AttributeField
     {
         return $this->all()[0];
     }
 
+    /**
+     * Return the attribute that is pointed by this foreign relation.
+     *
+     * @return AttributeField
+     */
     public function getOnField(): AttributeField
     {
         return $this->all()[1];

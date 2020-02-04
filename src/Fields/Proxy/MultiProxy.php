@@ -15,7 +15,7 @@ class MultiProxy extends BaseProxy
     /**
      * List of all proxies that this multi proxy can lead.
      *
-     * @var array
+     * @var array<Proxy>
      */
     protected $proxies = [];
 
@@ -39,6 +39,12 @@ class MultiProxy extends BaseProxy
         return $this->getName();
     }
 
+    /**
+     * Add a new proxy to this.
+     *
+     * @param Proxy $proxy
+     * @return self
+     */
     public function addProxy(Proxy $proxy)
     {
         $this->proxies[$proxy->getField()->getName()] = $proxy;
@@ -48,17 +54,34 @@ class MultiProxy extends BaseProxy
         return $this;
     }
 
-    public function hasProxy(string $fieldname)
+    /**
+     * Indicate if a proxy exists by a field name.
+     *
+     * @param string $fieldname
+     * @return boolean
+     */
+    public function hasProxy(string $fieldname): bool
     {
         return isset($this->proxies[$fieldname]);
     }
 
-    public function getProxy(string $fieldname)
+    /**
+     * Return a proxy by a field name.
+     *
+     * @param string $fieldname
+     * @return Proxy
+     */
+    public function getProxy(string $fieldname): Proxy
     {
         return $this->proxies[$fieldname];
     }
 
-    public function getProxies()
+    /**
+     * Return all proxies listed by this.
+     *
+     * @return array<Proxy>
+     */
+    public function getProxies(): array
     {
         return $this->proxies;
     }

@@ -24,16 +24,17 @@ abstract class BaseProxy extends BaseObserver
     /**
      * List of all variables to inject.
      *
-     * @var array
+     * @var array<string>
      */
     protected $injections;
 
     /**
      * An observer needs at least a name and a Closure.
      *
-     * @param string  $name
-     * @param integer $priority
-     * @param array   $data
+     * @param string        $name
+     * @param string        $methodName
+     * @param array<string> $injections
+     * @param array         $data
      */
     public function __construct(string $name, string $methodName, array $injections=[], array $data=[])
     {
@@ -71,7 +72,7 @@ abstract class BaseProxy extends BaseObserver
     /**
      * Define the arguments to inject.
      *
-     * @param array $injections
+     * @param array<string> $injections
      * @return self
      */
     public function setInjections(array $injections)
@@ -86,7 +87,7 @@ abstract class BaseProxy extends BaseObserver
     /**
      * Return the arguments to inject.
      *
-     * @return array
+     * @return array<string>
      */
     public function getInjections(): array
     {

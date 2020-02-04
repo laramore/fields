@@ -45,7 +45,15 @@ abstract class Constraint extends BaseObserver
         $this->setPriority($priority);
     }
 
-    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    /**
+     * Define a new constraint.
+     *
+     * @param array   $attributes
+     * @param string  $name
+     * @param integer $priority
+     * @return self|null
+     */
+    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY): ?Constraint
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
 
@@ -53,18 +61,28 @@ abstract class Constraint extends BaseObserver
             return null;
         }
 
-        $field = $creating ?: new static($attributes, $name, $priority);
+        $constraint = $creating ?: new static($attributes, $name, $priority);
 
-        Event::dispatch('constraints.created', $field);
+        Event::dispatch('constraints.created', $constraint);
 
-        return $field;
+        return $constraint;
     }
 
+    /**
+     * Return the constraint name.
+     *
+     * @return string
+     */
     public function getConstraintName(): string
     {
         return $this->constraintName;
     }
 
+    /**
+     * Return the default name for this constraint.
+     *
+     * @return string
+     */
     public function getDefaultName(): string
     {
         $tableName = $this->getMainTableName();
@@ -74,11 +92,21 @@ abstract class Constraint extends BaseObserver
         }, $this->getAttributes())).'_'.$this->constraintName;
     }
 
+    /**
+     * Indicate if it has a name.
+     *
+     * @return boolean
+     */
     public function hasName(): bool
     {
         return !\is_null($this->name);
     }
 
+    /**
+     * Return the name of this constraint.
+     *
+     * @return string
+     */
     public function getName(): string
     {
         if (!$this->hasName()) {
@@ -88,16 +116,26 @@ abstract class Constraint extends BaseObserver
         return $this->name;
     }
 
-    public function getTableNames()
+    /**
+     * Return all table names related to this constraint.
+     *
+     * @return array<string>
+     */
+    public function getTableNames(): array
     {
         return \array_unique(\array_map(function (AttributeField $field) {
             return $field->getMeta()->getTableName();
         }, $this->getAttributes()));
     }
 
-    public function getMainTableName()
+    /**
+     * Return the main table.
+     *
+     * @return string
+     */
+    public function getMainTableName(): string
     {
-        return $this->getAttributes()[0]->getMeta()->getTableName();
+        return \reset($this->getAttributes())->getMeta()->getTableName();
     }
 
     /**
@@ -110,6 +148,11 @@ abstract class Constraint extends BaseObserver
         return $this->all();
     }
 
+    /**
+     * Indicate if this constraint is composed of multiple fields.
+     *
+     * @return boolean
+     */
     public function isComposed(): bool
     {
         return $this->count() > 1;
@@ -143,7 +186,10 @@ abstract class Constraint extends BaseObserver
     protected function locking()
     {
         if ($this->getTableNames() !== [$this->getMainTableName()]) {
-            throw new LockException("A `$this->constraintName` constraint cannot have fields from different tables.", 'observed');
+            throw new LockException(
+                "A `$this->constraintName` constraint cannot have fields from different tables.",
+                'observed'
+            );
         }
     }
 

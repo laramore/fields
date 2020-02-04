@@ -25,9 +25,11 @@ class Proxy extends BaseProxy
     /**
      * An observer needs at least a name and a Closure.
      *
-     * @param string  $name
-     * @param integer $priority
-     * @param array   $data
+     * @param string        $name
+     * @param BaseField     $field
+     * @param string        $methodName
+     * @param array<string> $injections
+     * @param array         $data
      */
     public function __construct(string $name, BaseField $field, string $methodName, array $injections=[], array $data=[])
     {

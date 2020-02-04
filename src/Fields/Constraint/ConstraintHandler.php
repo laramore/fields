@@ -25,6 +25,11 @@ class ConstraintHandler extends BaseHandler
      */
     protected $observerClass = Constraint::class;
 
+    /**
+     * Return the primary constraint.
+     *
+     * @return Primary|null
+     */
     public function getPrimary(): ?Primary
     {
         $primaries = $this->allFromClass(Primary::class);
@@ -36,21 +41,41 @@ class ConstraintHandler extends BaseHandler
         return null;
     }
 
+    /**
+     * Return all indexes.
+     *
+     * @return array<Index>
+     */
     public function getIndexes(): array
     {
         return $this->allFromClass(Index::class);
     }
 
+    /**
+     * Return all unique constraints.
+     *
+     * @return array<Unique>
+     */
     public function getUniques(): array
     {
         return $this->allFromClass(Unique::class);
     }
 
+    /**
+     * Return all foreign constraints.
+     *
+     * @return array<Foreign>
+     */
     public function getForeigns(): array
     {
         return $this->allFromClass(Foreign::class);
     }
 
+    /**
+     * Actions during locking.
+     *
+     * @return void
+     */
     public function locking()
     {
         parent::locking();
