@@ -11,11 +11,9 @@
 namespace Laramore\Interfaces;
 
 use Illuminate\Support\Collection;
-use Laramore\Eloquent\{
-    Model, Builder
-};
+use Laramore\Eloquent\Builder;
 use Laramore\Interfaces\{
-    IsProxied, IsLockable, IsOwnable
+    IsLockable, IsOwnable
 };
 use Laramore\Elements\{
     TypeElement, OperatorElement
@@ -51,7 +49,7 @@ interface IsAField extends IsLockable, IsOwnable
      *
      * @param string $key
      * @param mixed  $value
-     * @return static
+     * @return self
      */
     public function setProperty(string $key, $value);
 
@@ -60,7 +58,7 @@ interface IsAField extends IsLockable, IsOwnable
      *
      * @param  string $method
      * @param  array  $args
-     * @return static
+     * @return self
      */
     public function __call(string $method, array $args);
 
@@ -128,9 +126,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  mixed   $value
      * @param  string  $boolean
      * @param  boolean $not
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false);
+    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder;
 
     /**
      * Add a where condition from this field.
@@ -138,9 +136,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Builder $builder
      * @param  mixed   $value
      * @param  string  $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and');
+    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder;
 
     /**
      * Add a where condition from this field.
@@ -149,9 +147,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false);
+    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder;
 
     /**
      * Add a where condition from this field.
@@ -159,9 +157,9 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  Builder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and');
+    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder;
 
     /**
      * Add a where condition from this field.
@@ -170,7 +168,7 @@ interface IsAField extends IsLockable, IsOwnable
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and');
+    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and'): Builder;
 }

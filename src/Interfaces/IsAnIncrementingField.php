@@ -28,7 +28,7 @@ interface IsAnIncrementingField extends IsAField
      *
      * @param IsALaramoreModel $model
      * @param integer|float    $value
-     * @param integer|float    $increment
+     * @param integer|float    $decrement
      *
      * @return void
      */

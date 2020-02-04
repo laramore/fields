@@ -10,7 +10,6 @@
 
 namespace Laramore\Interfaces;
 
-use Laramore\Builder;
 use Laramore\Fields\BaseField;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel, IsARelationField
