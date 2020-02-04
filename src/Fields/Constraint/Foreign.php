@@ -30,7 +30,7 @@ class Foreign extends Constraint
     protected function locking()
     {
         if ($this->count() !== 2) {
-            throw new LockException('You must define two fields for a foreign constraint');
+            throw new LockException('You must define two fields for a foreign constraint', 'fields');
         }
     }
 

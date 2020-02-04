@@ -135,7 +135,7 @@ abstract class Constraint extends BaseObserver
      */
     public function getMainTableName(): string
     {
-        return \reset($this->getAttributes())->getMeta()->getTableName();
+        return $this->getAttributes()[0]->getMeta()->getTableName();
     }
 
     /**
