@@ -16,13 +16,12 @@ use Illuminate\Support\{
 use Laramore\Eloquent\{
     Builder, Model
 };
-use Laramore\Meta;
 use Laramore\Interfaces\IsProxied;
 use Laramore\Elements\{
-    Type, Operator
+    TypeElement, OperatorElement
 };
 use Laramore\Facades\{
-    Rules, Operators
+    Rule, Operator
 };
 use Laramore\Traits\Field\HasFieldConstraints;
 
@@ -45,7 +44,7 @@ abstract class AttributeField extends BaseField
      */
     public static function parseAttname(string $attname): string
     {
-        return static::replaceInTemplate(config('fields.attname_template'), compact('attname'));
+        return static::replaceInTemplate(config('field.attname_template'), compact('attname'));
     }
 
     /**
@@ -150,13 +149,13 @@ abstract class AttributeField extends BaseField
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder  $builder
-     * @param  Operator $operator
-     * @param  mixed    $value
-     * @param  string   $boolean
+     * @param  Builder         $builder
+     * @param  OperatorElement $operator
+     * @param  mixed           $value
+     * @param  string          $boolean
      * @return Builder|void
      */
-    public function where(Builder $builder, Operator $operator, $value=null, string $boolean='and')
+    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and')
     {
         $builder->getQuery()->where($this->attname, $operator, $value, $boolean);
 
@@ -172,11 +171,11 @@ abstract class AttributeField extends BaseField
     public function relate(IsProxied $instance)
     {
         if ($instance instanceof Model) {
-            return $this->where($instance, Operators::equal(), $instance->getAttribute($this->attname));
+            return $this->where($instance, Operator::equal(), $instance->getAttribute($this->attname));
         }
 
         if ($instance instanceof Builder) {
-            return $this->where($instance, Operators::equal(), $instance->getModel()->getAttribute($this->attname));
+            return $this->where($instance, Operator::equal(), $instance->getModel()->getAttribute($this->attname));
         }
     }
 }

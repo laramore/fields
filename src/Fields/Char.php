@@ -11,8 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
-use Laramore\Facades\Rules;
+use Laramore\Facades\Rule;
 
 class Char extends Text
 {
@@ -43,13 +42,13 @@ class Char extends Text
         $value = parent::transform($value);
 
         if ($this->maxLength < strlen($value) && !is_null($value)) {
-            $dots = $this->hasRule(Rules::dotsOnResize()) ? '...' : '';
+            $dots = $this->hasRule(Rule::dotsOnResize()) ? '...' : '';
 
-            if ($this->hasRule(Rules::caracterResize())) {
+            if ($this->hasRule(Rule::caracterResize())) {
                 $value = $this->resize($model, $attValue, $value, null, '', $dots);
-            } else if ($this->hasRule(Rules::wordResize())) {
+            } else if ($this->hasRule(Rule::wordResize())) {
                 $value = $this->resize($model, $attValue, $value, null, ' ', $dots);
-            } else if ($this->hasRule(Rules::sentenceResize())) {
+            } else if ($this->hasRule(Rule::sentenceResize())) {
                 $value = $this->resize($model, $attValue, $value, null, '.', $dots);
             }
         }

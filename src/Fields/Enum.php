@@ -11,11 +11,10 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
 use Laramore\Elements\{
-    Enum as Element, EnumManager
+    EnumElement, EnumManager
 };
-use Laramore\Facades\Types;
+use Laramore\Exceptions\LockException;
 
 class Enum extends AttributeField
 {
@@ -25,8 +24,8 @@ class Enum extends AttributeField
     {
         parent::setProxies();
 
-        $conf = config('fields.proxies');
-        $class = config('fields.proxies.class');
+        $conf = config('field.proxies');
+        $class = config('field.proxies.class');
         $data = \array_merge($conf['configurations'], $this->getConfig('elements.proxy'));
 
         if ($conf['enabled'] && $data['enabled']) {
@@ -70,12 +69,12 @@ class Enum extends AttributeField
         return \array_keys($this->elements->all());
     }
 
-    public function getElement($key): Element
+    public function getElement($key): EnumElement
     {
         return $this->elements->get($key);
     }
 
-    public function findElement($key): Element
+    public function findElement($key): EnumElement
     {
         return $this->elements->find($key);
     }
@@ -110,7 +109,7 @@ class Enum extends AttributeField
     protected function checkRules()
     {
         if (!$this->hasProperty('elements') || $this->elements->count() === 0) {
-            throw new LockException($this, "Need a list of elements for {$this->getName()}", 'elements');
+            throw new LockException("Need a list of elements for {$this->getName()}", 'elements');
         }
     }
 
@@ -126,7 +125,7 @@ class Enum extends AttributeField
 
     public function transform($value)
     {
-        if (is_null($value) || ($value instanceof Element)) {
+        if (is_null($value) || ($value instanceof EnumElement)) {
             return $value;
         }
 
@@ -141,11 +140,12 @@ class Enum extends AttributeField
     /**
      * Return if the value is the right element as expected or not.
      *
-     * @param  mixed   $value
-     * @param  boolean $expected
+     * @param  EnumElement $value
+     * @param  mixed       $element
+     * @param  boolean     $expected
      * @return boolean
      */
-    public function is(Element $value, $element, bool $expected=true): bool
+    public function is(EnumElement $value, $element, bool $expected=true): bool
     {
         return ($value === $this->transform($element)) === $expected;
     }
@@ -153,10 +153,11 @@ class Enum extends AttributeField
     /**
      * Return if the value is not the right element.
      *
-     * @param  mixed $value
+     * @param  EnumElement $value
+     * @param  mixed       $element
      * @return boolean
      */
-    public function isNot(Element $value, $element): bool
+    public function isNot(EnumElement $value, $element): bool
     {
         return $this->is($value, $element, false);
     }

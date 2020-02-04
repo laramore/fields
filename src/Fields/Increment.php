@@ -13,16 +13,16 @@ namespace Laramore\Fields;
 use Laramore\Interfaces\{
     IsALaramoreModel, IsAnIncrementingField
 };
-use Laramore\Elements\Type;
+use Laramore\Elements\TypeElement;
 
 class Increment extends Integer implements IsAnIncrementingField
 {
     /**
      * Return the type object of the field.
      *
-     * @return Type
+     * @return TypeElement
      */
-    public function getType(): Type
+    public function getType(): TypeElement
     {
         return $this->resolveType();
     }

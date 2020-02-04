@@ -11,8 +11,8 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Collection;
-use Laramore\Facades\Operators;
-use Laramore\Elements\Operator;
+use Laramore\Facades\Operator;
+use Laramore\Elements\OperatorElement;
 use Laramore\Eloquent\Builder;
 use Laramore\Fields\CompositeField;
 use Laramore\Interfaces\{
@@ -71,7 +71,7 @@ class HasOne extends LinkField
 
     public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Operators::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
@@ -86,7 +86,7 @@ class HasOne extends LinkField
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, Operator $operator, $value=null, $boolean='and')
+    public function where(Builder $builder, OperatorElement $operator, $value=null, $boolean='and')
     {
         $builder->getQuery()->where($this->on::getMeta()->getPrimary()->attname, (string) $operator, $value, $boolean);
 

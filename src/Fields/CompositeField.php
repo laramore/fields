@@ -11,9 +11,9 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Arr;
-use Laramore\Elements\Rule;
+use Laramore\Elements\RuleElement;
 use Laramore\Exceptions\ConfigException;
-use Laramore\Facades\Rules;
+use Laramore\Facades\Rule;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
@@ -255,13 +255,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Add a rule to the resource.
      *
-     * @param string|Rule $rule
+     * @param string|RuleElement $rule
      * @return self
      */
     protected function addRule($rule)
     {
         if (\is_string($rule)) {
-            $rule = Rules::get($rule);
+            $rule = Rule::get($rule);
         }
 
         foreach ($this->getAttributes() as $attribute) {
@@ -274,13 +274,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Remove a rule from the resource.
      *
-     * @param  string|Rule $rule
+     * @param  string|RuleElement $rule
      * @return self
      */
     protected function removeRule($rule)
     {
         if (\is_string($rule)) {
-            $rule = Rules::get($rule);
+            $rule = Rule::get($rule);
         }
 
         foreach ($this->getAttributes() as $attribute) {

@@ -10,10 +10,9 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Database\Eloquent\Model;
-use Laramore\Elements\Type;
+use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
-    Rules, Types
+    Rule, Type
 };
 
 class Integer extends AttributeField
@@ -23,10 +22,10 @@ class Integer extends AttributeField
      *
      * @return Type
      */
-    public function getType(): Type
+    public function getType(): TypeElement
     {
-        if ($this->hasRule(Rules::unsigned())) {
-            return Types::get($this->getConfig('unsigned_type'));
+        if ($this->hasRule(Rule::unsigned())) {
+            return Type::get($this->getConfig('unsigned_type'));
         }
 
         return $this->resolveType();
@@ -44,8 +43,8 @@ class Integer extends AttributeField
             return $this->negative();
         }
 
-        $this->removeRule(Rules::negative());
-        $this->removeRule(Rules::unsigned());
+        $this->removeRule(Rule::negative());
+        $this->removeRule(Rule::unsigned());
 
         return $this;
     }
@@ -54,8 +53,8 @@ class Integer extends AttributeField
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(Rules::unsigned());
-        $this->removeRule(Rules::negative());
+        $this->addRule(Rule::unsigned());
+        $this->removeRule(Rule::negative());
 
         return $this;
     }
@@ -64,7 +63,7 @@ class Integer extends AttributeField
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(Rules::negative());
+        $this->addRule(Rule::negative());
 
         return $this;
     }
@@ -85,10 +84,10 @@ class Integer extends AttributeField
             return $value;
         }
 
-        if ($this->hasRule(Rules::unsigned())) {
+        if ($this->hasRule(Rule::unsigned())) {
             $newValue = abs($value);
 
-            if ($this->hasRule(Rules::negative())) {
+            if ($this->hasRule(Rule::negative())) {
                 $newValue = - $newValue;
             }
 

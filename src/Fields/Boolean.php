@@ -10,9 +10,6 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Database\Eloquent\Model;
-use Laramore\Facades\Types;
-
 class Boolean extends AttributeField
 {
     public function dry($value)

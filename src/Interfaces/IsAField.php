@@ -18,7 +18,7 @@ use Laramore\Interfaces\{
     IsProxied, IsLockable, IsOwnable
 };
 use Laramore\Elements\{
-    Type, Operator
+    TypeElement, OperatorElement
 };
 
 interface IsAField extends IsLockable, IsOwnable
@@ -26,9 +26,9 @@ interface IsAField extends IsLockable, IsOwnable
     /**
      * Return the type object of the field.
      *
-     * @return Type
+     * @return TypeElement
      */
-    public function getType(): Type;
+    public function getType(): TypeElement;
 
     /**
      * Indicate if a propery exists.
@@ -166,11 +166,11 @@ interface IsAField extends IsLockable, IsOwnable
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder  $builder
-     * @param  Operator $operator
-     * @param  mixed    $value
-     * @param  string   $boolean
+     * @param  Builder         $builder
+     * @param  OperatorElement $operator
+     * @param  mixed           $value
+     * @param  string          $boolean
      * @return Builder|void
      */
-    public function where(Builder $builder, Operator $operator, $value=null, string $boolean='and');
+    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and');
 }

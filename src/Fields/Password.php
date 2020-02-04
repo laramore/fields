@@ -11,8 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Laramore\Facades\Rules;
+use Laramore\Facades\Rule;
 
 class Password extends Pattern
 {
@@ -33,19 +32,19 @@ class Password extends Pattern
             $rules[] = str_replace(['$min', '$max'], $lengths, $patterns['min_max_part']);
         }
 
-        if ($this->hasRule(Rules::needLowercase())) {
+        if ($this->hasRule(Rule::needLowercase())) {
             $rules[] = $patterns['one_lowercase_part'];
         }
 
-        if ($this->hasRule(Rules::needUppercase())) {
+        if ($this->hasRule(Rule::needUppercase())) {
             $rules[] = $patterns['one_uppercase_part'];
         }
 
-        if ($this->hasRule(Rules::needNumber())) {
+        if ($this->hasRule(Rule::needNumber())) {
             $rules[] = $patterns['one_number_part'];
         }
 
-        if ($this->hasRule(Rules::needSpecial())) {
+        if ($this->hasRule(Rule::needSpecial())) {
             $rules[] = $patterns['one_special_part'];
         }
 

@@ -11,7 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Collection;
-use Laramore\Elements\Operator;
+use Laramore\Elements\OperatorElement;
 use Laramore\Eloquent\Builder;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
@@ -51,7 +51,7 @@ class HasMany extends HasOne
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, Operator $operator, $value=null, $boolean='and', int $count=null)
+    public function where(Builder $builder, OperatorElement $operator, $value=null, $boolean='and', int $count=null)
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 

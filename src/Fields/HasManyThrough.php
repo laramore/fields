@@ -11,10 +11,9 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Collection;
-use Laramore\Elements\Operator;
+use Laramore\Elements\OperatorElement;
 use Laramore\Eloquent\Builder;
-use Laramore\Fields\CompositeField;
-use Laramore\Facades\Operators;
+use Laramore\Facades\Operator;
 use Laramore\Interfaces\{
     IsProxied, IsALaramoreModel
 };
@@ -28,18 +27,6 @@ class HasManyThrough extends LinkField
     protected $pivotMeta;
     protected $pivotTo;
     protected $pivotFrom;
-
-    protected function setProxies()
-    {
-        parent::setProxies();
-
-        $this->setProxy('attach', ['model']);
-        $this->setProxy('detach', ['model']);
-        $this->setProxy('sync', ['model']);
-        $this->setProxy('toggle', ['model']);
-        $this->setProxy('syncWithoutDetaching', ['model']);
-        $this->setProxy('updateExistingPivot', ['model']);
-    }
 
     public function cast($value)
     {
@@ -91,9 +78,9 @@ class HasManyThrough extends LinkField
     public function relate(IsProxied $model)
     {
         return $model->belongsToMany($this->on, $this->pivotMeta->getTableName(), $this->pivotTo->from, $this->pivotFrom->from, $this->to, $this->from, $this->name)
-            ->withPivot(...\array_map(function (Field $field) {
+            ->withPivot(...\array_map(function (AttributeField $field) {
                 return $field->attname;
-            }, \array_values($this->pivotMeta->getFields())));
+            }, \array_values($this->pivotMeta->getAttributes())));
     }
 
     public function whereNull(Builder $builder, $value=null, $boolean='and', $not=false, \Closure $callback=null)
@@ -107,7 +94,7 @@ class HasManyThrough extends LinkField
 
     public function whereNotNull(Builder $builder, $value=null, $boolean='and', $operator=null, int $count=1, \Closure $callback=null)
     {
-        return $builder->has($this->name, (string) ($operator ?? Operators::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
 
     public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
@@ -124,7 +111,7 @@ class HasManyThrough extends LinkField
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, Operator $operator, $value=null, $boolean='and', int $count=null)
+    public function where(Builder $builder, OperatorElement $operator, $value=null, $boolean='and', int $count=null)
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 

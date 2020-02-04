@@ -12,9 +12,9 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Event;
-use Laramore\Elements\Type;
+use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
-    Rules, Types
+    Rule, Type
 };
 use Laramore\Interfaces\{
     IsAField, IsConfigurable, IsAnOwner
@@ -96,7 +96,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $name = Str::snake((new \ReflectionClass($this))->getShortName());
 
-        return 'fields.configurations.'.$name.(\is_null($path) ? '' : '.'.$path);
+        return 'field.configurations.'.$name.(\is_null($path) ? '' : '.'.$path);
     }
 
     /**
@@ -114,25 +114,25 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Return the type derived of this field.
      *
-     * @return Type
+     * @return TypeElement
      */
-    protected function resolveType(): Type
+    protected function resolveType(): TypeElement
     {
         $type = $this->getConfig('type');
 
         if (\is_null($type)) {
-            throw new ConfigException($this->getConfigPath('type'), \array_keys(Types::all()), null);
+            throw new ConfigException($this->getConfigPath('type'), \array_keys(Type::all()), null);
         }
 
-        return Types::get($type);
+        return Type::get($type);
     }
 
     /**
      * Return the type object of the field.
      *
-     * @return Type
+     * @return TypeElement
      */
-    public function getType(): Type
+    public function getType(): TypeElement
     {
         return $this->resolveType();
     }
@@ -159,7 +159,7 @@ abstract class BaseField implements IsAField, IsConfigurable
             }
 
             return $this->$key;
-        } else if (Rules::has($snakeKey = Str::snake($key))) {
+        } else if (Rule::has($snakeKey = Str::snake($key))) {
             return $this->hasRule($snakeKey);
         }
 
@@ -180,7 +180,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $this->needsToBeUnlocked();
 
-        if (Rules::has($snakeKey = Str::snake($key))) {
+        if (Rule::has($snakeKey = Str::snake($key))) {
             if ($value === false) {
                 return $this->removeRule($snakeKey);
             }
@@ -199,7 +199,7 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public static function parseName(string $name): string
     {
-        return static::replaceInTemplate(config('fields.name_template'), compact('name'));
+        return static::replaceInTemplate(config('field.name_template'), compact('name'));
     }
 
     /**
@@ -265,7 +265,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $this->needsToBeUnlocked();
 
-        $this->removeRule(Rules::required());
+        $this->removeRule(Rule::required());
 
         if (\is_null($value)) {
             $this->nullable();
@@ -377,21 +377,21 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         if ($this->hasProperty('default')) {
             if (\is_null($this->getProperty('default'))) {
-                if ($this->hasRule(Rules::notNullable())) {
+                if ($this->hasRule(Rule::notNullable())) {
                     throw new \LogicException("The field `{$this->getFullName()}` cannot be null and defined as null by default");
-                } else if (!$this->hasRule(Rules::nullable()) && !$this->hasRule(Rules::required())) {
+                } else if (!$this->hasRule(Rule::nullable()) && !$this->hasRule(Rule::required())) {
                     throw new \LogicException("The field `{$this->getFullName()}` cannot be null, defined as null by default and not required");
                 }
-            } else if ($this->hasRule(Rules::required())) {
+            } else if ($this->hasRule(Rule::required())) {
                 throw new \LogicException("The field `{$this->getFullName()}` cannot have a default value and be required");
             }
         }
 
-        if (!$this->hasRule(Rules::fillable()) && $this->hasRule(Rules::required())) {
+        if (!$this->hasRule(Rule::fillable()) && $this->hasRule(Rule::required())) {
             throw new \LogicException("The field `{$this->getFullName()}` must be fillable if it is required");
         }
 
-        if ($this->hasRule(Rules::notNullable()) && $this->hasRule(Rules::nullable())) {
+        if ($this->hasRule(Rule::notNullable()) && $this->hasRule(Rule::nullable())) {
             throw new \LogicException("The field `{$this->getFullName()}` cannot be nullable and not nullable on the same time");
         }
     }
@@ -403,15 +403,15 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     protected function setProxies()
     {
-        $class = config('fields.proxies.class');
-        $proxies = \array_merge(config('fields.proxies.common'), $this->getConfig('proxies'));
+        $class = config('field.proxies.class');
+        $proxies = \array_merge(config('field.proxies.common'), $this->getConfig('proxies'));
 
-        if (!config('fields.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
+        if (!config('field.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
             return;
         }
 
         $proxyHandler = $this->getMeta()->getProxyHandler();
-        $default = config('fields.proxies.configurations');
+        $default = config('field.proxies.configurations');
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {

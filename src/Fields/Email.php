@@ -10,8 +10,7 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\Str;
-use Laramore\Facades\Rules;
+use Laramore\Facades\Rule;
 
 class Email extends Pattern
 {
@@ -70,7 +69,7 @@ class Email extends Pattern
 
     public function fix(string $value)
     {
-        if ($this->hasRule(Rules::acceptUsername())) {
+        if ($this->hasRule(Rule::acceptUsername())) {
             return $value.'@'.$this->getMainDomain();
         }
 
