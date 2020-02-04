@@ -71,7 +71,7 @@ abstract class Constraint extends BaseObserver
 
         return $tableName.'_'.implode('_', \array_map(function (AttributeField $field) {
             return $field->getAttname();
-        }, $this->getFields())).'_'.$this->constraintName;
+        }, $this->getAttributes())).'_'.$this->constraintName;
     }
 
     public function hasName(): bool
@@ -92,12 +92,22 @@ abstract class Constraint extends BaseObserver
     {
         return \array_unique(\array_map(function (AttributeField $field) {
             return $field->getMeta()->getTableName();
-        }, $this->all()));
+        }, $this->getAttributes()));
     }
 
     public function getMainTableName()
     {
-        return $this->all()[0]->getMeta()->getTableName();
+        return $this->getAttributes()[0]->getMeta()->getTableName();
+    }
+
+    /**
+     * Return all concerned attribute fields.
+     *
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->all();
     }
 
     public function isComposed(): bool
