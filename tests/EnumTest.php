@@ -2,17 +2,16 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Laramore\Exceptions\LockException;
 use Laramore\Elements\{
-    Enum, EnumManager, Element, ElementManager
+    EnumElement, EnumManager, Element, ElementManager
 };
 
 final class EnumTest extends TestCase
 {
     public function testEnumClass()
     {
-        $operator = new Enum('name', 'native');
-        $operator2 = new Enum('name', 'native', 'description');
+        $operator = new EnumElement('name', 'native');
+        $operator2 = new EnumElement('name', 'native', 'description');
 
         $this->assertTrue($operator instanceof Element);
     }
@@ -23,7 +22,7 @@ final class EnumTest extends TestCase
 
         $this->assertTrue($manager instanceof ElementManager);
 
-        $manager->set(new Enum('name', 'native'));
+        $manager->set(new EnumElement('name', 'native'));
     }
 
     public function testWrongEnum()
