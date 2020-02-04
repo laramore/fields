@@ -31,6 +31,14 @@ class Integer extends AttributeField
         return $this->resolveType();
     }
 
+    /**
+     * Force the value to be unsigned or not, positive or not.
+     *
+     * @param boolean $unsigned
+     * @param boolean $positive
+     *
+     * @return self
+     */
     public function unsigned(bool $unsigned=true, bool $positive=true)
     {
         $this->needsToBeUnlocked();
@@ -49,6 +57,11 @@ class Integer extends AttributeField
         return $this;
     }
 
+    /**
+     * Force the value to be positive.
+     *
+     * @return self
+     */
     public function positive()
     {
         $this->needsToBeUnlocked();
@@ -59,6 +72,11 @@ class Integer extends AttributeField
         return $this;
     }
 
+    /**
+     * Force the value to be negative.
+     *
+     * @return self
+     */
     public function negative()
     {
         $this->needsToBeUnlocked();
@@ -68,16 +86,34 @@ class Integer extends AttributeField
         return $this;
     }
 
+    /**
+     * Dry the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function dry($value)
     {
         return is_null($value) ? $value : (int) $value;
     }
 
+    /**
+     * Cast the value in the correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function cast($value)
     {
         return $this->transform($this->dry($value));
     }
 
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         if (is_null($value)) {
@@ -88,7 +124,7 @@ class Integer extends AttributeField
             $newValue = abs($value);
 
             if ($this->hasRule(Rule::negative())) {
-                $newValue = - $newValue;
+                $newValue = (- $newValue);
             }
 
             $value = $newValue;
@@ -97,6 +133,12 @@ class Integer extends AttributeField
         return $value;
     }
 
+    /**
+     * Serialize the value for outputs.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function serialize($value)
     {
         return $value;

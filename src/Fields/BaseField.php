@@ -69,7 +69,7 @@ abstract class BaseField implements IsAField, IsConfigurable
      * Call the constructor and generate the field.
      *
      * @param  array|null $rules
-     * @return static
+     * @return self
      */
     public static function field(array $rules=null)
     {
@@ -164,7 +164,7 @@ abstract class BaseField implements IsAField, IsConfigurable
         }
 
         if ($fail) {
-            throw new \ErrorException("The property $key does not exist");
+            throw new \ErrorException("The property `$key` does not exist");
         }
     }
 
@@ -375,24 +375,26 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     protected function checkRules()
     {
+        $name = $this->getFullName();
+
         if ($this->hasProperty('default')) {
             if (\is_null($this->getProperty('default'))) {
                 if ($this->hasRule(Rule::notNullable())) {
-                    throw new \LogicException("The field `{$this->getFullName()}` cannot be null and defined as null by default");
+                    throw new \LogicException("The field `$name` cannot be null and defined as null by default");
                 } else if (!$this->hasRule(Rule::nullable()) && !$this->hasRule(Rule::required())) {
-                    throw new \LogicException("The field `{$this->getFullName()}` cannot be null, defined as null by default and not required");
+                    throw new \LogicException("The field `$name` cannot be null, defined as null by default and not required");
                 }
             } else if ($this->hasRule(Rule::required())) {
-                throw new \LogicException("The field `{$this->getFullName()}` cannot have a default value and be required");
+                throw new \LogicException("The field `$name` cannot have a default value and be required");
             }
         }
 
         if (!$this->hasRule(Rule::fillable()) && $this->hasRule(Rule::required())) {
-            throw new \LogicException("The field `{$this->getFullName()}` must be fillable if it is required");
+            throw new \LogicException("The field `$name` must be fillable if it is required");
         }
 
         if ($this->hasRule(Rule::notNullable()) && $this->hasRule(Rule::nullable())) {
-            throw new \LogicException("The field `{$this->getFullName()}` cannot be nullable and not nullable on the same time");
+            throw new \LogicException("The field `$name` cannot be nullable and not nullable on the same time");
         }
     }
 

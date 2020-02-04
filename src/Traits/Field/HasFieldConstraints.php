@@ -108,7 +108,8 @@ trait HasFieldConstraints
      * @param  integer        $priority
      * @return self
      */
-    public function foreign(AttributeField $field, string $name=null, string $class=null, int $priority=Foreign::MEDIUM_PRIORITY)
+    public function foreign(AttributeField $field, string $name=null, string $class=null,
+                            int $priority=Foreign::MEDIUM_PRIORITY)
     {
         $this->needsToBeUnlocked();
 
@@ -125,6 +126,11 @@ trait HasFieldConstraints
         return $this;
     }
 
+    /**
+     * Define all constraints for this field.
+     *
+     * @return void
+     */
     protected function setConstraints()
     {
         $handler = $this->getMeta()->getConstraintHandler();

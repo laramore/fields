@@ -16,6 +16,11 @@ use Laramore\Facades\Rule;
 
 class Timestamp extends AttributeField
 {
+    /**
+     * Check all properties and rules before locking the field.
+     *
+     * @return void
+     */
     protected function checkRules()
     {
         parent::checkRules();
@@ -25,21 +30,45 @@ class Timestamp extends AttributeField
         }
     }
 
-    public function cast($value)
-    {
-        return \is_null($value) ? null : new Carbon($value);
-    }
-
+    /**
+     * Dry the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function dry($value)
     {
         return \is_null($value) ? null : (string) $value;
     }
 
+    /**
+     * Cast the value in the correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function cast($value)
+    {
+        return \is_null($value) ? null : new Carbon($value);
+    }
+
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         return $value;
     }
 
+    /**
+     * Serialize the value for outputs.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function serialize($value)
     {
         return $this->dry($value);

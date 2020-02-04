@@ -10,13 +10,10 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Meta;
 use Laramore\Interfaces\{
     IsAnOwner, IsARelationField
 };
-use Laramore\Fields\{
-    BaseField, CompositeField
-};
+use Laramore\Fields\BaseField;
 
 abstract class LinkField extends BaseField implements IsARelationField
 {

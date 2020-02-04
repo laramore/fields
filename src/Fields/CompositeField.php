@@ -27,28 +27,28 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Attribute fields managed by this composite fields.
      *
-     * @var array
+     * @var array<AttributeField>
      */
     protected $attributes = [];
 
     /**
      * Link fields managed by this composite fields.
      *
-     * @var array
+     * @var array<LinkField>
      */
     protected $links = [];
 
     /**
      * Name of each attribute fields.
      *
-     * @var array
+     * @var array<string>
      */
     protected $attributesName = [];
 
     /**
      * Name of each link fields.
      *
-     * @var array
+     * @var array<string>
      */
     protected $linksName = [];
 
@@ -100,7 +100,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param array $rules
      * @param array $attributes Allow the user to define sub fields.
      * @param array $links      Allow the user to define sub links.
-     * @return static
+     * @return self
      */
     public static function field(array $rules=null, array $attributes=null, array $links=null)
     {
@@ -311,7 +311,9 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected function ownAttributes()
     {
         foreach ($this->attributes as $attributename => $attribute) {
-            $name = $this->replaceInFieldTemplate(($this->attributesName[$attributename] ?? $this->getConfig('attribute_name_template')), $attributename);
+            $template = ($this->attributesName[$attributename] ?? $this->getConfig('attribute_name_template'));
+            $name = $this->replaceInFieldTemplate($template, $attributename);
+
             $this->attributes[$attributename] = $attribute->own($this, $name);
         }
     }
@@ -324,11 +326,20 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected function ownLinks()
     {
         foreach ($this->links as $linkname => $link) {
-            $name = $this->replaceInFieldTemplate(($this->linksName[$linkname] ?? $this->getConfig('link_name_template')), $linkname);
+            $template = ($this->linksName[$linkname] ?? $this->getConfig('link_name_template'));
+            $name = $this->replaceInFieldTemplate($template, $linkname);
+
             $this->links[$linkname] = $link->own($this, $name);
         }
     }
 
+    /**
+     * Replace in field template
+     *
+     * @param string $template
+     * @param string $fieldname
+     * @return string
+     */
     protected function replaceInFieldTemplate(string $template, string $fieldname)
     {
         $keyValues = [

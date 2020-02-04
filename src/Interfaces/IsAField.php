@@ -120,7 +120,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function serialize($value);
 
     /**
-     * Add a where condition from this field.
+     * Add a where null condition from this field.
      *
      * @param  Builder $builder
      * @param  mixed   $value
@@ -131,7 +131,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder;
 
     /**
-     * Add a where condition from this field.
+     * Add a where not null condition from this field.
      *
      * @param  Builder $builder
      * @param  mixed   $value
@@ -141,7 +141,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder;
 
     /**
-     * Add a where condition from this field.
+     * Add a where in condition from this field.
      *
      * @param  Builder    $builder
      * @param  Collection $value
@@ -152,7 +152,7 @@ interface IsAField extends IsLockable, IsOwnable
     public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder;
 
     /**
-     * Add a where condition from this field.
+     * Add a where not in condition from this field.
      *
      * @param  Builder    $builder
      * @param  Collection $value

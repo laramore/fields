@@ -27,11 +27,27 @@ class Increment extends Integer implements IsAnIncrementingField
         return $this->resolveType();
     }
 
+    /**
+     * Increment the attribute value by the desired number (1 by default).
+     *
+     * @param IsALaramoreModel $model
+     * @param integer|float    $value
+     * @param integer|float    $increment
+     * @return mixed
+     */
     public function increment(IsALaramoreModel $model, $value, $increment=1)
     {
         return $model->setAttribute($this->attname, ($value + $increment));
     }
 
+    /**
+     * Decrement the attribute value by the desired number (1 by default).
+     *
+     * @param IsALaramoreModel $model
+     * @param integer|float    $value
+     * @param integer|float    $decrement
+     * @return mixed
+     */
     public function decrement(IsALaramoreModel $model, $value, $decrement=1)
     {
         return $this->increment($model, $value, - $decrement);

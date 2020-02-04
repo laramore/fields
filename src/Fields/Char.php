@@ -17,6 +17,15 @@ class Char extends Text
 {
     protected $maxLength;
 
+    /**
+     * Create a new field with basic rules.
+     * The constructor is protected so the field is created writing left to right.
+     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
+     *
+     * Max length is defined by the default value.
+     *
+     * @param array|null $rules
+     */
     protected function __construct(array $rules=null)
     {
         parent::__construct($rules);
@@ -24,6 +33,13 @@ class Char extends Text
         $this->maxLength = Schema::getFacadeRoot()::$defaultStringLength;
     }
 
+    /**
+     * Define the max length for this field.
+     *
+     * @param integer $maxLength
+     *
+     * @return self
+     */
     public function maxLength(int $maxLength)
     {
         $this->needsToBeUnlocked();
@@ -37,6 +53,12 @@ class Char extends Text
         return $this;
     }
 
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         $value = parent::transform($value);
@@ -45,18 +67,27 @@ class Char extends Text
             $dots = $this->hasRule(Rule::dotsOnResize()) ? '...' : '';
 
             if ($this->hasRule(Rule::caracterResize())) {
-                $value = $this->resize($model, $attValue, $value, null, '', $dots);
+                $value = $this->resize($value, null, '', $dots);
             } else if ($this->hasRule(Rule::wordResize())) {
-                $value = $this->resize($model, $attValue, $value, null, ' ', $dots);
+                $value = $this->resize($value, null, ' ', $dots);
             } else if ($this->hasRule(Rule::sentenceResize())) {
-                $value = $this->resize($model, $attValue, $value, null, '.', $dots);
+                $value = $this->resize($value, null, '.', $dots);
             }
         }
 
         return $value;
     }
 
-    public function resize(string $value, $length=null, $delimiter='', $toAdd='')
+    /**
+     * Resize a text value.
+     *
+     * @param string       $value
+     * @param integer|null $length
+     * @param string       $delimiter
+     * @param string       $toAdd     If the value is resized.
+     * @return string
+     */
+    public function resize(string $value, ?integer $length=null, string $delimiter='', string $toAdd=''): string
     {
         $parts = $delimiter === '' ? str_split($value) : explode($delimiter, $value);
         $valides = [];
@@ -74,6 +105,12 @@ class Char extends Text
         return implode($delimiter, $valides).$toAdd;
     }
 
+    /**
+     * Serialize the value for outputs.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function serialize($value)
     {
         return $value;

@@ -17,11 +17,21 @@ class Password extends Pattern
 {
     protected $minLength = 8;
 
+    /**
+     * Return the pattern to match.
+     *
+     * @return string
+     */
     public function getPattern(): string
     {
         return '/^\S*'.implode('', $this->getRegexRules()).'\S*$/';
     }
 
+    /**
+     * Generate the regex rules.
+     *
+     * @return string
+     */
     protected function getRegexRules()
     {
         $rules = [];
@@ -51,6 +61,12 @@ class Password extends Pattern
         return $rules;
     }
 
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         $value = parent::transform($value);
@@ -62,11 +78,25 @@ class Password extends Pattern
         return $this->hash($value);
     }
 
+    /**
+     * Hash the password so it is not retrievible.
+     *
+     * @param string $value
+     * @return string
+     */
     public function hash(string $value)
     {
         return Hash::make($value);
     }
 
+    /**
+     * Indicate if the password is the right one.
+     *
+     * @param string  $value
+     * @param string  $password
+     * @param boolean $expected
+     * @return boolean
+     */
     public function isCorrect(string $value, string $password=null, bool $expected=true)
     {
         return Hash::check($password, $value) === $expected;

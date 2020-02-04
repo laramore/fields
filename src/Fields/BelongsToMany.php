@@ -17,11 +17,21 @@ class BelongsToMany extends LinkField
 {
     use ManyToManyRelation;
 
+    /**
+     * Return the reversed field.
+     *
+     * @return CompositeField
+     */
     public function getReversed(): CompositeField
     {
         return $this->getOwner();
     }
 
+    /**
+     * Define values after the field is owned.
+     *
+     * @return void
+     */
     protected function owned()
     {
         parent::owned();

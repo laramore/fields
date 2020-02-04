@@ -15,8 +15,4 @@ use Laramore\Traits\Field\OneToOneRelation;
 class OneToOne extends CompositeField
 {
     use OneToOneRelation;
-
-    protected static $defaultLinks = [
-        'reversed' => HasOne::class,
-    ];
 }

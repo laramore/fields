@@ -21,18 +21,66 @@ use Laramore\Interfaces\IsALaramoreModel;
 
 trait OneToOneRelation
 {
-    protected $on;
-    protected $to;
+    /**
+     * Model from the relation is.
+     *
+     * @var IsALaramoreModel
+     */
     protected $off;
+
+    /**
+     * Attribute name from the relation is.
+     *
+     * @var string
+     */
     protected $from;
+
+    /**
+     * Model from the relation is.
+     *
+     * @var IsALaramoreModel
+     */
+    protected $on;
+
+    /**
+     * Attribute name from the relation is.
+     *
+     * @var string
+     */
+    protected $to;
+
+    /**
+     * Reversed name of this relation.
+     *
+     * @var string
+     */
     protected $reversedName;
+
+    /**
+     * Name for this relation.
+     *
+     * @var string
+     */
     protected $relationName;
 
+    /**
+     * Return the reversed field.
+     *
+     * @return LinkField
+     */
     public function getReversed(): LinkField
     {
         return $this->getLink('reversed');
     }
 
+    /**
+     * Define the model on which to point.
+     *
+     * @param string $model
+     * @param string $reversedName
+     * @param string $relationName
+     * @return self
+     */
     public function on(string $model, string $reversedName=null, string $relationName=null)
     {
         $this->needsToBeUnlocked();
@@ -57,11 +105,22 @@ trait OneToOneRelation
         return $this;
     }
 
+    /**
+     * Define on self.
+     *
+     * @return self
+     */
     public function onSelf()
     {
         return $this->on('self');
     }
 
+    /**
+     * Define the attribute name.
+     *
+     * @param string $name
+     * @return self
+     */
     public function to(string $name)
     {
         $this->needsToBeUnlocked();
@@ -71,6 +130,12 @@ trait OneToOneRelation
         return $this;
     }
 
+    /**
+     * Define the reversed name of the relation.
+     *
+     * @param string $reversedName
+     * @return self
+     */
     public function reversedName(string $reversedName=null)
     {
         $this->needsToBeUnowned();
@@ -81,6 +146,11 @@ trait OneToOneRelation
         return $this;
     }
 
+    /**
+     * Define on, off and from variables after being owned.
+     *
+     * @return void
+     */
     public function owned()
     {
         if ($this->on === 'self') {
@@ -93,6 +163,11 @@ trait OneToOneRelation
         $this->defineProperty('from', $this->getReversed()->to = $this->getAttribute('id')->attname);
     }
 
+    /**
+     * Define all constraints for this field.
+     *
+     * @return void
+     */
     protected function setConstraints()
     {
         parent::setConstraints();
@@ -102,6 +177,11 @@ trait OneToOneRelation
         $this->foreign('id', Metas::get($this->on)->getAttribute($this->to), $relationName);
     }
 
+    /**
+     * Check all rules.
+     *
+     * @return void
+     */
     protected function checkRules()
     {
         if (!$this->on) {
@@ -113,16 +193,22 @@ trait OneToOneRelation
         parent::checkRules();
     }
 
+    /**
+     * Indicate if it is a relation on itself.
+     *
+     * @return boolean
+     */
     public function isOnSelf()
     {
-        return $this->on === $this->getMeta()->getModelClass();
+        return \in_array($this->on, [$this->getMeta()->getModelClass(), 'self']);
     }
 
-    public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
+    /**
+     * Dry the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function dry($value)
     {
         $value = $this->transform($value);
@@ -130,6 +216,23 @@ trait OneToOneRelation
         return isset($value[$this->to]) ? $value[$this->to] : $value;
     }
 
+    /**
+     * Cast the value in the correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function cast($value)
+    {
+        return $this->transform($value);
+    }
+
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         if (\is_null($value) || $value instanceof $this->on || \is_array($value) || $value instanceof Collection) {
@@ -142,50 +245,97 @@ trait OneToOneRelation
         return $model;
     }
 
+    /**
+     * Serialize the value for outputs.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function serialize($value)
     {
         return $value;
     }
 
+    /**
+     * Retrieve values from the relation field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
     public function retrieve(IsALaramoreModel $model)
     {
         return $this->relate($model)->getResults();
     }
 
-    public function whereNull(Builder $builder, $value=null, $boolean='and', $not=false)
+    /**
+     * Add a where null condition from this field.
+     *
+     * @param  Builder $builder
+     * @param  mixed   $value
+     * @param  string  $boolean
+     * @param  boolean $not
+     * @return Builder
+     */
+    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder
     {
-        $builder->getQuery()->whereNull($this->getAttribute('id')->attname, $boolean, $not);
-
-        return $builder;
+        return $this->getAttribute('id')->addBuilderOperation($builder, 'whereNull', $boolean, $not);
     }
 
-    public function whereNotNull(Builder $builder, $value=null, $boolean='and')
+    /**
+     * Add a where not null condition from this field.
+     *
+     * @param  Builder $builder
+     * @param  mixed   $value
+     * @param  string  $boolean
+     * @return Builder
+     */
+    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder
     {
         return $this->whereNull($builder, $value, $boolean, true);
-
-        return $builder;
     }
 
-    public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
+    /**
+     * Add a where in condition from this field.
+     *
+     * @param  Builder    $builder
+     * @param  Collection $value
+     * @param  string     $boolean
+     * @param  boolean    $notIn
+     * @return Builder
+     */
+    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
     {
-        $builder->getQuery()->whereIn($this->getAttribute('id')->attname, $value, $boolean, $not);
-
-        return $builder;
+        return $this->getAttribute('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
-    public function whereNotIn(Builder $builder, Collection $value=null, $boolean='and')
+    /**
+     * Add a where not in condition from this field.
+     *
+     * @param  Builder    $builder
+     * @param  Collection $value
+     * @param  string     $boolean
+     * @return Builder
+     */
+    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, OperatorElement $operator=null, $value=null, $boolean='and')
+    /**
+     * Add a where condition from this field.
+     *
+     * @param  Builder         $builder
+     * @param  OperatorElement $operator
+     * @param  mixed           $value
+     * @param  string          $boolean
+     * @return Builder
+     */
+    public function where(Builder $builder, OperatorElement $operator=null, $value=null, string $boolean='and'): Builder
     {
         if ($operator->needs === 'collection') {
             return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));
         }
 
-        $builder->getQuery()->where($this->getAttribute('id')->attname, $operator, $value, $boolean);
-
-        return $builder;
+        return $this->getAttribute('id')->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 }

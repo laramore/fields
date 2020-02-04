@@ -10,19 +10,13 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\{
-    Str, Collection
-};
+use Illuminate\Support\Collection;
 use Laramore\Eloquent\{
     Builder, Model
 };
 use Laramore\Interfaces\IsProxied;
-use Laramore\Elements\{
-    TypeElement, OperatorElement
-};
-use Laramore\Facades\{
-    Rule, Operator
-};
+use Laramore\Elements\OperatorElement;
+use Laramore\Facades\Operator;
 use Laramore\Traits\Field\HasFieldConstraints;
 
 abstract class AttributeField extends BaseField
@@ -51,6 +45,7 @@ abstract class AttributeField extends BaseField
      * Define the name property.
      *
      * @param  string $name
+     * @param  string $attname
      * @return self
      */
     protected function setName(string $name, string $attname=null)
@@ -89,61 +84,72 @@ abstract class AttributeField extends BaseField
     }
 
     /**
-     * Add a where condition from this field.
+     * Add an operation to a query builder.
+     *
+     * @param Builder $builder
+     * @param string  $operation
+     * @param mixed   ...$params
+     * @return Builder
+     */
+    public function addBuilderOperation(Builder $builder, string $operation, ...$params): Builder
+    {
+        \call_user_func([$builder->getQuery(), $operation], $this->getFullName(), ...$params);
+
+        return $builder;
+    }
+
+    /**
+     * Add a where null condition from this field.
      *
      * @param  Builder $builder
      * @param  mixed   $value
      * @param  string  $boolean
      * @param  boolean $not
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false)
+    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder
     {
-        $builder->getQuery()->whereNull($this->attname, $boolean, $not);
-
-        return $builder;
+        return $this->addBuilderOperation($builder, 'whereNull', $boolean, $not);
     }
 
     /**
-     * Add a where condition from this field.
+     * Add a where not null condition from this field.
      *
      * @param  Builder $builder
      * @param  mixed   $value
      * @param  string  $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and')
+    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder
     {
         return $this->whereNull($builder, $value, $boolean, true);
     }
 
     /**
-     * Add a where condition from this field.
+     * Add a where in condition from this field.
      *
      * @param  Builder    $builder
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false)
+    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
     {
-        $builder->whereIn($this->attname, $value, $boolean, $notIn);
+        return $this->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
     /**
-     * Add a where condition from this field.
+     * Add a where not in condition from this field.
      *
      * @param  Builder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and')
+    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
     {
         return $this->whereIn($builder, $value, $boolean, true);
-
-        return $builder;
     }
 
     /**
@@ -153,13 +159,11 @@ abstract class AttributeField extends BaseField
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
-     * @return Builder|void
+     * @return Builder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and')
+    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and'): Builder
     {
-        $builder->getQuery()->where($this->attname, $operator, $value, $boolean);
-
-        return $builder;
+        return $this->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
     /**
@@ -168,7 +172,7 @@ abstract class AttributeField extends BaseField
      * @param  IsProxied $instance
      * @return Builder
      */
-    public function relate(IsProxied $instance)
+    public function relate(IsProxied $instance): Builder
     {
         if ($instance instanceof Model) {
             return $this->where($instance, Operator::equal(), $instance->getAttribute($this->attname));

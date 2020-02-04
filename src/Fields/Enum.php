@@ -20,6 +20,11 @@ class Enum extends AttributeField
 {
     protected $elements;
 
+    /**
+     * Define all proxies for this field.
+     *
+     * @return void
+     */
     protected function setProxies()
     {
         parent::setProxies();
@@ -46,6 +51,12 @@ class Enum extends AttributeField
         }
     }
 
+    /**
+     * Define all elements for this enum field.
+     *
+     * @param array<string>|array<EnumElement>|EnumManager $elements
+     * @return self
+     */
     public function elements($elements)
     {
         $this->checkNeedsToBeLocked(false);
@@ -59,41 +70,89 @@ class Enum extends AttributeField
         return $this;
     }
 
+    /**
+     * Return the element manager for this field.
+     *
+     * @return EnumManager
+     */
     public function getElements(): EnumManager
     {
         return $this->elements;
     }
 
-    public function getElementsValue()
+    /**
+     * Return elements.
+     *
+     * @return array<EnumElement>
+     */
+    public function getElementsValue(): array
     {
         return \array_keys($this->elements->all());
     }
 
+    /**
+     * Return an element by its name.
+     *
+     * @param mixed $key
+     *
+     * @return EnumElement
+     */
     public function getElement($key): EnumElement
     {
         return $this->elements->get($key);
     }
 
+    /**
+     * Return an element by its value.
+     *
+     * @param mixed $key
+     *
+     * @return EnumElement
+     */
     public function findElement($key): EnumElement
     {
         return $this->elements->find($key);
     }
 
+    /**
+     * Indicate if an element exists.
+     *
+     * @param mixed $key
+     *
+     * @return boolean
+     */
     public function hasElement($key): bool
     {
         return $this->elements->has($key);
     }
 
+    /**
+     * Set the default value.
+     *
+     * @param mixed $value
+     *
+     * @return self
+     */
     public function default($value=null)
     {
         return parent::default($this->getElement($value));
     }
 
+    /**
+     * Return the default value.
+     *
+     * @return mixed
+     */
     public function getDefaultValue()
     {
         return $this->default->name;
     }
 
+    /**
+     * Lock each element.
+     *
+     * @return void
+     */
     protected function locking()
     {
         parent::locking();
@@ -109,20 +168,38 @@ class Enum extends AttributeField
     protected function checkRules()
     {
         if (!$this->hasProperty('elements') || $this->elements->count() === 0) {
-            throw new LockException("Need a list of elements for {$this->getName()}", 'elements');
+            throw new LockException("Need a list of elements for `{$this->getName()}`", 'elements');
         }
     }
 
-    public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
+    /**
+     * Dry the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function dry($value)
     {
         return $this->transform($value)->native;
     }
 
+    /**
+     * Cast the value in the correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function cast($value)
+    {
+        return $this->transform($value);
+    }
+
+    /**
+     * Transform the value to be used as a correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transform($value)
     {
         if (is_null($value) || ($value instanceof EnumElement)) {
@@ -132,6 +209,12 @@ class Enum extends AttributeField
         return $this->getElement($value);
     }
 
+    /**
+     * Serialize the value for outputs.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function serialize($value)
     {
         return $value->native;

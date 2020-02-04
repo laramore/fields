@@ -20,11 +20,41 @@ class ManyToMany extends CompositeField
 {
     use ManyToManyRelation;
 
+    /**
+     * Defined reversed name.
+     *
+     * @var string
+     */
     protected $reversedName;
+
+    /**
+     * Indicate if this use a specific pivot.
+     *
+     * @var boolean
+     */
     protected $usePivot;
+
+    /**
+     * Pivot class name.
+     *
+     * @var string
+     */
     protected $pivotClass;
+
+    /**
+     * Defined reversed pivot name.
+     *
+     * @var string
+     */
     protected $reversedPivotName;
 
+    /**
+     * Define the pivot and reversed pivot names.
+     *
+     * @param string $pivotName
+     * @param string $reversedPivotName
+     * @return self
+     */
     public function pivotName(string $pivotName, string $reversedPivotName=null)
     {
         $this->needsToBeUnlocked();
@@ -43,30 +73,42 @@ class ManyToMany extends CompositeField
      * The constructor is protected so the field is created writing left to right.
      * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
      *
+     * Define by default pivot and reversed pivot names.
+     *
      * @param array|null $rules
      */
     protected function __construct(array $rules=null)
     {
         parent::__construct($rules);
 
-        $this->pivotName = $this->getConfig('pivot_name_template');
+        $this->pivotName($this->getConfig('pivot_name_template'), $this->getConfig('reversed_pivot_name_template'));
 
         if (\is_null($this->pivotName)) {
             throw new ConfigException($this->getConfigPath('pivot_name_template'), ['any string name'], null);
         }
-
-        $this->reversedPivotName = $this->getConfig('reversed_pivot_name_template');
 
         if (\is_null($this->reversedPivotName)) {
             throw new ConfigException($this->getConfigPath('reversed_pivot_name_template'), ['any string name'], null);
         }
     }
 
+    /**
+     * Return the reversed field.
+     *
+     * @return LinkField
+     */
     public function getReversed(): LinkField
     {
         return $this->getLink('reversed');
     }
 
+    /**
+     * Define the model on which to point.
+     *
+     * @param string $model
+     * @param string $reversedName
+     * @return self
+     */
     public function on(string $model, string $reversedName=null)
     {
         $this->needsToBeUnlocked();
@@ -87,11 +129,22 @@ class ManyToMany extends CompositeField
         return $this;
     }
 
+    /**
+     * Define on self.
+     *
+     * @return self
+     */
     public function onSelf()
     {
         return $this->on('self');
     }
 
+    /**
+     * Define the attribute name.
+     *
+     * @param string $name
+     * @return self
+     */
     public function to(string $name)
     {
         $this->needsToBeUnlocked();
@@ -101,6 +154,12 @@ class ManyToMany extends CompositeField
         return $this;
     }
 
+    /**
+     * Define the reversed name of the relation.
+     *
+     * @param string $reversedName
+     * @return self
+     */
     public function reversedName(string $reversedName)
     {
         $this->needsToBeUnlocked();
@@ -111,6 +170,12 @@ class ManyToMany extends CompositeField
         return $this;
     }
 
+    /**
+     * Indicate which pivot to use.
+     *
+     * @param string $pivotClass
+     * @return self
+     */
     public function usePivot(string $pivotClass=null)
     {
         $this->needsToBeUnlocked();
@@ -121,11 +186,15 @@ class ManyToMany extends CompositeField
         return $this;
     }
 
+    /**
+     * Load the pivot meta.
+     *
+     * @return void
+     */
     protected function loadPivotMeta()
     {
         $offMeta = $this->getMeta();
         $onMeta = $this->on::getMeta();
-        $onTable = $onMeta->getTableName();
         $offName = Str::snake($offMeta->getModelClassName());
         $onName = Str::snake(Str::singular($this->name));
         $namespaceName = 'App\\Pivots';
@@ -178,6 +247,11 @@ class ManyToMany extends CompositeField
         }
     }
 
+    /**
+     * Define on and off variables after being owned.
+     *
+     * @return void
+     */
     public function owned()
     {
         if ($this->on === 'self') {
@@ -191,6 +265,11 @@ class ManyToMany extends CompositeField
         parent::owned();
     }
 
+    /**
+     * Check and set variables during locking.
+     *
+     * @return void
+     */
     protected function locking()
     {
         if (!$this->on) {
@@ -203,9 +282,14 @@ class ManyToMany extends CompositeField
         parent::locking();
     }
 
+    /**
+     * Indicate if it is a relation on itself.
+     *
+     * @return boolean
+     */
     public function isOnSelf()
     {
-        return $this->on === $this->getMeta()->getModelClass();
+        return \in_array($this->on, [$this->getMeta()->getModelClass(), 'self']);
     }
 
     /**

@@ -19,11 +19,23 @@ use Laramore\Interfaces\{
 
 class HasMany extends HasOne
 {
+    /**
+     * Transform the value to be used as a correct model.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
     public function transformToModel($value)
     {
         return parent::transform($value);
     }
 
+    /**
+     * Transform the value to a correct collection.
+     *
+     * @param mixed $value
+     * @return Collection
+     */
     public function transform($value)
     {
         if ($value instanceof Collection) {
@@ -37,29 +49,66 @@ class HasMany extends HasOne
         return collect($this->transformToModel($value));
     }
 
-    public function whereIn(Builder $builder, Collection $value=null, $boolean='and', $not=false)
+    /**
+     * Add a where in condition from this field.
+     *
+     * @param  Builder    $builder
+     * @param  Collection $value
+     * @param  string     $boolean
+     * @param  boolean    $notIn
+     * @return Builder
+     */
+    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
-        return $this->whereNull($builder, $value, $boolean, $not, function ($query) use ($attname, $value) {
+        return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
         });
     }
 
-    public function whereNotIn(Builder $builder, Collection $value=null, $boolean='and')
+    /**
+     * Add a where not in condition from this field.
+     *
+     * @param  Builder    $builder
+     * @param  Collection $value
+     * @param  string     $boolean
+     * @return Builder
+     */
+    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
 
-    public function where(Builder $builder, OperatorElement $operator, $value=null, $boolean='and', int $count=null)
+    /**
+     * Add a where condition from this field.
+     *
+     * @param  Builder         $builder
+     * @param  OperatorElement $operator
+     * @param  mixed           $value
+     * @param  string          $boolean
+     * @param  integer         $count
+     * @return Builder
+     */
+    public function where(Builder $builder, OperatorElement $operator, $value=null,
+                          string $boolean='and', int $count=null): Builder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
-        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)), function ($query) use ($attname, $value) {
-            return $query->whereIn($attname, $value);
-        });
+        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)),
+            function ($query) use ($attname, $value) {
+                return $query->whereIn($attname, $value);
+            }
+        );
     }
 
+    /**
+     * Use the relation to set the other field values.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return mixed
+     */
     public function consume(IsALaramoreModel $model, $value)
     {
         $relationName = $this->getReversed()->name;
@@ -78,21 +127,44 @@ class HasMany extends HasOne
         return $collections;
     }
 
+    /**
+     * Return the query with this field as condition.
+     *
+     * @param  IsProxied $model
+     * @return Builder
+     */
     public function relate(IsProxied $model)
     {
         return $model->hasMany($this->on, $this->to, $this->from);
     }
 
+    /**
+     * Reverbate the relation into database.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return boolean
+     */
     public function reverbate(IsALaramoreModel $model, $value): bool
     {
-        $attname = $this->on::getMeta()->getPrimary()->attname;
+        $primary = $this->on::getMeta()->getPrimary();
+        $attname = $primary->getNative();
         $id = $model->getKey();
-        $ids = $value->map(function ($element) use ($attname) {
+        $valueIds = $value->map(function ($element) use ($attname) {
             return $element[$attname];
         });
 
-        $this->on::where($this->to, $id)->whereNotIn($attname, $ids)->update([$this->to => null]);
-        $this->on::whereIn($attname, $ids)->update([$this->to => $id]);
+        $primary->addBuilderOperation(
+            $this->on::where($this->to, $id),
+            'whereNotIn',
+            $valueIds
+        )->update([$this->to => null]);
+
+        $primary->addBuilderOperation(
+            (new $this->on)->newQuery(),
+            'whereIn',
+            $valueIds
+        )->update([$this->to => $id]);
 
         return true;
     }

@@ -12,9 +12,19 @@ namespace Laramore\Fields;
 
 abstract class Pattern extends Char
 {
+    /**
+     * Return the pattern to match.
+     *
+     * @return string
+     */
     abstract public function getPattern(): string;
 
-    public function getFlags()
+    /**
+     * Return all pattern flags
+     *
+     * @return mixed
+     */
+    public function getPatternFlags()
     {
         return null;
     }
