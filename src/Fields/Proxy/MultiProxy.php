@@ -94,7 +94,7 @@ class MultiProxy extends BaseProxy
     protected function locking()
     {
         $this->setCallback(function (string $fieldName, ...$args) {
-            return $this->getProxy($fieldName)->getCallback()(...$args);
+            return \call_user_func($this->getProxy($fieldName)->getCallback(), ...$args);
         });
 
         parent::locking();
