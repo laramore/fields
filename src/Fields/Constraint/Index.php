@@ -10,12 +10,12 @@
 
 namespace Laramore\Fields\Constraint;
 
-class Index extends Constraint
+class Index extends BaseConstraint
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName = 'index';
+    protected $constraintName = self::INDEX;
 }

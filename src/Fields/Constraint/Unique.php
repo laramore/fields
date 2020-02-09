@@ -10,12 +10,12 @@
 
 namespace Laramore\Fields\Constraint;
 
-class Unique extends Constraint
+class Unique extends BaseConstraint
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName = 'unique';
+    protected $constraintName = self::UNIQUE;
 }

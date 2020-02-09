@@ -41,7 +41,7 @@ trait HasFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('field.constraints.types.primary.class');
+            $class = config('field.constraints.configurations.primary.class');
         }
 
         $this->constraints['primary'] = $class::constraint([$this], $name, $priority);
@@ -66,7 +66,7 @@ trait HasFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('field.constraints.types.index.class');
+            $class = config('field.constraints.configurations.index.class');
         }
 
         $this->constraints['index'] = $class::constraint([$this], $name, $priority);
@@ -91,7 +91,7 @@ trait HasFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('field.constraints.types.unique.class');
+            $class = config('field.constraints.configurations.unique.class');
         }
 
         $this->constraints['unique'] = $class::constraint([$this], $name, $priority);
@@ -118,7 +118,7 @@ trait HasFieldConstraints
         }
 
         if (\is_null($class)) {
-            $class = config('field.constraints.types.foreign.class');
+            $class = config('field.constraints.configurations.foreign.class');
         }
 
         $this->constraints['foreign'] = $class::constraint([$this, $field], $name, $priority);

@@ -13,14 +13,14 @@ namespace Laramore\Fields\Constraint;
 use Laramore\Exceptions\LockException;
 use Laramore\Fields\AttributeField;
 
-class Foreign extends Constraint
+class Foreign extends BaseConstraint
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName = 'foreign';
+    protected $constraintName = self::FOREIGN;
 
     /**
      * Actions during locking.

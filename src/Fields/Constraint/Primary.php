@@ -12,14 +12,14 @@ namespace Laramore\Fields\Constraint;
 
 use Laramore\Fields\AttributeField;
 
-class Primary extends Constraint
+class Primary extends BaseConstraint
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName = 'primary';
+    protected $constraintName = self::PRIMARY;
 
     /**
      * Return the first field of this constraint.
