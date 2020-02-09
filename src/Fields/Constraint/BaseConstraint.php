@@ -59,7 +59,8 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
      * @param integer $priority
      * @return self|null
      */
-    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY): ?BaseConstraint
+    public static function constraint(array $attributes, string $name=null,
+                                      int $priority=self::MEDIUM_PRIORITY): ?BaseConstraint
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
 
@@ -80,9 +81,9 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
      * @param string $path
      * @return mixed
      */
-    public function getConfigPath(string $path = null)
+    public function getConfigPath(string $path=null)
     {
-        return 'field.constraints.configurations.' . $this->getConstraintName() . (\is_null($path) ? '' : '.' . $path);
+        return 'field.constraints.configurations.'.$this->getConstraintName().(\is_null($path) ? '' : '.'.$path);
     }
 
     /**
@@ -92,7 +93,7 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
      * @param mixed  $default
      * @return mixed
      */
-    public function getConfig(string $path = null, $default = null)
+    public function getConfig(string $path=null, $default=null)
     {
         return config($this->getConfigPath($path), $default);
     }
@@ -169,7 +170,7 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
 
     /**
      * Return the main attirbute
-     * 
+     *
      * @return AttributeField
      */
     public function getMainAttribute(): AttributeField

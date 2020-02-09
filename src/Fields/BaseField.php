@@ -140,12 +140,11 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Return a property by its name.
      *
-     * @param  string  $key
-     * @param  boolean $fail
+     * @param  string $key
      * @return mixed
      * @throws \ErrorException If no property exists with this name.
      */
-    public function getProperty(string $key, bool $fail=true)
+    public function getProperty(string $key)
     {
         if ($key === 'type') {
             return $this->getType();
@@ -161,10 +160,6 @@ abstract class BaseField implements IsAField, IsConfigurable
             return $this->$key;
         } else if (Rule::has($snakeKey = Str::snake($key))) {
             return $this->hasRule($snakeKey);
-        }
-
-        if ($fail) {
-            throw new \ErrorException("The property `$key` does not exist");
         }
     }
 

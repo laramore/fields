@@ -309,7 +309,7 @@ class ManyToMany extends CompositeField
         }
 
         if (\is_null($class)) {
-            $class = config('field.constraints.types.unique.class');
+            $class = config('field.constraints.configurations.unique.class');
         }
 
         if (\is_null($this->pivotMeta)) {
