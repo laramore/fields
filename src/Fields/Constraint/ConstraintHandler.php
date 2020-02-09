@@ -23,7 +23,7 @@ class ConstraintHandler extends BaseHandler
      *
      * @var string
      */
-    protected $observerClass = Constraint::class;
+    protected $observerClass = BaseConstraint::class;
 
     /**
      * Return the primary constraint.

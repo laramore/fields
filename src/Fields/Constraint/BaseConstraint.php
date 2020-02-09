@@ -13,16 +13,22 @@ namespace Laramore\Fields\Constraint;
 use Illuminate\Support\Facades\Event;
 use Laramore\Exceptions\LockException;
 use Laramore\Fields\AttributeField;
+use Laramore\Interfaces\IsConfigurable;
 use Laramore\Observers\BaseObserver;
 
-abstract class Constraint extends BaseObserver
+abstract class BaseConstraint extends BaseObserver implements IsConfigurable
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName = 'constraint';
+    protected $constraintName;
+
+    const FOREIGN = 'foreign';
+    const INDEX = 'index';
+    const PRIMARY = 'primary';
+    const UNIQUE = 'unique';
 
     /**
      * An observer needs at least a name.
@@ -53,7 +59,7 @@ abstract class Constraint extends BaseObserver
      * @param integer $priority
      * @return self|null
      */
-    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY): ?Constraint
+    public static function constraint(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY): ?BaseConstraint
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
 
@@ -66,6 +72,29 @@ abstract class Constraint extends BaseObserver
         Event::dispatch('constraints.created', $constraint);
 
         return $constraint;
+    }
+
+    /**
+     * Return the configuration path for this field.
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfigPath(string $path = null)
+    {
+        return 'field.constraints.configurations.' . $this->getConstraintName() . (\is_null($path) ? '' : '.' . $path);
+    }
+
+    /**
+     * Return the configuration for this field.
+     *
+     * @param string $path
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getConfig(string $path = null, $default = null)
+    {
+        return config($this->getConfigPath($path), $default);
     }
 
     /**
@@ -135,7 +164,17 @@ abstract class Constraint extends BaseObserver
      */
     public function getMainTableName(): string
     {
-        return $this->getAttributes()[0]->getMeta()->getTableName();
+        return $this->getMainAttribute()->getMeta()->getTableName();
+    }
+
+    /**
+     * Return the main attirbute
+     * 
+     * @return AttributeField
+     */
+    public function getMainAttribute(): AttributeField
+    {
+        return $this->getAttributes()[0];
     }
 
     /**

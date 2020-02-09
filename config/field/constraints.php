@@ -13,7 +13,7 @@ return [
 
     'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
 
-    'types' => [
+    'configurations' => [
         'primary' => [
             'class' => Laramore\Fields\Constraint\Primary::class,
         ],
