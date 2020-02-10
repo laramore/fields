@@ -13,9 +13,7 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Eloquent\Builder;
-use Laramore\Facades\{
-    Metas, Operator
-};
+use Laramore\Facades\Operator;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\IsALaramoreModel;
 
@@ -74,6 +72,25 @@ trait OneToOneRelation
     }
 
     /**
+     * Define the attribute name.
+     *
+     * @param string $name
+     * @return self
+     */
+    public function to(string $name)
+    {
+        $this->needsToBeUnlocked();
+
+        if ($this->hasProperty('to')) {
+            throw new \Exception('The property to cannot be reset. Set it before assigning an ');
+        }
+
+        $this->defineProperty('to', $this->getReversed()->from = $name);
+
+        return $this;
+    }
+
+    /**
      * Define the model on which to point.
      *
      * @param string $model
@@ -113,21 +130,6 @@ trait OneToOneRelation
     public function onSelf()
     {
         return $this->on('self');
-    }
-
-    /**
-     * Define the attribute name.
-     *
-     * @param string $name
-     * @return self
-     */
-    public function to(string $name)
-    {
-        $this->needsToBeUnlocked();
-
-        $this->defineProperty('to', $this->getReversed()->from = $name);
-
-        return $this;
     }
 
     /**
@@ -174,7 +176,7 @@ trait OneToOneRelation
 
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
 
-        $this->foreign('id', Metas::get($this->on)->getAttribute($this->to), $relationName);
+        $this->foreign('id', $this->on::getMeta()->getAttribute($this->to), $relationName);
     }
 
     /**
