@@ -72,6 +72,24 @@ trait OneToOneRelation
     }
 
     /**
+     * Define the shared field for our fk attribute.
+     *
+     * @return void
+     */
+    protected function defineSharedField()
+    {
+        // A shared field cannot only been set if the attribute is already owned.
+        // We also require the shared field data.
+        if ($this->hasProperty('on') && $this->hasProperty('to') && $this->getProperty('on') !== 'self') {
+            $attribute = $this->getAttribute('id');
+
+            if ($attribute->isOwned()) {
+                $attribute->sharedField($this->on::getMeta()->getAttribute($this->to));
+            }
+        }
+    }
+
+    /**
      * Define the attribute name.
      *
      * @param string $name
@@ -81,11 +99,8 @@ trait OneToOneRelation
     {
         $this->needsToBeUnlocked();
 
-        if ($this->hasProperty('to')) {
-            throw new \Exception('The property to cannot be reset. Set it before assigning an ');
-        }
-
         $this->defineProperty('to', $this->getReversed()->from = $name);
+        $this->defineSharedField();
 
         return $this;
     }
@@ -118,6 +133,8 @@ trait OneToOneRelation
         if ($relationName) {
             $this->setProperty('relationName', $relationName);
         }
+
+        $this->defineSharedField();
 
         return $this;
     }
@@ -163,6 +180,7 @@ trait OneToOneRelation
 
         $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
         $this->defineProperty('from', $this->getReversed()->to = $this->getAttribute('id')->attname);
+        $this->defineSharedField();
     }
 
     /**

@@ -115,9 +115,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function generateAttribute($attribute): AttributeField
     {
-        if (\is_array($attribute)) {
-            return \array_shift($attribute)::field(...$attribute);
-        } else if (\is_string($attribute)) {
+        if (\is_string($attribute)) {
             return $attribute::field();
         } else {
             return $attribute;
@@ -132,9 +130,7 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function generateLink($link): LinkField
     {
-        if (\is_array($link)) {
-            return \array_shift($link)::field(...$link);
-        } else if (\is_string($link)) {
+        if (\is_string($link)) {
             return $link::field();
         } else {
             return $link;
@@ -264,8 +260,10 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
             $rule = Rule::get($rule);
         }
 
-        foreach ($this->getAttributes() as $attribute) {
-            $attribute->addRule($rule);
+        if (!$rule->has('heritable') || $rule->heritable !== false) {
+            foreach ($this->getAttributes() as $attribute) {
+                $attribute->addRule($rule);
+            }
         }
 
         return parent::addRule($rule);

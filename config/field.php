@@ -103,10 +103,7 @@ return [
         'foreign' => [
             'type' => 'composite',
             'attributes' => [
-                'id' => [
-                    Laramore\Fields\Integer::class,
-                    ['visible', 'fillable', 'required', 'not_zero', 'unsigned', 'require_sign'],
-                ],
+                'id' => Laramore\Fields\Integer::class,
             ],
             'links' => [
                 'reversed' => Laramore\Fields\HasMany::class,
@@ -210,10 +207,7 @@ return [
         'one_to_one' => [
             'type' => 'composite',
             'attributes' => [
-                'id' => [
-                    Laramore\Fields\Integer::class,
-                    ['visible', 'fillable', 'not_zero', 'unsigned', 'require_sign'],
-                ],
+                'id' => Laramore\Fields\Integer::class,
             ],
             'links' => [
                 'reversed' => Laramore\Fields\HasOne::class,

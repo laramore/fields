@@ -31,6 +31,14 @@ abstract class AttributeField extends BaseField
     protected $attname;
 
     /**
+     * Field whose this field is linked to.
+     * If this field is a fk on another field, just share its rules.
+     *
+     * @var AttributeField
+     */
+    protected $sharedField;
+
+    /**
      * Parse the attribute attname.
      *
      * @param  string $attname
@@ -72,6 +80,27 @@ abstract class AttributeField extends BaseField
     }
 
     /**
+     * Define a shared field.
+     * Usefull to link this attribute as fk to another.
+     *
+     * @param AttributeField $field
+     * @return self
+     */
+    public function sharedField(AttributeField $field)
+    {
+        $this->needsToBeOwned();
+        $this->needsToBeUnlocked();
+
+        if (!($this->getOwner() instanceof CompositeField)) {
+            throw new \Exception('Only attributes owned by a composite field can have a shared field');
+        }
+
+        $this->defineProperty('sharedField', $field);
+
+        return $this;
+    }
+
+    /**
      * Each class locks in a specific way.
      *
      * @return void
@@ -80,7 +109,27 @@ abstract class AttributeField extends BaseField
     {
         parent::locking();
 
+        if ($this->hasProperty('sharedField')) {
+            $this->updateFromSharedField($this->sharedField);
+        }
+
         $this->setConstraints();
+    }
+
+    /**
+     * Update a field
+     *
+     * @param BaseField $field
+     *
+     * @return void
+     */
+    protected function updateFromSharedField(BaseField $field)
+    {
+        $rules = $this->rules;
+        $this->rules = [];
+
+        $this->addRules($field->rules);
+        $this->addRules($rules);
     }
 
     /**
