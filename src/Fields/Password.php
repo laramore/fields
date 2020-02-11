@@ -11,7 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
-use Laramore\Facades\Rule;
+use Laramore\Facades\Option;
 
 class Password extends Pattern
 {
@@ -24,41 +24,41 @@ class Password extends Pattern
      */
     public function getPattern(): string
     {
-        return '/^\S*'.implode('', $this->getRegexRules()).'\S*$/';
+        return '/^\S*'.implode('', $this->getRegexOptions()).'\S*$/';
     }
 
     /**
-     * Generate the regex rules.
+     * Generate the regex options.
      *
      * @return string
      */
-    protected function getRegexRules()
+    protected function getRegexOptions()
     {
-        $rules = [];
+        $options = [];
         $patterns = $this->getConfig('patterns');
 
         if (!\is_null($this->minLength) || !\is_null($this->maxLength)) {
             $lengths = [$this->minLength ?: '', $this->maxLength ?: ''];
-            $rules[] = str_replace(['$min', '$max'], $lengths, $patterns['min_max_part']);
+            $options[] = str_replace(['$min', '$max'], $lengths, $patterns['min_max_part']);
         }
 
-        if ($this->hasRule(Rule::needLowercase())) {
-            $rules[] = $patterns['one_lowercase_part'];
+        if ($this->hasOption(Option::needLowercase())) {
+            $options[] = $patterns['one_lowercase_part'];
         }
 
-        if ($this->hasRule(Rule::needUppercase())) {
-            $rules[] = $patterns['one_uppercase_part'];
+        if ($this->hasOption(Option::needUppercase())) {
+            $options[] = $patterns['one_uppercase_part'];
         }
 
-        if ($this->hasRule(Rule::needNumber())) {
-            $rules[] = $patterns['one_number_part'];
+        if ($this->hasOption(Option::needNumber())) {
+            $options[] = $patterns['one_number_part'];
         }
 
-        if ($this->hasRule(Rule::needSpecial())) {
-            $rules[] = $patterns['one_special_part'];
+        if ($this->hasOption(Option::needSpecial())) {
+            $options[] = $patterns['one_special_part'];
         }
 
-        return $rules;
+        return $options;
     }
 
     /**

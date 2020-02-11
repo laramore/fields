@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9564be7385bddfb4f381f2324ad31e91",
+    "content-hash": "045ba0b061abc4d03d49fb32fa0fadd2",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -433,16 +433,16 @@
         },
         {
             "name": "laramore/types",
-            "version": "v0.2.2",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "3693b69300ff574f44fa3d47a6bc1718540ce939"
+                "reference": "832c0d03a9293266932eb98443e45716726e8c93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/3693b69300ff574f44fa3d47a6bc1718540ce939",
-                "reference": "3693b69300ff574f44fa3d47a6bc1718540ce939",
+                "url": "https://api.github.com/repos/laramore/types/zipball/832c0d03a9293266932eb98443e45716726e8c93",
+                "reference": "832c0d03a9293266932eb98443e45716726e8c93",
                 "shasum": ""
             },
             "require": {
@@ -462,15 +462,14 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Laramore\\Providers\\RuleProvider",
+                        "Laramore\\Providers\\OptionProvider",
                         "Laramore\\Providers\\TypeProvider",
                         "Laramore\\Providers\\OperatorProvider"
                     ],
                     "aliases": {
-                        "Rule": "Laramore\\Facades\\Rule",
+                        "Option": "Laramore\\Facades\\Option",
                         "Type": "Laramore\\Facades\\Type",
-                        "Operator": "Laramore\\Facades\\Operator",
-                        "Op": "Laramore\\Facades\\Operator"
+                        "Operator": "Laramore\\Facades\\Operator"
                     }
                 }
             },
@@ -501,7 +500,7 @@
                 "model",
                 "types"
             ],
-            "time": "2020-02-09T14:38:40+00:00"
+            "time": "2020-02-11T19:24:17+00:00"
         },
         {
             "name": "nesbot/carbon",

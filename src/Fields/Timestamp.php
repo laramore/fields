@@ -12,20 +12,20 @@ namespace Laramore\Fields;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Laramore\Facades\Rule;
+use Laramore\Facades\Option;
 
 class Timestamp extends AttributeField
 {
     /**
-     * Check all properties and rules before locking the field.
+     * Check all properties and options before locking the field.
      *
      * @return void
      */
-    protected function checkRules()
+    protected function checkOptions()
     {
-        parent::checkRules();
+        parent::checkOptions();
 
-        if ($this->hasRule(Rule::nullable()) && $this->hasRule(Rule::useCurrent())) {
+        if ($this->hasOption(Option::nullable()) && $this->hasOption(Option::useCurrent())) {
             throw new \Exception("This field must be either nullable or set by default as the current date");
         }
     }

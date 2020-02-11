@@ -11,9 +11,9 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Arr;
-use Laramore\Elements\RuleElement;
+use Laramore\Elements\OptionElement;
 use Laramore\Exceptions\ConfigException;
-use Laramore\Facades\Rule;
+use Laramore\Facades\Option;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
     IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
@@ -53,17 +53,17 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     protected $linksName = [];
 
     /**
-     * Create a new field with basic rules.
+     * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
      * ex: Foreign::field()->on(User::class) insteadof (new Foreign)->on(User::class).
      *
-     * @param array $rules
+     * @param array $options
      * @param array $attributes Allow the user to define sub fields.
      * @param array $links      Allow the user to define sub links.
      */
-    protected function __construct(array $rules=null, array $attributes=null, array $links=null)
+    protected function __construct(array $options=null, array $attributes=null, array $links=null)
     {
-        parent::__construct($rules);
+        parent::__construct($options);
 
         $attributes = ($attributes ?: $this->getConfig('attributes'));
 
@@ -97,14 +97,14 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     /**
      * Call the constructor and generate the field.
      *
-     * @param array $rules
+     * @param array $options
      * @param array $attributes Allow the user to define sub fields.
      * @param array $links      Allow the user to define sub links.
      * @return self
      */
-    public static function field(array $rules=null, array $attributes=null, array $links=null)
+    public static function field(array $options=null, array $attributes=null, array $links=null)
     {
-        return new static($rules, $attributes, $links);
+        return new static($options, $attributes, $links);
     }
 
     /**
@@ -249,43 +249,43 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     }
 
     /**
-     * Add a rule to the resource.
+     * Add a option to the resource.
      *
-     * @param string|RuleElement $rule
+     * @param string|OptionElement $option
      * @return self
      */
-    protected function addRule($rule)
+    protected function addOption($option)
     {
-        if (\is_string($rule)) {
-            $rule = Rule::get($rule);
+        if (\is_string($option)) {
+            $option = Option::get($option);
         }
 
-        if (!$rule->has('heritable') || $rule->heritable !== false) {
+        if (!$option->has('heritable') || $option->heritable !== false) {
             foreach ($this->getAttributes() as $attribute) {
-                $attribute->addRule($rule);
+                $attribute->addOption($option);
             }
         }
 
-        return parent::addRule($rule);
+        return parent::addOption($option);
     }
 
     /**
-     * Remove a rule from the resource.
+     * Remove a option from the resource.
      *
-     * @param  string|RuleElement $rule
+     * @param  string|OptionElement $option
      * @return self
      */
-    protected function removeRule($rule)
+    protected function removeOption($option)
     {
-        if (\is_string($rule)) {
-            $rule = Rule::get($rule);
+        if (\is_string($option)) {
+            $option = Option::get($option);
         }
 
         foreach ($this->getAttributes() as $attribute) {
-            $attribute->removeRule($rule);
+            $attribute->removeOption($option);
         }
 
-        return parent::removeRule($rule);
+        return parent::removeOption($option);
     }
 
     /**

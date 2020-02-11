@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Event;
 use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
-    Rule, Type
+    Option, Type
 };
 use Laramore\Interfaces\{
     IsAField, IsConfigurable, IsAnOwner
@@ -23,14 +23,14 @@ use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties
 };
 use Laramore\Traits\{
-    HasRules, HasLockedMacros
+    HasOptions, HasLockedMacros
 };
 use Laramore\Meta;
 use Laramore\Exceptions\ConfigException;
 
 abstract class BaseField implements IsAField, IsConfigurable
 {
-    use IsOwned, IsLocked, HasLockedMacros, HasProperties, HasRules {
+    use IsOwned, IsLocked, HasLockedMacros, HasProperties, HasOptions {
         own as protected ownFromTrait;
         setOwner as protected setOwnerFromTrait;
         lock as protected lockFromTrait;
@@ -54,24 +54,24 @@ abstract class BaseField implements IsAField, IsConfigurable
     protected $default;
 
     /**
-     * Create a new field with basic rules.
+     * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
      * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
      *
-     * @param array|null $rules
+     * @param array|null $options
      */
-    protected function __construct(array $rules=null)
+    protected function __construct(array $options=null)
     {
-        $this->addRules($rules ?: $this->getType()->getDefaultRules());
+        $this->addOptions($options ?: $this->getType()->getDefaultOptions());
     }
 
     /**
      * Call the constructor and generate the field.
      *
-     * @param  array|null $rules
+     * @param  array|null $options
      * @return self
      */
-    public static function field(array $rules=null)
+    public static function field(array $options=null)
     {
         $creating = Event::until('fields.creating', static::class, \func_get_args());
 
@@ -79,7 +79,7 @@ abstract class BaseField implements IsAField, IsConfigurable
             return null;
         }
 
-        $field = $creating ?: new static($rules);
+        $field = $creating ?: new static($options);
 
         Event::dispatch('fields.created', $field);
 
@@ -158,8 +158,8 @@ abstract class BaseField implements IsAField, IsConfigurable
             }
 
             return $this->$key;
-        } else if (Rule::has($snakeKey = Str::snake($key))) {
-            return $this->hasRule($snakeKey);
+        } else if (Option::has($snakeKey = Str::snake($key))) {
+            return $this->hasOption($snakeKey);
         }
     }
 
@@ -175,12 +175,12 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $this->needsToBeUnlocked();
 
-        if (Rule::has($snakeKey = Str::snake($key))) {
+        if (Option::has($snakeKey = Str::snake($key))) {
             if ($value === false) {
-                return $this->removeRule($snakeKey);
+                return $this->removeOption($snakeKey);
             }
 
-            return $this->addRule($snakeKey);
+            return $this->addOption($snakeKey);
         }
 
         return $this->forceProperty($key, $value);
@@ -260,7 +260,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $this->needsToBeUnlocked();
 
-        $this->removeRule(Rule::required());
+        $this->removeOption(Option::required());
 
         if (\is_null($value)) {
             $this->nullable();
@@ -359,36 +359,36 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     protected function locking()
     {
-        $this->checkRules();
+        $this->checkOptions();
         $this->setProxies();
     }
 
     /**
-     * Check all properties and rules before locking the field.
+     * Check all properties and options before locking the field.
      *
      * @return void
      */
-    protected function checkRules()
+    protected function checkOptions()
     {
         $name = $this->getFullName();
 
         if ($this->hasProperty('default')) {
             if (\is_null($this->getProperty('default'))) {
-                if ($this->hasRule(Rule::notNullable())) {
+                if ($this->hasOption(Option::notNullable())) {
                     throw new \LogicException("The field `$name` cannot be null and defined as null by default");
-                } else if (!$this->hasRule(Rule::nullable()) && !$this->hasRule(Rule::required())) {
+                } else if (!$this->hasOption(Option::nullable()) && !$this->hasOption(Option::required())) {
                     throw new \LogicException("The field `$name` cannot be null, defined as null by default and not required");
                 }
-            } else if ($this->hasRule(Rule::required())) {
+            } else if ($this->hasOption(Option::required())) {
                 throw new \LogicException("The field `$name` cannot have a default value and be required");
             }
         }
 
-        if (!$this->hasRule(Rule::fillable()) && $this->hasRule(Rule::required())) {
+        if (!$this->hasOption(Option::fillable()) && $this->hasOption(Option::required())) {
             throw new \LogicException("The field `$name` must be fillable if it is required");
         }
 
-        if ($this->hasRule(Rule::notNullable()) && $this->hasRule(Rule::nullable())) {
+        if ($this->hasOption(Option::notNullable()) && $this->hasOption(Option::nullable())) {
             throw new \LogicException("The field `$name` cannot be nullable and not nullable on the same time");
         }
     }

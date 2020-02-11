@@ -11,24 +11,24 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
-use Laramore\Facades\Rule;
+use Laramore\Facades\Option;
 
 class Char extends Text
 {
     protected $maxLength;
 
     /**
-     * Create a new field with basic rules.
+     * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
      * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
      *
      * Max length is defined by the default value.
      *
-     * @param array|null $rules
+     * @param array|null $options
      */
-    protected function __construct(array $rules=null)
+    protected function __construct(array $options=null)
     {
-        parent::__construct($rules);
+        parent::__construct($options);
 
         $this->maxLength = Schema::getFacadeRoot()::$defaultStringLength;
     }
@@ -64,13 +64,13 @@ class Char extends Text
         $value = parent::transform($value);
 
         if ($this->maxLength < strlen($value) && !is_null($value)) {
-            $dots = $this->hasRule(Rule::dotsOnResize()) ? '...' : '';
+            $dots = $this->hasOption(Option::dotsOnResize()) ? '...' : '';
 
-            if ($this->hasRule(Rule::caracterResize())) {
+            if ($this->hasOption(Option::caracterResize())) {
                 $value = $this->resize($value, null, '', $dots);
-            } else if ($this->hasRule(Rule::wordResize())) {
+            } else if ($this->hasOption(Option::wordResize())) {
                 $value = $this->resize($value, null, ' ', $dots);
-            } else if ($this->hasRule(Rule::sentenceResize())) {
+            } else if ($this->hasOption(Option::sentenceResize())) {
                 $value = $this->resize($value, null, '.', $dots);
             }
         }

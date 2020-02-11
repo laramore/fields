@@ -161,11 +161,11 @@ class Enum extends AttributeField
     }
 
     /**
-     * Check all properties and rules before locking the field.
+     * Check all properties and options before locking the field.
      *
      * @return void
      */
-    protected function checkRules()
+    protected function checkOptions()
     {
         if (!$this->hasProperty('elements') || $this->elements->count() === 0) {
             throw new LockException("Need a list of elements for `{$this->getName()}`", 'elements');

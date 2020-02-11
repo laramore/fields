@@ -12,7 +12,7 @@ namespace Laramore\Fields;
 
 use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
-    Rule, Type
+    Option, Type
 };
 
 class Integer extends AttributeField
@@ -24,7 +24,7 @@ class Integer extends AttributeField
      */
     public function getType(): TypeElement
     {
-        if ($this->hasRule(Rule::unsigned())) {
+        if ($this->hasOption(Option::unsigned())) {
             return Type::get($this->getConfig('unsigned_type'));
         }
 
@@ -51,8 +51,8 @@ class Integer extends AttributeField
             return $this->negative();
         }
 
-        $this->removeRule(Rule::negative());
-        $this->removeRule(Rule::unsigned());
+        $this->removeOption(Option::negative());
+        $this->removeOption(Option::unsigned());
 
         return $this;
     }
@@ -66,8 +66,8 @@ class Integer extends AttributeField
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(Rule::unsigned());
-        $this->removeRule(Rule::negative());
+        $this->addOption(Option::unsigned());
+        $this->removeOption(Option::negative());
 
         return $this;
     }
@@ -81,7 +81,7 @@ class Integer extends AttributeField
     {
         $this->needsToBeUnlocked();
 
-        $this->addRule(Rule::negative());
+        $this->addOption(Option::negative());
 
         return $this;
     }
@@ -120,10 +120,10 @@ class Integer extends AttributeField
             return $value;
         }
 
-        if ($this->hasRule(Rule::unsigned())) {
+        if ($this->hasOption(Option::unsigned())) {
             $newValue = abs($value);
 
-            if ($this->hasRule(Rule::negative())) {
+            if ($this->hasOption(Option::negative())) {
                 $newValue = (- $newValue);
             }
 

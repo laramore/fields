@@ -13,7 +13,7 @@
         "illuminate/database": ">=5.5",
         "nesbot/carbon": ">=1.0",
         "symfony/http-kernel": ">=3.4",
-        "laramore/types": "^0.2.2"
+        "laramore/types": "^0.3.0"
     },
     "authors": [
         {

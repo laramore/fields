@@ -32,7 +32,7 @@ abstract class AttributeField extends BaseField
 
     /**
      * Field whose this field is linked to.
-     * If this field is a fk on another field, just share its rules.
+     * If this field is a fk on another field, just share its options.
      *
      * @var AttributeField
      */
@@ -125,11 +125,11 @@ abstract class AttributeField extends BaseField
      */
     protected function updateFromSharedField(BaseField $field)
     {
-        $rules = $this->rules;
-        $this->rules = [];
+        $options = $this->options;
+        $this->options = [];
 
-        $this->addRules($field->rules);
-        $this->addRules($rules);
+        $this->addOptions($field->options);
+        $this->addOptions($options);
     }
 
     /**

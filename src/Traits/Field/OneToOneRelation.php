@@ -198,11 +198,11 @@ trait OneToOneRelation
     }
 
     /**
-     * Check all rules.
+     * Check all options.
      *
      * @return void
      */
-    protected function checkRules()
+    protected function checkOptions()
     {
         if (!$this->on) {
             throw new \Exception('Related model settings needed. Set it by calling `on` method');
@@ -210,7 +210,7 @@ trait OneToOneRelation
 
         $this->defineProperty('reversedName', $this->getReversed()->name);
 
-        parent::checkRules();
+        parent::checkOptions();
     }
 
     /**
