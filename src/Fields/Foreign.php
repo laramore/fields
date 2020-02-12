@@ -37,10 +37,10 @@ class Foreign extends CompositeField
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  IsALaramoreModel $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(IsALaramoreModel $model)
     {
         return $model->belongsTo($this->on, $this->from, $this->to);
     }

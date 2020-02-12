@@ -219,10 +219,10 @@ class HasOne extends LinkField
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  IsALaramoreModel $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(IsALaramoreModel $model)
     {
         return $model->hasOne($this->on, $this->to, $this->from);
     }

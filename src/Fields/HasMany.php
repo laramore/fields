@@ -130,10 +130,10 @@ class HasMany extends HasOne
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  IsALaramoreModel $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(IsALaramoreModel $model)
     {
         return $model->hasMany($this->on, $this->to, $this->from);
     }

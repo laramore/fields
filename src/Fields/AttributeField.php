@@ -11,12 +11,8 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Collection;
-use Laramore\Eloquent\{
-    Builder, Model
-};
-use Laramore\Interfaces\IsProxied;
+use Laramore\Eloquent\Builder;
 use Laramore\Elements\OperatorElement;
-use Laramore\Facades\Operator;
 use Laramore\Traits\Field\HasFieldConstraints;
 
 abstract class AttributeField extends BaseField
@@ -213,22 +209,5 @@ abstract class AttributeField extends BaseField
     public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and'): Builder
     {
         return $this->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
-    }
-
-    /**
-     * Return the query with this field as condition.
-     *
-     * @param  IsProxied $instance
-     * @return Builder
-     */
-    public function relate(IsProxied $instance): Builder
-    {
-        if ($instance instanceof Model) {
-            return $this->where($instance, Operator::equal(), $instance->getAttribute($this->attname));
-        }
-
-        if ($instance instanceof Builder) {
-            return $this->where($instance, Operator::equal(), $instance->getModel()->getAttribute($this->attname));
-        }
     }
 }

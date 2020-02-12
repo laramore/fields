@@ -11,7 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Schema;
-use Laramore\Facades\Option;
 
 class Char extends Text
 {
@@ -51,58 +50,6 @@ class Char extends Text
         $this->defineProperty('maxLength', $maxLength);
 
         return $this;
-    }
-
-    /**
-     * Transform the value to be used as a correct format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
-    {
-        $value = parent::transform($value);
-
-        if ($this->maxLength < strlen($value) && !is_null($value)) {
-            $dots = $this->hasOption(Option::dotsOnResize()) ? '...' : '';
-
-            if ($this->hasOption(Option::caracterResize())) {
-                $value = $this->resize($value, null, '', $dots);
-            } else if ($this->hasOption(Option::wordResize())) {
-                $value = $this->resize($value, null, ' ', $dots);
-            } else if ($this->hasOption(Option::sentenceResize())) {
-                $value = $this->resize($value, null, '.', $dots);
-            }
-        }
-
-        return $value;
-    }
-
-    /**
-     * Resize a text value.
-     *
-     * @param string       $value
-     * @param integer|null $length
-     * @param string       $delimiter
-     * @param string       $toAdd     If the value is resized.
-     * @return string
-     */
-    public function resize(string $value, ?integer $length=null, string $delimiter='', string $toAdd=''): string
-    {
-        $parts = $delimiter === '' ? str_split($value) : explode($delimiter, $value);
-        $valides = [];
-        $length = (($length ?: $this->maxLength) - strlen($toAdd));
-
-        foreach ($parts as $part) {
-            if (strlen($part) <= $length) {
-                $length -= strlen($part);
-                $valides[] = $part;
-            } else {
-                break;
-            }
-        }
-
-        return implode($delimiter, $valides).$toAdd;
     }
 
     /**
