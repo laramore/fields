@@ -115,11 +115,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function generateAttribute($attribute): AttributeField
     {
-        if (\is_string($attribute)) {
+        if (\is_array($attribute)) {
+            return $attribute[0]::field($attribute[1]);
+        } else if (\is_string($attribute)) {
             return $attribute::field();
-        } else {
-            return $attribute;
         }
+
+        return $attribute;
     }
 
     /**
@@ -130,11 +132,13 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      */
     protected function generateLink($link): LinkField
     {
-        if (\is_string($link)) {
+        if (\is_array($link)) {
+            return $link[0]::field($link[1]);
+        } else if (\is_string($link)) {
             return $link::field();
-        } else {
-            return $link;
         }
+
+        return $link;
     }
 
     /**
