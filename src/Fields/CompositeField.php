@@ -16,11 +16,12 @@ use Laramore\Exceptions\ConfigException;
 use Laramore\Facades\Option;
 use Laramore\Fields\LinkField;
 use Laramore\Interfaces\{
-    IsProxied, IsAFieldOwner, IsALaramoreModel, IsARelationField
+    IsAFieldOwner,
+    IsProxied, IsAnOwner, IsALaramoreModel, IsARelationField
 };
 use Laramore\Traits\Field\HasMultipleFieldConstraints;
 
-abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARelationField
+abstract class CompositeField extends BaseField implements IsAnOwner, IsARelationField, IsAFieldOwner
 {
     use HasMultipleFieldConstraints;
 
@@ -397,40 +398,74 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
     }
 
     /**
+     * Get the value definied by the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function get(IsALaramoreModel $model)
+    {
+        return $model->getRelationValue($this->getNative());
+    }
+
+    /**
+     * Set the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return mixed
+     */
+    public function set(IsALaramoreModel $model, $value)
+    {
+        return $model->setRawRelationValue($this->getNative(), $value);
+    }
+
+    /**
+     * Reet the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function reset(IsALaramoreModel $model)
+    {
+        return $model->setRawRelationValue($this->getNative(), $this->getProperty('default'));
+    }
+
+    /**
      * Return the get value for a specific field.
      *
-     * @param BaseField        $attribute
+     * @param BaseField        $field
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model)
+    public function getFieldAttribute(BaseField $field, IsALaramoreModel $model)
     {
-        return $this->getOwner()->getValueFieldAttribute($attribute, $model);
+        return $this->getOwner()->getFieldAttribute($field, $model);
     }
 
     /**
      * Return the set value for a specific field.
-     *
-     * @param BaseField        $attribute
+     * z
+     * @param BaseField        $field
      * @param IsALaramoreModel $model
      * @param mixed            $value
      * @return mixed
      */
-    public function setValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model, $value)
+    public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value)
     {
-        return $this->getOwner()->setValueFieldAttribute($attribute, $model, $value);
+        return $this->getOwner()->setFieldAttribute($field, $model, $value);
     }
 
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param BaseField        $attribute
+     * @param BaseField        $field
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function resetValueFieldAttribute(BaseField $attribute, IsALaramoreModel $model)
+    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model)
     {
-        return $this->getOwner()->resetValueFieldAttribute($attribute, $model);
+        return $this->getOwner()->resetFieldAttribute($field, $model);
     }
 
     /**
@@ -440,22 +475,9 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model)
+    public function relateFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model)
     {
-        return $this->getOwner()->getRelationFieldAttribute($attribute, $model);
-    }
-
-    /**
-     * Return the set value for a relation field.
-     *
-     * @param IsARelationField $attribute
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return mixed
-     */
-    public function setRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model, $value)
-    {
-        return $this->getOwner()->setRelationFieldAttribute($attribute, $model, $value);
+        return $this->getOwner()->relateFieldAttribute($attribute, $model);
     }
 
     /**
@@ -466,9 +488,9 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
      * @param mixed            $value
      * @return boolean
      */
-    public function reverbateRelationFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model, $value): bool
+    public function reverbateFieldAttribute(IsARelationField $attribute, IsALaramoreModel $model, $value): bool
     {
-        return $this->getOwner()->reverbateRelationFieldAttribute($attribute, $model, $value);
+        return $this->getOwner()->reverbateFieldAttribute($attribute, $model, $value);
     }
 
     /**
@@ -488,18 +510,6 @@ abstract class CompositeField extends BaseField implements IsAFieldOwner, IsARel
         }
 
         return $this->getOwner()->whereFieldAttribute($attribute, $builder, $operator, $value, ...$args);
-    }
-
-    /**
-     * Return the query with this field as condition.
-     *
-     * @param BaseField $attribute
-     * @param IsProxied $model
-     * @return mixed
-     */
-    public function relateFieldAttribute(BaseField $attribute, IsProxied $model)
-    {
-        return $this->getOwner()->relateFieldAttribute($attribute, $model);
     }
 
     /**

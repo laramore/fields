@@ -11,7 +11,7 @@
 namespace Laramore\Fields;
 
 use Laramore\Interfaces\{
-    IsAnOwner, IsARelationField
+    IsAnOwner, IsARelationField, IsALaramoreModel
 };
 use Laramore\Fields\BaseField;
 
@@ -44,5 +44,39 @@ abstract class LinkField extends BaseField implements IsARelationField
         parent::owned();
 
         $this->getMeta()->setLink($this->name, $this);
+    }
+
+    /**
+     * Get the value definied by the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function get(IsALaramoreModel $model)
+    {
+        $model->getRelationValue($this->getNative());
+    }
+
+    /**
+     * Set the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return mixed
+     */
+    public function set(IsALaramoreModel $model, $value)
+    {
+        $model->setRawRelationValue($this->getNative, $value);
+    }
+
+    /**
+     * Reet the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function reset(IsALaramoreModel $model)
+    {
+        return $model->setRawRelation($this->getNative(), $this->getProperty('default'));
     }
 }

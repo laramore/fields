@@ -13,6 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Collection;
 use Laramore\Eloquent\Builder;
 use Laramore\Elements\OperatorElement;
+use Laramore\Interfaces\IsALaramoreModel;
 use Laramore\Traits\Field\HasFieldConstraints;
 
 abstract class AttributeField extends BaseField
@@ -121,11 +122,41 @@ abstract class AttributeField extends BaseField
      */
     protected function updateFromSharedField(BaseField $field)
     {
-        $options = $this->options;
-        $this->options = [];
+        $this->addOptions(\array_merge($field->options, $this->options));
+    }
 
-        $this->addOptions($field->options);
-        $this->addOptions($options);
+    /**
+     * Get the value definied by the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function get(IsALaramoreModel $model)
+    {
+        return $model->getRawAttribute($this->getNative());
+    }
+
+    /**
+     * Set the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return mixed
+     */
+    public function set(IsALaramoreModel $model, $value)
+    {
+        return $model->setRawAttribute($this->getNative(), $value);
+    }
+
+    /**
+     * Reet the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function reset(IsALaramoreModel $model)
+    {
+        return $model->setRawAttribute($this->getNative(), $this->getProperty('default'));
     }
 
     /**

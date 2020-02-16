@@ -246,6 +246,27 @@ return [
             'type' => 'timestamp',
             'proxies' => [],
         ],
+
+        'body' => [
+            'type' => 'body',
+            'proxies' => [],
+        ],
+        'name' => [
+            'type' => 'composite',
+            'attributes' => [
+                'firstname' => [
+                    Laramore\Fields\Body::class,
+                    ['visible', 'fillable', 'required', 'title'],
+                ],
+                'lastname' => [
+                    Laramore\Fields\Body::class,
+                    ['visible', 'fillable', 'required', 'uppercase'],
+                ],
+            ],
+            'links' => [],
+            'attribute_name_template' => '${fieldname}',
+            'proxies' => [],
+        ],
     ],
 
 ];

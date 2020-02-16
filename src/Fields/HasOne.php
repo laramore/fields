@@ -210,7 +210,6 @@ class HasOne extends LinkField
      */
     public function consume(IsALaramoreModel $model, $value)
     {
-        $value = $this->transform($value);
         $value->setAttribute($this->getReversed()->name, $model);
 
         return $value;
@@ -219,10 +218,10 @@ class HasOne extends LinkField
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsALaramoreModel $model
+     * @param  IsProxied $model
      * @return Builder
      */
-    public function relate(IsALaramoreModel $model)
+    public function relate(IsProxied $model)
     {
         return $model->hasOne($this->on, $this->to, $this->from);
     }

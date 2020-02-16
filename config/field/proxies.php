@@ -24,6 +24,21 @@ return [
     ],
 
     'common' => [
+        'get' => [
+            'name_template' => '${methodname}^{fieldname}Attribute',
+            'multi_proxy_template' => '${methodname}Attribute',
+            'requirements' => ['instance'],
+        ],
+        'set' => [
+            'name_template' => '${methodname}^{fieldname}Attribute',
+            'multi_proxy_template' => '${methodname}Attribute',
+            'requirements' => ['instance'],
+        ],
+        'reset' => [
+            'name_template' => '${methodname}^{fieldname}Attribute',
+            'multi_proxy_template' => '${methodname}Attribute',
+            'requirements' => ['instance'],
+        ],
         'relate' => [
             'name_template' => '${fieldname}',
             'requirements' => ['instance'],
