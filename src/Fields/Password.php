@@ -12,8 +12,9 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
 use Laramore\Facades\Option;
+use Laramore\Interfaces\IsAPatternField;
 
-class Password extends Pattern
+class Password extends Char implements IsAPatternField
 {
     protected $minLength = 8;
 
@@ -25,6 +26,16 @@ class Password extends Pattern
     public function getPattern(): string
     {
         return '/^\S*'.implode('', $this->getRegexOptions()).'\S*$/';
+    }
+
+    /**
+     * Return all pattern flags
+     *
+     * @return mixed
+     */
+    public function getPatternFlags()
+    {
+        return null;
     }
 
     /**

@@ -11,8 +11,9 @@
 namespace Laramore\Fields;
 
 use Laramore\Facades\Option;
+use Laramore\Interfaces\IsAPatternField;
 
-class Email extends Pattern
+class Email extends Char implements IsAPatternField
 {
     /**
      * All defined allowed domains.
@@ -91,6 +92,16 @@ class Email extends Pattern
     public function getPattern(): string
     {
         return $this->getConfig('patterns.email');
+    }
+
+    /**
+     * Return all pattern flags
+     *
+     * @return mixed
+     */
+    public function getPatternFlags()
+    {
+        return null;
     }
 
     /**
