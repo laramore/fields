@@ -13,29 +13,20 @@ namespace Laramore\Interfaces;
 interface IsARelationField extends IsAField
 {
     /**
+     * Return the relation with this field.
+     *
+     * @param  IsALaramoreModel $instance
+     * @return Builder
+     */
+    public function relate(IsALaramoreModel $instance);
+
+    /**
      * Retrieve values from the relation field.
      *
      * @param  IsALaramoreModel $model
      * @return mixed
      */
     public function retrieve(IsALaramoreModel $model);
-
-    /**
-     * Use the relation to set the other field values.
-     *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
-     * @return mixed
-     */
-    public function consume(IsALaramoreModel $model, $value);
-
-    /**
-     * Return the query with this field as condition.
-     *
-     * @param  IsALaramoreModel $model
-     * @return Builder
-     */
-    public function relate(IsALaramoreModel $model);
 
     /**
      * Reverbate the relation into database.

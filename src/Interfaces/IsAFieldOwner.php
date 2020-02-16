@@ -24,17 +24,17 @@ interface IsAFieldOwner extends IsAnOwner
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getValueFieldAttribute(BaseField $field, IsALaramoreModel $model);
+    public function getFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
      * Return the set value for a specific field.
-     *
+     * z
      * @param BaseField        $field
      * @param IsALaramoreModel $model
      * @param mixed            $value
      * @return mixed
      */
-    public function setValueFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
+    public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
 
     /**
      * Reset the value with the default value for a specific field.
@@ -43,7 +43,7 @@ interface IsAFieldOwner extends IsAnOwner
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function resetValueFieldAttribute(BaseField $field, IsALaramoreModel $model);
+    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model);
 
     /**
      * Return the get value for a relation field.
@@ -52,17 +52,7 @@ interface IsAFieldOwner extends IsAnOwner
      * @param IsALaramoreModel $model
      * @return mixed
      */
-    public function getRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model);
-
-    /**
-     * Return the set value for a relation field.
-     *
-     * @param IsARelationField $field
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return mixed
-     */
-    public function setRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value);
+    public function relateFieldAttribute(IsARelationField $field, IsALaramoreModel $model);
 
     /**
      * Reverbate a saved relation value for a specific field.
@@ -72,7 +62,7 @@ interface IsAFieldOwner extends IsAnOwner
      * @param mixed            $value
      * @return boolean
      */
-    public function reverbateRelationFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value): bool;
+    public function reverbateFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value): bool;
 
     /**
      * Return generally a Builder after adding to it a condition.

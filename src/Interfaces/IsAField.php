@@ -28,6 +28,21 @@ interface IsAField extends IsLockable, IsOwnable
      */
     public function getType(): TypeElement;
 
+     /**
+      * Return the native value of this field.
+      * Commonly, its name.
+      *
+      * @return string
+      */
+    public function getNative(): string;
+
+    /**
+     * Return the fully qualified name.
+     *
+     * @return string
+     */
+    public function getFullName(): string;
+
     /**
      * Indicate if a propery exists.
      *
@@ -118,6 +133,31 @@ interface IsAField extends IsLockable, IsOwnable
      * @return mixed
      */
     public function serialize($value);
+
+    /**
+     * Get the value definied by the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function get(IsALaramoreModel $model);
+
+    /**
+     * Set the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @param  mixed            $value
+     * @return mixed
+     */
+    public function set(IsALaramoreModel $model, $value);
+
+    /**
+     * Reset the value for the field.
+     *
+     * @param  IsALaramoreModel $model
+     * @return mixed
+     */
+    public function reset(IsALaramoreModel $model);
 
     /**
      * Add a where null condition from this field.
