@@ -23,6 +23,13 @@ class Proxy extends BaseProxy
     protected $field;
 
     /**
+     * Prefered name for the multi proxy name.
+     *
+     * @var string
+     */
+    protected $multiProxyName;
+
+    /**
      * An observer needs at least a name and a Closure.
      *
      * @param string        $name
@@ -62,6 +69,31 @@ class Proxy extends BaseProxy
     public function getField(): BaseField
     {
         return $this->field;
+    }
+
+    /**
+     * Define the proxy multi proxy name.
+     *
+     * @param string $multiProxyName
+     * @return self
+     */
+    public function setMultiProxyName(string $multiProxyName)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->multiProxyName = $multiProxyName;
+
+        return $this;
+    }
+
+    /**
+     * Return the proxy multi proxyn ame.
+     *
+     * @return string
+     */
+    public function getMultiProxyName(): string
+    {
+        return $this->multiProxyName ?: $this->getMethodName();
     }
 
     /**

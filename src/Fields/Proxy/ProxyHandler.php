@@ -37,7 +37,7 @@ class ProxyHandler extends BaseHandler
     {
         \array_push($proxys, $proxy);
 
-        if ($this->has($name = $proxy->getMethodName())) {
+        if ($this->has($name = $proxy->getMultiProxyName())) {
             $multiProxy = $this->get($name);
 
             if (!($multiProxy instanceof MultiProxy)) {

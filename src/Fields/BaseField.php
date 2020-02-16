@@ -401,7 +401,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     protected function setProxies()
     {
         $class = config('field.proxies.class');
-        $proxies = \array_merge(config('field.proxies.common'), $this->getConfig('proxies'));
+        $proxies = \array_merge(config('field.proxies.common'), $this->getConfig('proxies', []));
 
         if (!config('field.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
             return;
@@ -420,8 +420,16 @@ abstract class BaseField implements IsAField, IsConfigurable
                 'methodname' => $methodName,
                 'fieldname' => Str::camel($this->name),
             ]);
+            $proxy = new $class($name, $this, $methodName, $data['requirements'], $data['targets']);
 
-            $proxyHandler->add(new $class($name, $this, $methodName, $data['requirements'], $data['targets']));
+            if (isset($data['multi_proxy_template'])) {
+                $proxy->setMultiProxyName(static::replaceInTemplate($data['multi_proxy_template'], [
+                    'methodname' => $methodName,
+                    'fieldname' => Str::camel($this->name),
+                ]));
+            }
+
+            $proxyHandler->add($proxy);
         }
     }
 
