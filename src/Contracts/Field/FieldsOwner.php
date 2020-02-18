@@ -1,80 +1,104 @@
 <?php
 /**
- * Owner interface.
+ * Fields owner contract.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2020
  * @license MIT
  */
 
-namespace Laramore\Interfaces;
+namespace Laramore\Contracts\Field;
 
 use Laramore\Fields\BaseField;
-use Laramore\Interfaces\{
-    IsProxied, IsALaramoreModel, IsARelationField
+use Laramore\Contracts\{
+    Proxied, Eloquent\LaramoreModel, Field\RelationField
 };
 
-interface IsAFieldOwner extends IsAnOwner
+interface FieldsOwner
 {
+    /**
+     * Indicate if this meta has a classic, link or composite field with a given name.
+     *
+     * @param  string $name
+     * @return BaseField
+     */
+    public function getField(string $name): BaseField;
+
+    /**
+     * Define a classic, link or composite field with a given name.
+     *
+     * @param string    $name
+     * @param BaseField $field
+     * @return self
+     */
+    public function setField(string $name, BaseField $field);
+
+    /**
+     * Return all attribute, link and composite fields.
+     *
+     * @return array
+     */
+    public function getFields(): array;
+
     /**
      * Return the get value for a specific field.
      *
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
+     * @param BaseField     $field
+     * @param LaramoreModel $model
      * @return mixed
      */
-    public function getFieldAttribute(BaseField $field, IsALaramoreModel $model);
+    public function getFieldAttribute(BaseField $field, LaramoreModel $model);
 
     /**
      * Return the set value for a specific field.
      * z
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
+     * @param BaseField     $field
+     * @param LaramoreModel $model
+     * @param mixed         $value
      * @return mixed
      */
-    public function setFieldAttribute(BaseField $field, IsALaramoreModel $model, $value);
+    public function setFieldAttribute(BaseField $field, LaramoreModel $model, $value);
 
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param BaseField        $field
-     * @param IsALaramoreModel $model
+     * @param BaseField     $field
+     * @param LaramoreModel $model
      * @return mixed
      */
-    public function resetFieldAttribute(BaseField $field, IsALaramoreModel $model);
+    public function resetFieldAttribute(BaseField $field, LaramoreModel $model);
 
     /**
      * Return the get value for a relation field.
      *
-     * @param IsARelationField $field
-     * @param IsALaramoreModel $model
+     * @param RelationField $field
+     * @param LaramoreModel $model
      * @return mixed
      */
-    public function relateFieldAttribute(IsARelationField $field, IsALaramoreModel $model);
+    public function relateFieldAttribute(RelationField $field, LaramoreModel $model);
 
     /**
      * Reverbate a saved relation value for a specific field.
      *
-     * @param IsARelationField $field
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
+     * @param RelationField $field
+     * @param LaramoreModel $model
+     * @param mixed         $value
      * @return boolean
      */
-    public function reverbateFieldAttribute(IsARelationField $field, IsALaramoreModel $model, $value): bool;
+    public function reverbateFieldAttribute(RelationField $field, LaramoreModel $model, $value): bool;
 
     /**
      * Return generally a Builder after adding to it a condition.
      *
-     * @param BaseField            $field
-     * @param IsProxied            $builder
-     * @param Operator|string|null $operator
-     * @param mixed                $value
-     * @param mixed                ...$args
+     * @param BaseField                   $field
+     * @param Proxied                     $builder
+     * @param OperatorElement|string|null $operator
+     * @param mixed                       $value
+     * @param mixed                       ...$args
      * @return mixed
      */
-    public function whereFieldAttribute(BaseField $field, IsProxied $builder, $operator=null, $value=null, ...$args);
+    public function whereFieldAttribute(BaseField $field, Proxied $builder, $operator=null, $value=null, ...$args);
 
     /**
      * Transform a value for a specific field.

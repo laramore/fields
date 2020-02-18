@@ -1,25 +1,28 @@
 <?php
 /**
- * Field interface.
+ * Field contract.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2020
  * @license MIT
  */
 
-namespace Laramore\Interfaces;
+namespace Laramore\Contracts\Field;
 
 use Illuminate\Support\Collection;
-use Laramore\Eloquent\Builder;
-use Laramore\Interfaces\{
-    IsLockable, IsOwnable
+use Laramore\Contracts\{
+    Locked,
+    Owned,
+    Eloquent\LaramoreModel,
+    Eloquent\LaramoreBuilder
 };
 use Laramore\Elements\{
-    TypeElement, OperatorElement
+    TypeElement,
+    OperatorElement
 };
 
-interface IsAField extends IsLockable, IsOwnable
+interface Field extends Locked, Owned
 {
     /**
      * Return the type object of the field.
@@ -28,12 +31,12 @@ interface IsAField extends IsLockable, IsOwnable
      */
     public function getType(): TypeElement;
 
-     /**
-      * Return the native value of this field.
-      * Commonly, its name.
-      *
-      * @return string
-      */
+    /**
+     * Return the native value of this field.
+     * Commonly, its name.
+     *
+     * @return string
+     */
     public function getNative(): string;
 
     /**
@@ -135,80 +138,89 @@ interface IsAField extends IsLockable, IsOwnable
     public function serialize($value);
 
     /**
-     * Get the value definied by the field.
+     * Return the default value of this field.
      *
-     * @param  IsALaramoreModel $model
      * @return mixed
      */
-    public function get(IsALaramoreModel $model);
+    public function getDefault();
+
+    /**
+     * Get the value definied by the field.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function get(LaramoreModel $model);
 
     /**
      * Set the value for the field.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return mixed
      */
-    public function set(IsALaramoreModel $model, $value);
+    public function set(LaramoreModel $model, $value);
 
     /**
      * Reset the value for the field.
      *
-     * @param  IsALaramoreModel $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function reset(IsALaramoreModel $model);
+    public function reset(LaramoreModel $model);
 
     /**
      * Add a where null condition from this field.
      *
-     * @param  Builder $builder
-     * @param  mixed   $value
-     * @param  string  $boolean
-     * @param  boolean $not
-     * @return Builder
+     * @param  LaramoreBuilder $builder
+     * @param  mixed           $value
+     * @param  string          $boolean
+     * @param  boolean         $not
+     * @return LaramoreBuilder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder;
+    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and', bool $not=false): LaramoreBuilder;
 
     /**
      * Add a where not null condition from this field.
      *
-     * @param  Builder $builder
-     * @param  mixed   $value
-     * @param  string  $boolean
-     * @return Builder
+     * @param  LaramoreBuilder $builder
+     * @param  mixed           $value
+     * @param  string          $boolean
+     * @return LaramoreBuilder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder;
+    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and'): LaramoreBuilder;
 
     /**
      * Add a where in condition from this field.
      *
-     * @param  Builder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
-     * @param  boolean    $notIn
-     * @return Builder
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
+     * @return LaramoreBuilder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder;
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+                            string $boolean='and', bool $notIn=false): LaramoreBuilder;
 
     /**
      * Add a where not in condition from this field.
      *
-     * @param  Builder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
-     * @return Builder
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @return LaramoreBuilder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder;
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder;
 
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder         $builder
+     * @param  LaramoreBuilder $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and'): Builder;
+    public function where(LaramoreBuilder $builder, OperatorElement $operator,
+                          $value=null, string $boolean='and'): LaramoreBuilder;
 }

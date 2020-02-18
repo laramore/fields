@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a pattern field interface.
+ * Define a pattern field contract.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-namespace Laramore\Interfaces;
+namespace Laramore\Contracts\Field;
 
-interface IsAPatternField
+interface PatternField extends Field
 {
     /**
      * Return the pattern to match.
