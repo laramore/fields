@@ -11,49 +11,50 @@ return [
     |
     */
 
-    'enabled' => true,
+    'class' => \Laramore\Proxies\FieldProxy::class,
 
-    'manager' => \Laramore\Fields\Proxy\ProxyManager::class,
-
-    'class' => \Laramore\Fields\Proxy\Proxy::class,
-
-    'configurations' => [
-        'targets' => [\Laramore\Fields\Proxy\ProxyHandler::MODEL_TYPE],
-        'requirements' => [],
-        'name_template' => '${methodname}^{fieldname}',
-    ],
-
-    'common' => [
+    'common_configurations' => [
+        'dry' => [
+            'static' => true,
+        ],
+        'cast' => [
+            'static' => true,
+        ],
+        'transform' => [
+            'static' => true,
+        ],
+        'serialize' => [
+            'static' => true,
+        ],
+        'getDefault' => [
+            'static' => true,
+        ],
         'get' => [
-            'name_template' => '${methodname}^{fieldname}Attribute',
+            'name_template' => '${methodname}^{identifier}Attribute',
             'multi_proxy_template' => '${methodname}Attribute',
-            'requirements' => ['instance'],
         ],
         'set' => [
-            'name_template' => '${methodname}^{fieldname}Attribute',
+            'name_template' => '${methodname}^{identifier}Attribute',
             'multi_proxy_template' => '${methodname}Attribute',
-            'requirements' => ['instance'],
         ],
         'reset' => [
-            'name_template' => '${methodname}^{fieldname}Attribute',
+            'name_template' => '${methodname}^{identifier}Attribute',
             'multi_proxy_template' => '${methodname}Attribute',
-            'requirements' => ['instance'],
         ],
         'relate' => [
-            'name_template' => '${fieldname}',
-            'requirements' => ['instance'],
+            'name_template' => '${identifier}',
         ],
         'where' => [
             'requirements' => ['instance'],
-            'targets' => [\Laramore\Fields\Proxy\ProxyHandler::BUILDER_TYPE],
+            'name_template' => 'scope^{$methodname}^{identifier}',
         ],
         'doesntHave' => [
             'requirements' => ['instance'],
-            'targets' => [\Laramore\Fields\Proxy\ProxyHandler::BUILDER_TYPE],
+            'name_template' => 'scope^{$methodname}^{identifier}',
         ],
         'has' => [
             'requirements' => ['instance'],
-            'targets' => [\Laramore\Fields\Proxy\ProxyHandler::BUILDER_TYPE],
+            'name_template' => 'scope^{$methodname}^{identifier}',
         ],
     ],
 

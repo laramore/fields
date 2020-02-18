@@ -29,22 +29,16 @@ return [
             'type' => 'link',
             'proxies' => [
                 'attach' => [
-                    'requirements' => ['instance'],
                 ],
                 'detach' => [
-                    'requirements' => ['instance'],
                 ],
                 'sync' => [
-                    'requirements' => ['instance'],
                 ],
                 'toggle' => [
-                    'requirements' => ['instance'],
                 ],
                 'syncWithoutDetaching' => [
-                    'requirements' => ['instance'],
                 ],
                 'updateExistingPivot' => [
-                    'requirements' => ['instance'],
                 ],
             ],
         ],
@@ -52,10 +46,10 @@ return [
             'type' => 'boolean',
             'proxies' => [
                 'is' => [
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
                 'isNot' => [
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
             ],
         ],
@@ -80,9 +74,8 @@ return [
             'type' => 'enum',
             'elements' => [
                 'proxy' => [
-                    'enabled' => true,
                     'name_template' => '${methodname}^{elementname}',
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
             ],
             'proxies' => [
@@ -93,10 +86,10 @@ return [
                     'name_template' => 'get*{fieldname}',
                 ],
                 'is' => [
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
                 'isNot' => [
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
             ],
         ],
@@ -223,7 +216,7 @@ return [
                 'hash' => [],
                 'isCorrect' => [
                     'name_template' => 'is^{fieldname}Correct',
-                    'requirements' => ['value'],
+                    'needsValue' => true,
                 ],
             ],
             'patterns' => [
