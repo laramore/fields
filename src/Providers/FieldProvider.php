@@ -27,6 +27,10 @@ class FieldProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/../../config/field.php', 'field',
         );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/field/proxies.php', 'field.proxies',
+        );
     }
 
     /**
@@ -36,8 +40,11 @@ class FieldProvider extends ServiceProvider
      */
     public function boot()
     {
+        $pathDir = $this->app->make('path.config');
+
         $this->publishes([
-            __DIR__.'/../../config/field.php' => $this->app->make('path.config').DIRECTORY_SEPARATOR.'field.php',
+            __DIR__.'/../../config/field.php' => $pathDir.'/field.php',
+            __DIR__.'/../../config/field/proxies.php' => $pathDir.'/field/proxies.php',
         ]);
     }
 }
