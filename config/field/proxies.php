@@ -13,7 +13,7 @@ return [
 
     'class' => \Laramore\Proxies\FieldProxy::class,
 
-    'common_configurations' => [
+    'configurations' => [
         'dry' => [
             'static' => true,
         ],
@@ -30,31 +30,45 @@ return [
             'static' => true,
         ],
         'get' => [
-            'name_template' => '${methodname}^{identifier}Attribute',
-            'multi_proxy_template' => '${methodname}Attribute',
+            'templates' => [
+                'name' => '${methodname}^{identifier}Attribute',
+                'multi_name' => '${methodname}Attribute',
+            ],
         ],
         'set' => [
-            'name_template' => '${methodname}^{identifier}Attribute',
-            'multi_proxy_template' => '${methodname}Attribute',
+            'templates' => [
+                'name' => '${methodname}^{identifier}Attribute',
+                'multi_name' => '${methodname}Attribute',
+            ],
         ],
         'reset' => [
-            'name_template' => '${methodname}^{identifier}Attribute',
-            'multi_proxy_template' => '${methodname}Attribute',
+            'templates' => [
+                'name' => '${methodname}^{identifier}Attribute',
+                'multi_name' => '${methodname}Attribute',
+            ],
         ],
         'relate' => [
-            'name_template' => '${identifier}',
+            'templates' => [
+                'name' => '${identifier}',
+            ],
         ],
         'where' => [
             'requirements' => ['instance'],
-            'name_template' => 'scope^{$methodname}^{identifier}',
+            'templates' => [
+                'name' => 'scope^{methodname}^{identifier}',
+            ],
         ],
         'doesntHave' => [
             'requirements' => ['instance'],
-            'name_template' => 'scope^{$methodname}^{identifier}',
+            'templates' => [
+                'name' => 'scope^{methodname}^{identifier}',
+            ],
         ],
         'has' => [
             'requirements' => ['instance'],
-            'name_template' => 'scope^{$methodname}^{identifier}',
+            'templates' => [
+                'name' => 'scope^{methodname}^{identifier}',
+            ],
         ],
     ],
 

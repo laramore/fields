@@ -13,19 +13,12 @@ return [
 
     'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
 
-    'configurations' => [
-        'primary' => [
-            'class' => Laramore\Fields\Constraint\Primary::class,
-        ],
-        'index' => [
-            'class' => Laramore\Fields\Constraint\Index::class,
-        ],
-        'unique' => [
-            'class' => Laramore\Fields\Constraint\Unique::class,
-        ],
-        'foreign' => [
-            'class' => Laramore\Fields\Constraint\Foreign::class,
-        ],
+    'classes' => [
+        'primary' => Laramore\Fields\Constraint\Primary::class,
+        'index' => Laramore\Fields\Constraint\Index::class,
+        'unique' => Laramore\Fields\Constraint\Unique::class,
+        'foreign' => Laramore\Fields\Constraint\Foreign::class,
     ],
 
+    'configurations' => [],
 ];

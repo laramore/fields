@@ -12,8 +12,10 @@ return [
     |
     */
 
-    'name_template' => '_{name}',
-    'attname_template' => '_{attname}',
+    'templates' => [
+        'name' => '_{name}',
+        'attname' => '_{attname}',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -28,28 +30,22 @@ return [
         'belongs_to_many' => [
             'type' => 'link',
             'proxies' => [
-                'attach' => [
-                ],
-                'detach' => [
-                ],
-                'sync' => [
-                ],
-                'toggle' => [
-                ],
-                'syncWithoutDetaching' => [
-                ],
-                'updateExistingPivot' => [
-                ],
+                'attach' => [],
+                'detach' => [],
+                'sync' => [],
+                'toggle' => [],
+                'syncWithoutDetaching' => [],
+                'updateExistingPivot' => [],
             ],
         ],
         'boolean' => [
             'type' => 'boolean',
             'proxies' => [
                 'is' => [
-                    'needsValue' => true,
+                    'needs_value' => true,
                 ],
                 'isNot' => [
-                    'needsValue' => true,
+                    'needs_value' => true,
                 ],
             ],
         ],
@@ -73,83 +69,55 @@ return [
         'enum' => [
             'type' => 'enum',
             'elements' => [
-                'proxy' => [
-                    'name_template' => '${methodname}^{elementname}',
-                    'needsValue' => true,
+                'proxy_class' => Laramore\Proxies\EnumProxy::class,
+                'proxies' => [
+                    'is' => [
+                        'templates' => [
+                            'name' => '${methodname}^{elementname}',
+                        ],
+                        'needs_value' => true,
+                    ]
                 ],
             ],
             'proxies' => [
                 'getElements' => [
-                    'name_template' => 'get^{fieldname}Elements',
+                    'templates' => [
+                        'name' => 'get^{identifier}Elements',
+                    ],
                 ],
                 'getElementsValue' => [
-                    'name_template' => 'get*{fieldname}',
+                    'templates' => [
+                        'name' => 'get*{identifier}',
+                    ],
                 ],
                 'is' => [
-                    'needsValue' => true,
+                    'needs_value' => true,
                 ],
                 'isNot' => [
-                    'needsValue' => true,
+                    'needs_value' => true,
                 ],
             ],
-        ],
-        'foreign' => [
-            'type' => 'composite',
-            'attributes' => [
-                'id' => Laramore\Fields\Integer::class,
-            ],
-            'links' => [
-                'reversed' => Laramore\Fields\HasMany::class,
-            ],
-            'self_reversed_name_template' => 'reversed_+{name}',
-            'attribute_name_template' => '${name}_${fieldname}',
-            'link_name_template' => '+{modelname}',
-            'proxies' => [],
         ],
         'has_many' => [
             'type' => 'link',
             'proxies' => [
-                'attach' => [
-                    'requirements' => ['instance'],
-                ],
-                'detach' => [
-                    'requirements' => ['instance'],
-                ],
-                'sync' => [
-                    'requirements' => ['instance'],
-                ],
-                'toggle' => [
-                    'requirements' => ['instance'],
-                ],
-                'syncWithoutDetaching' => [
-                    'requirements' => ['instance'],
-                ],
-                'updateExistingPivot' => [
-                    'requirements' => ['instance'],
-                ],
+                'attach' => [],
+                'detach' => [],
+                'sync' => [],
+                'toggle' => [],
+                'syncWithoutDetaching' => [],
+                'updateExistingPivot' => [],
             ],
         ],
         'has_many_through' => [
             'type' => 'link',
             'proxies' => [
-                'attach' => [
-                    'requirements' => ['instance'],
-                ],
-                'detach' => [
-                    'requirements' => ['instance'],
-                ],
-                'sync' => [
-                    'requirements' => ['instance'],
-                ],
-                'toggle' => [
-                    'requirements' => ['instance'],
-                ],
-                'syncWithoutDetaching' => [
-                    'requirements' => ['instance'],
-                ],
-                'updateExistingPivot' => [
-                    'requirements' => ['instance'],
-                ],
+                'attach' => [],
+                'detach' => [],
+                'sync' => [],
+                'toggle' => [],
+                'syncWithoutDetaching' => [],
+                'updateExistingPivot' => [],
             ],
         ],
         'has_one' => [
@@ -159,9 +127,7 @@ return [
         'increment' => [
             'type' => 'increment',
             'proxies' => [
-                'increment' => [
-                    'requirements' => ['instance', 'value'],
-                ],
+                'increment' => [],
             ],
         ],
         'integer' => [
@@ -170,43 +136,31 @@ return [
             'proxies' => [],
         ],
         'many_to_many' => [
-            'type' => 'composite',
-            'attributes' => [],
-            'links' => [
+            'type' => 'composed',
+            'fields' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
-            'pivot_name_template' => 'pivot',
-            'reversed_pivot_name_template' => 'pivot',
-            'self_reversed_name_template' => 'reversed_+{name}',
-            'self_pivot_reversed_name_template' => 'reversed_+{modelname}',
-            'attribute_name_template' => '${name}_${fieldname}',
-            'link_name_template' => '+{modelname}',
+            'templates' => [
+                'reversed' => '+{modelname}',
+                'pivot' => 'pivot',
+                'reversed_pivot' => 'pivot',
+                'self_reversed' => 'reversed_+{name}',
+                'self_pivot_reversed' => 'reversed_+{modelname}',
+            ],
             'proxies' => [
-                'attach' => [
-                    'requirements' => ['instance'],
-                ],
+                'attach' => [],
             ],
         ],
-        'morph_to_one' => [
-            'type' => 'composite',
-            'attributes' => [],
-            'links' => [
-                'reversed' => Laramore\Fields\BelongsToMany::class,
-            ],
-            'attribute_name_template' => '${name}_${fieldname}',
-            'link_name_template' => '+{modelname}',
-            'proxies' => [],
-        ],
-        'one_to_one' => [
-            'type' => 'composite',
-            'attributes' => [
+        'one_to_many' => [
+            'type' => 'composed',
+            'fields' => [
                 'id' => Laramore\Fields\Integer::class,
-            ],
-            'links' => [
                 'reversed' => Laramore\Fields\HasOne::class,
             ],
-            'attribute_name_template' => '${name}_${fieldname}',
-            'link_name_template' => '+{modelname}',
+            'templates' => [
+                'id' => '${name}_${identifier}',
+                'reversed' => '+{modelname}',
+            ],
             'proxies' => [],
         ],
         'password' => [
@@ -215,8 +169,10 @@ return [
                 'resize' => [],
                 'hash' => [],
                 'isCorrect' => [
-                    'name_template' => 'is^{fieldname}Correct',
-                    'needsValue' => true,
+                    'templates' => [
+                        'name' => 'is^{identifier}Correct',
+                    ],
+                    'needs_value' => true,
                 ],
             ],
             'patterns' => [
@@ -245,8 +201,8 @@ return [
             'proxies' => [],
         ],
         'name' => [
-            'type' => 'composite',
-            'attributes' => [
+            'type' => 'composed',
+            'fields' => [
                 'firstname' => [
                     Laramore\Fields\Body::class,
                     ['visible', 'fillable', 'required', 'title'],
@@ -256,8 +212,10 @@ return [
                     ['visible', 'fillable', 'required', 'uppercase'],
                 ],
             ],
-            'links' => [],
-            'attribute_name_template' => '${fieldname}',
+            'templates' => [
+                'firstname' => 'firstname',
+                'lastname' => 'lastname',
+            ],
             'proxies' => [],
         ],
     ],
