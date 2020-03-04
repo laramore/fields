@@ -10,7 +10,7 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Fields\AttributeField;
+use Laramore\Contracts\Field\AttributeField;
 
 class Primary extends BaseConstraint
 {
@@ -19,7 +19,7 @@ class Primary extends BaseConstraint
      *
      * @var string
      */
-    protected $constraintName = self::PRIMARY;
+    protected $constraintType = self::PRIMARY;
 
     /**
      * Return the first field of this constraint.

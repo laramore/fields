@@ -17,5 +17,5 @@ class Index extends BaseConstraint
      *
      * @var string
      */
-    protected $constraintName = self::INDEX;
+    protected $constraintType = self::INDEX;
 }

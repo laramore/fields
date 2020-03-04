@@ -17,5 +17,5 @@ class Unique extends BaseConstraint
      *
      * @var string
      */
-    protected $constraintName = self::UNIQUE;
+    protected $constraintType = self::UNIQUE;
 }

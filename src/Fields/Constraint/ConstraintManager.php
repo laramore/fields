@@ -10,18 +10,19 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Illuminate\Database\Eloquent\Model;
 use Laramore\Observers\BaseManager;
-use Laramore\Interfaces\IsALaramoreManager;
+use Laramore\Contracts\{
+    Manager\LaramoreManager, Eloquent\LaramoreModel
+};
 
-class ConstraintManager extends BaseManager implements IsALaramoreManager
+class ConstraintManager extends BaseManager implements LaramoreManager
 {
     /**
      * Allowed observable sub class.
      *
      * @var string
      */
-    protected $managedClass = Model::class;
+    protected $managedClass = LaramoreModel::class;
 
     /**
      * The observable handler class to generate.

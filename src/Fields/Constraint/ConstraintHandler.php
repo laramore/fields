@@ -10,78 +10,84 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Observers\BaseHandler;
-use Laramore\Exceptions\LockException;
-use Laramore\Fields\Constraint\{
-    Primary, Index, Unique, Foreign
-};
+use Laramore\Contracts\Eloquent\LaramoreModel;
 
-class ConstraintHandler extends BaseHandler
+class ConstraintHandler extends BaseConstraintHandler
 {
     /**
-     * The observer class to use to generate.
+     * The observable class.
      *
      * @var string
      */
-    protected $observerClass = BaseConstraint::class;
+    protected $observableClass = LaramoreModel::class;
 
     /**
-     * Return the primary constraint.
+     * All field constraints
      *
-     * @return Primary|null
+     * @var array<FieldConstraintHandler>
      */
-    public function getPrimary(): ?Primary
+    protected $fieldConstraints = [];
+
+    /**
+     * Add a field handler
+     *
+     * @param FieldConstraintHandler $handler
+     * @return self
+     */
+    public function addFieldHandler(FieldConstraintHandler $handler)
     {
-        $primaries = $this->allFromClass(Primary::class);
+        $name = $handler->getConstrainted()->getName();
 
-        if (\count($primaries)) {
-            return $primaries[0];
-        }
+        $this->fieldConstraints[$name] = $handler->own($this, $name);
 
-        return null;
+        return $this;
     }
 
     /**
-     * Return all indexes.
+     * Indicate if it has a field handler.
      *
-     * @return array<Index>
+     * @param string $name
+     * @return boolean
      */
-    public function getIndexes(): array
+    public function hasFieldHandler(string $name): bool
     {
-        return $this->allFromClass(Index::class);
+        return isset($this->getFieldHandlers()[$name]);
     }
 
     /**
-     * Return all unique constraints.
+     * Return a field handler by the field name.
      *
-     * @return array<Unique>
+     * @param string $name
+     * @return FieldConstraintHandler
      */
-    public function getUniques(): array
+    public function getFieldHandler(string $name): FieldConstraintHandler
     {
-        return $this->allFromClass(Unique::class);
+        return $this->getFieldHandlers()[$name];
     }
 
     /**
-     * Return all foreign constraints.
+     * Return all field handlers.
      *
-     * @return array<Foreign>
+     * @return array
      */
-    public function getForeigns(): array
+    public function getFieldHandlers(): array
     {
-        return $this->allFromClass(Foreign::class);
+        return $this->fieldConstraints;
     }
 
     /**
-     * Actions during locking.
+     * Need to lock every observer.
      *
      * @return void
      */
-    public function locking()
+    protected function locking()
     {
-        parent::locking();
-
-        if (\count($this->allFromClass(Primary::class)) > 1) {
-            throw new LockException('A table cannot have multiple primary constraints', 'primary');
+        foreach ($this->observers as $constraints) {
+            foreach ($constraints as $constraint) {
+                if (!$constraint->isLocked()) {
+                    $constraint->lock();
+                }
+            }
         }
     }
 }

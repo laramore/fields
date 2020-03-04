@@ -12,19 +12,23 @@ namespace Laramore\Fields\Constraint;
 
 use Illuminate\Support\Facades\Event;
 use Laramore\Exceptions\LockException;
-use Laramore\Fields\AttributeField;
-use Laramore\Interfaces\IsConfigurable;
+use Laramore\Contracts\Field\{
+    AttributeField, Constraint\ConstraintedField
+};
 use Laramore\Observers\BaseObserver;
 
-abstract class BaseConstraint extends BaseObserver implements IsConfigurable
+abstract class BaseConstraint extends BaseObserver
 {
     /**
      * Define the name of the constraint.
      *
      * @var string
      */
-    protected $constraintName;
+    protected $constraintType;
 
+    /**
+     * All possible constraint types.
+     */
     const FOREIGN = 'foreign';
     const INDEX = 'index';
     const PRIMARY = 'primary';
@@ -33,34 +37,34 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
     /**
      * An observer needs at least a name.
      *
-     * @param array<AttributeField> $attributes
-     * @param string                $name
-     * @param integer               $priority
+     * @param ConstraintedField|array<ConstraintedField> $attributes
+     * @param string                                     $name
+     * @param integer                                    $priority
      */
-    protected function __construct(array $attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    protected function __construct($attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {
         if (!\is_null($name)) {
             $this->setName($name);
         }
 
-        if (\count($attributes) === 0) {
-            throw new \LogicException('A constraints works on at least one field');
-        }
-
         $this->on($attributes);
         $this->setPriority($priority);
+
+        if ($this->count() === 0) {
+            throw new \LogicException('A constraints works on at least one field');
+        }
     }
 
     /**
      * Define a new constraint.
      *
-     * @param array   $attributes
-     * @param string  $name
-     * @param integer $priority
+     * @param ConstraintedField|array<ConstraintedField> $attributes
+     * @param string                                     $name
+     * @param integer                                    $priority
      * @return self|null
      */
-    public static function constraint(array $attributes, string $name=null,
-                                      int $priority=self::MEDIUM_PRIORITY): ?BaseConstraint
+    public static function constraint($attributes, string $name=null,
+                                      int $priority=self::MEDIUM_PRIORITY)
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
 
@@ -76,36 +80,13 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
     }
 
     /**
-     * Return the configuration path for this field.
-     *
-     * @param string $path
-     * @return mixed
-     */
-    public function getConfigPath(string $path=null)
-    {
-        return 'field.constraints.configurations.'.$this->getConstraintName().(\is_null($path) ? '' : '.'.$path);
-    }
-
-    /**
-     * Return the configuration for this field.
-     *
-     * @param string $path
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function getConfig(string $path=null, $default=null)
-    {
-        return config($this->getConfigPath($path), $default);
-    }
-
-    /**
      * Return the constraint name.
      *
      * @return string
      */
-    public function getConstraintName(): string
+    public function getConstraintType(): string
     {
-        return $this->constraintName;
+        return $this->constraintType;
     }
 
     /**
@@ -119,7 +100,7 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
 
         return $tableName.'_'.implode('_', \array_map(function (AttributeField $field) {
             return $field->getAttname();
-        }, $this->getAttributes())).'_'.$this->constraintName;
+        }, $this->getAttributes())).'_'.$this->constraintType;
     }
 
     /**
@@ -227,7 +208,7 @@ abstract class BaseConstraint extends BaseObserver implements IsConfigurable
     {
         if ($this->getTableNames() !== [$this->getMainTableName()]) {
             throw new LockException(
-                "A `$this->constraintName` constraint cannot have fields from different tables.",
+                "A `$this->constraintType` constraint cannot have fields from different tables.",
                 'observed'
             );
         }
