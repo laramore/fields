@@ -91,7 +91,7 @@ interface FieldsOwner
     /**
      * Retrieve values from the relation field.
      *
-     * @param ExtraField $field
+     * @param ExtraField    $field
      * @param  LaramoreModel $model
      * @return mixed
      */

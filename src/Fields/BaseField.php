@@ -10,25 +10,24 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Container\Container;
+use Illuminate\Support\{
+    Arr,
+    Str, Facades\Event
+};
 use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
     Option, Type
 };
-use Laramore\Interfaces\{
-    IsAField, IsConfigurable, IsAnOwner
+use Laramore\Contracts\{
+    Eloquent\LaramoreMeta, Field\Field, Configured
 };
 use Laramore\Traits\{
-    IsOwned, IsLocked, HasProperties
+    IsOwned, IsLocked, HasProperties, HasOptions, HasLockedMacros
 };
-use Laramore\Traits\{
-    HasOptions, HasLockedMacros
-};
-use Laramore\Meta;
 use Laramore\Exceptions\ConfigException;
 
-abstract class BaseField implements IsAField, IsConfigurable
+abstract class BaseField implements Field, Configured
 {
     use IsOwned, IsLocked, HasLockedMacros, HasProperties, HasOptions {
         own as protected ownFromTrait;
@@ -40,9 +39,9 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
-     * Meta that owns this field.
+     * LaramoreMeta that owns this field.
      *
-     * @var \Laramore\Meta
+     * @var \Laramore\LaramoreMeta
      */
     protected $meta;
 
@@ -56,7 +55,7 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
-     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
+     * ex: Char::field()->maxLength(255) insteadof (new Char)->maxLength(255).
      *
      * @param array|null $options
      */
@@ -108,7 +107,7 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public function getConfig(string $path=null, $default=null)
     {
-        return config($this->getConfigPath($path), $default);
+        return Container::getInstance()->config->get($this->getConfigPath($path), $default);
     }
 
     /**
@@ -194,7 +193,7 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     public static function parseName(string $name): string
     {
-        return static::replaceInTemplate(config('field.name_template'), compact('name'));
+        return Str::replaceInTemplate(Container::getInstance()->config->get('field.templates.name'), compact('name'));
     }
 
     /**
@@ -240,6 +239,16 @@ abstract class BaseField implements IsAField, IsConfigurable
     }
 
     /**
+     * Return default value.
+     *
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    /**
      * Define the field as not visible.
      *
      * @param  boolean $hidden
@@ -274,15 +283,15 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Set the owner.
      *
-     * @param IsAnOwner $owner
+     * @param mixed $owner
      * @return void
      */
-    protected function setOwner(IsAnOwner $owner)
+    protected function setOwner($owner)
     {
         $this->setOwnerFromTrait($owner);
 
         if (!$this->hasProperty('meta')) {
-            while (!($owner instanceof Meta)) {
+            while (!($owner instanceof LaramoreMeta)) {
                 $owner = $owner->getOwner();
             }
 
@@ -293,11 +302,11 @@ abstract class BaseField implements IsAField, IsConfigurable
     /**
      * Assign a unique owner to this instance.
      *
-     * @param  IsAnOwner $owner
-     * @param  string    $name
+     * @param  mixed  $owner
+     * @param  string $name
      * @return self
      */
-    public function own(IsAnOwner $owner, string $name)
+    public function own($owner, string $name)
     {
         $this->needsToBeUnlocked();
 
@@ -325,8 +334,8 @@ abstract class BaseField implements IsAField, IsConfigurable
     {
         $owner = $this->getOwner();
 
-        if (!($owner instanceof Meta) && !($owner instanceof CompositeField)) {
-            throw new \LogicException('A field should be owned by a Meta or a CompositeField');
+        if (!($owner instanceof LaramoreMeta) && !($owner instanceof BaseComposed)) {
+            throw new \LogicException('A field should be owned by a LaramoreMeta or a BaseComposed');
         }
     }
 
@@ -400,67 +409,32 @@ abstract class BaseField implements IsAField, IsConfigurable
      */
     protected function setProxies()
     {
-        $class = config('field.proxies.class');
-        $proxies = \array_merge(config('field.proxies.common'), $this->getConfig('proxies', []));
-
-        if (!config('field.proxies.enabled') || \is_null($class) || \is_null($proxies)) {
-            return;
-        }
-
+        $config = Container::getInstance()->config;
         $proxyHandler = $this->getMeta()->getProxyHandler();
-        $default = config('field.proxies.configurations');
+
+        $class = $config->get('field.proxies.class');
+        $proxies = \array_merge($config->get('field.proxies.configurations'), $this->getConfig('proxies', []));
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {
                 continue;
             }
 
-            $data = \array_merge($default, $data);
-            $name = static::replaceInTemplate($data['name_template'], [
-                'methodname' => $methodName,
-                'fieldname' => Str::camel($this->name),
-            ]);
-            $proxy = new $class($name, $this, $methodName, $data['requirements'], $data['targets']);
-
-            if (isset($data['multi_proxy_template'])) {
-                $proxy->setMultiProxyName(static::replaceInTemplate($data['multi_proxy_template'], [
-                    'methodname' => $methodName,
-                    'fieldname' => Str::camel($this->name),
-                ]));
-            }
-
-            $proxyHandler->add($proxy);
+            $proxyHandler->add(new $class(
+                $this, $methodName,
+                Arr::get($data, 'static', false), Arr::get($data, 'needs_value', false),
+                Arr::get($data, 'templates.name'), Arr::get($data, 'templates.multi_name')
+            ));
         }
-    }
-
-    /**
-     * Remplace in template with values.
-     *
-     * @param  string $template
-     * @param  array  $keyValues
-     * @return string
-     */
-    public static function replaceInTemplate(string $template, array $keyValues): string
-    {
-        foreach ($keyValues as $key => $value) {
-            $template = \str_replace([
-                '${'.$key.'}', '#{'.$key.'}', '+{'.$key.'}', '^{'.$key.'}', '*{'.$key.'}', '_{'.$key.'}', '-{'.$key.'}',
-            ], [
-                $value, Str::singular($value), Str::plural($value), \ucwords($value), \ucwords(Str::plural($value)),
-                Str::snake($value), Str::camel($value)
-            ], $template);
-        }
-
-        return $template;
     }
 
     /**
      * Define the meta of this field.
      *
-     * @param  Meta $meta
+     * @param  LaramoreMeta $meta
      * @return self
      */
-    public function setMeta(Meta $meta)
+    public function setMeta(LaramoreMeta $meta)
     {
         $this->needsToBeUnlocked();
 
@@ -475,12 +449,14 @@ abstract class BaseField implements IsAField, IsConfigurable
 
     /**
      * Return the meta of this field.
-     * The owner could be a composite field and so on but not the coresponded meta.
+     * The owner could be a composed field and so on but not the coresponded meta.
      *
-     * @return Meta
+     * @return LaramoreMeta
      */
-    public function getMeta(): Meta
+    public function getMeta(): LaramoreMeta
     {
+        $this->needsToBeOwned();
+
         return $this->meta;
     }
 
