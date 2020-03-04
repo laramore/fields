@@ -27,15 +27,15 @@ class EnumProxy extends FieldProxy
     /**
      * An observer needs at least a name and a Closure.
      *
-     * @param Enum   $field
-     * @param EnumElement   $element
-     * @param string  $methodName
-     * @param boolean $static
-     * @param boolean $needsValue
-     * @param string  $nameTemplate
-     * @param string  $multiNameTemplate
+     * @param Enum        $field
+     * @param EnumElement $element
+     * @param string      $methodName
+     * @param boolean     $static
+     * @param boolean     $needsValue
+     * @param string      $nameTemplate
+     * @param string      $multiNameTemplate
      */
-    public function __construct(Enum $field, EnumElement $element, string $methodName, 
+    public function __construct(Enum $field, EnumElement $element, string $methodName,
                                 bool $static=false, bool $needsValue=false,
                                 string $nameTemplate=null, string $multiNameTemplate=null)
     {
@@ -65,7 +65,7 @@ class EnumProxy extends FieldProxy
     /**
      * Define the proxy enum.
      *
-     * @param Field $enum
+     * @param EnumElement $enum
      * @return self
      */
     public function setEnum(EnumElement $enum)
