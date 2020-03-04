@@ -10,64 +10,74 @@
 
 namespace Laramore\Contracts\Field;
 
-use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Field\RelationField
+    Proxied, Eloquent\LaramoreModel, Field\Field, Field\RelationField, Field\ExtraField
 };
 
 interface FieldsOwner
 {
     /**
-     * Indicate if this meta has a classic, link or composite field with a given name.
+     * Indicate if a field with a given name exists.
      *
      * @param  string $name
-     * @return BaseField
+     * @param  string $class The field must be an instance of the class.
+     * @return boolean
      */
-    public function getField(string $name): BaseField;
+    public function hasField(string $name, string $class=null): bool;
 
     /**
-     * Define a classic, link or composite field with a given name.
+     * Return a field with a given name.
      *
-     * @param string    $name
-     * @param BaseField $field
+     * @param  string $name
+     * @param  string $class The field must be an instance of the class.
+     * @return Field
+     */
+    public function getField(string $name, string $class=null): Field;
+
+    /**
+     * Define a field with a given name.
+     *
+     * @param string $name
+     * @param Field  $field
      * @return self
      */
-    public function setField(string $name, BaseField $field);
+    public function setField(string $name, Field $field);
 
     /**
-     * Return all attribute, link and composite fields.
+     * Return all fields.
      *
+     * @param  string $class Each field must be an instance of the class.
      * @return array
      */
-    public function getFields(): array;
+    public function getFields(string $class=null): array;
 
     /**
      * Return the get value for a specific field.
      *
-     * @param BaseField     $field
+     * @param Field         $field
      * @param LaramoreModel $model
      * @return mixed
      */
-    public function getFieldAttribute(BaseField $field, LaramoreModel $model);
+    public function getFieldValue(Field $field, LaramoreModel $model);
 
     /**
      * Return the set value for a specific field.
      * z
-     * @param BaseField     $field
+     * @param Field         $field
      * @param LaramoreModel $model
      * @param mixed         $value
      * @return mixed
      */
-    public function setFieldAttribute(BaseField $field, LaramoreModel $model, $value);
+    public function setFieldValue(Field $field, LaramoreModel $model, $value);
 
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param BaseField     $field
+     * @param Field         $field
      * @param LaramoreModel $model
      * @return mixed
      */
-    public function resetFieldAttribute(BaseField $field, LaramoreModel $model);
+    public function resetFieldValue(Field $field, LaramoreModel $model);
 
     /**
      * Return the get value for a relation field.
@@ -76,7 +86,16 @@ interface FieldsOwner
      * @param LaramoreModel $model
      * @return mixed
      */
-    public function relateFieldAttribute(RelationField $field, LaramoreModel $model);
+    public function relateFieldValue(RelationField $field, LaramoreModel $model);
+
+    /**
+     * Retrieve values from the relation field.
+     *
+     * @param ExtraField $field
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function retrieveFieldValue(ExtraField $field, LaramoreModel $model);
 
     /**
      * Reverbate a saved relation value for a specific field.
@@ -86,71 +105,71 @@ interface FieldsOwner
      * @param mixed         $value
      * @return boolean
      */
-    public function reverbateFieldAttribute(RelationField $field, LaramoreModel $model, $value): bool;
+    public function reverbateFieldValue(RelationField $field, LaramoreModel $model, $value): bool;
 
     /**
      * Return generally a Builder after adding to it a condition.
      *
-     * @param BaseField                   $field
+     * @param Field                       $field
      * @param Proxied                     $builder
      * @param OperatorElement|string|null $operator
      * @param mixed                       $value
      * @param mixed                       ...$args
      * @return mixed
      */
-    public function whereFieldAttribute(BaseField $field, Proxied $builder, $operator=null, $value=null, ...$args);
+    public function whereFieldValue(Field $field, Proxied $builder, $operator=null, $value=null, ...$args);
 
     /**
      * Transform a value for a specific field.
      *
-     * @param BaseField $field
-     * @param mixed     $value
+     * @param Field $field
+     * @param mixed $value
      * @return mixed
      */
-    public function transformFieldAttribute(BaseField $field, $value);
+    public function transformFieldValue(Field $field, $value);
 
     /**
      * Serialize a value for a specific field.
      *
-     * @param BaseField $field
-     * @param mixed     $value
+     * @param Field $field
+     * @param mixed $value
      * @return mixed
      */
-    public function serializeFieldAttribute(BaseField $field, $value);
+    public function serializeFieldValue(Field $field, $value);
 
     /**
      * Dry a value for a specific field.
      *
-     * @param BaseField $field
-     * @param mixed     $value
+     * @param Field $field
+     * @param mixed $value
      * @return mixed
      */
-    public function dryFieldAttribute(BaseField $field, $value);
+    public function dryFieldValue(Field $field, $value);
 
     /**
      * Cast a value for a specific field.
      *
-     * @param BaseField $field
-     * @param mixed     $value
+     * @param Field $field
+     * @param mixed $value
      * @return mixed
      */
-    public function castFieldAttribute(BaseField $field, $value);
+    public function castFieldValue(Field $field, $value);
 
     /**
      * Return the default value for a specific field.
      *
-     * @param BaseField $field
+     * @param Field $field
      * @return mixed
      */
-    public function defaultFieldAttribute(BaseField $field);
+    public function defaultFieldValue(Field $field);
 
     /**
      * Call a field attribute method that is not basic.
      *
-     * @param BaseField $field
-     * @param string    $methodName
-     * @param array     $args
+     * @param Field  $field
+     * @param string $methodName
+     * @param array  $args
      * @return mixed
      */
-    public function callFieldAttributeMethod(BaseField $field, string $methodName, array $args);
+    public function callFieldValueMethod(Field $field, string $methodName, array $args);
 }
