@@ -1,6 +1,5 @@
 <?php
 /**
- * Define a primary field contract.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,6 +9,6 @@
 
 namespace Laramore\Contracts\Field;
 
-interface PrimaryField extends Field
+interface LinkField extends RelationField
 {
 }

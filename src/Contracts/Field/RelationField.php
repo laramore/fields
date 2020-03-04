@@ -10,7 +10,9 @@
 
 namespace Laramore\Contracts\Field;
 
-interface RelationField extends Field
+use Laramore\Contracts\Eloquent\LaramoreModel;
+
+interface RelationField extends ExtraField
 {
     /**
      * Return the relation with this field.
@@ -19,14 +21,6 @@ interface RelationField extends Field
      * @return Builder
      */
     public function relate(LaramoreModel $instance);
-
-    /**
-     * Retrieve values from the relation field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieve(LaramoreModel $model);
 
     /**
      * Reverbate the relation into database.
