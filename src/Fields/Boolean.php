@@ -10,7 +10,7 @@
 
 namespace Laramore\Fields;
 
-class Boolean extends AttributeField
+class Boolean extends BaseAttribute
 {
     /**
      * Dry the value in a simple format.
@@ -67,7 +67,7 @@ class Boolean extends AttributeField
      * @param  boolean      $expected
      * @return boolean
      */
-    public function is(?bool $value, bool $expected=true): bool
+    public function is(bool $value=null, bool $expected=true): bool
     {
         return $value === $expected;
     }
@@ -78,7 +78,7 @@ class Boolean extends AttributeField
      * @param  boolean|null $value
      * @return boolean
      */
-    public function isNot(?bool $value): bool
+    public function isNot(bool $value): bool
     {
         return $this->is($value, false);
     }

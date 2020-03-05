@@ -13,37 +13,36 @@ namespace Laramore\Fields;
 use Illuminate\Support\Collection;
 use Laramore\Facades\Operator;
 use Laramore\Elements\OperatorElement;
-use Laramore\Eloquent\Builder;
-use Laramore\Fields\CompositeField;
-use Laramore\Interfaces\{
-    IsProxied, IsALaramoreModel
+use Laramore\Fields\BaseComposed;
+use Laramore\Contracts\{
+    Proxied, Eloquent\LaramoreModel, Eloquent\Builder
 };
 
-class HasOne extends LinkField
+class HasOne extends BaseLink
 {
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $off;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
     protected $from;
 
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $on;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
@@ -52,9 +51,9 @@ class HasOne extends LinkField
     /**
      * Return the reversed field.
      *
-     * @return CompositeField
+     * @return BaseComposed
      */
-    public function getReversed(): CompositeField
+    public function getReversed(): BaseComposed
     {
         return $this->getOwner();
     }
@@ -96,7 +95,7 @@ class HasOne extends LinkField
         }
 
         $model = new $this->on;
-        $model->setRawAttribute($model->getKeyName(), $value);
+        $model->setAttributeValue($model->getKeyName(), $value);
 
         return $model;
     }
@@ -193,10 +192,10 @@ class HasOne extends LinkField
     /**
      * Retrieve values from the relation field.
      *
-     * @param  IsALaramoreModel $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function retrieve(IsALaramoreModel $model)
+    public function retrieve(LaramoreModel $model)
     {
         return $this->relate($model)->getResults();
     }
@@ -204,11 +203,11 @@ class HasOne extends LinkField
     /**
      * Use the relation to set the other field values.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return mixed
      */
-    public function consume(IsALaramoreModel $model, $value)
+    public function consume(LaramoreModel $model, $value)
     {
         $value->setAttribute($this->getReversed()->name, $model);
 
@@ -218,10 +217,10 @@ class HasOne extends LinkField
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  Proxied $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(Proxied $model)
     {
         return $model->hasOne($this->on, $this->to, $this->from);
     }
@@ -229,11 +228,11 @@ class HasOne extends LinkField
     /**
      * Reverbate the relation into database.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return boolean
      */
-    public function reverbate(IsALaramoreModel $model, $value): bool
+    public function reverbate(LaramoreModel $model, $value): bool
     {
         $primary = $this->on::getMeta()->getPrimary();
         $id = $model->getKey();

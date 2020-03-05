@@ -15,7 +15,7 @@ use Laramore\Facades\{
     Option, Type
 };
 
-class Integer extends AttributeField
+class Integer extends BaseAttribute
 {
     /**
      * Return the type object of the field.

@@ -12,9 +12,9 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Facades\Hash;
 use Laramore\Facades\Option;
-use Laramore\Interfaces\IsAPatternField;
+use Laramore\Contracts\Field\PatternField;
 
-class Password extends Char implements IsAPatternField
+class Password extends Char implements PatternField
 {
     protected $minLength = 8;
 
@@ -41,9 +41,9 @@ class Password extends Char implements IsAPatternField
     /**
      * Generate the regex options.
      *
-     * @return string
+     * @return array
      */
-    protected function getRegexOptions()
+    protected function getRegexOptions(): array
     {
         $options = [];
         $patterns = $this->getConfig('patterns');

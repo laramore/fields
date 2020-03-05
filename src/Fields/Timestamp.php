@@ -10,11 +10,11 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\LaramoreModel;
 use Carbon\Carbon;
 use Laramore\Facades\Option;
 
-class Timestamp extends AttributeField
+class Timestamp extends BaseAttribute
 {
     /**
      * Check all properties and options before locking the field.

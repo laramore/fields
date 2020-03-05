@@ -10,13 +10,13 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Laramore\Elements\{
     EnumElement, EnumManager
 };
 use Laramore\Exceptions\LockException;
 
-class Enum extends AttributeField
+class Enum extends BaseAttribute
 {
     protected $elements;
 
@@ -29,24 +29,23 @@ class Enum extends AttributeField
     {
         parent::setProxies();
 
-        $conf = config('field.proxies');
-        $class = config('field.proxies.class');
-        $data = \array_merge($conf['configurations'], $this->getConfig('elements.proxy'));
+        $class = $this->getConfig('elements.proxy_class');
+        $proxies = $this->getConfig('elements.proxies');
 
-        if ($conf['enabled'] && $data['enabled']) {
-            $proxyHandler = $this->getMeta()->getProxyHandler();
+        $proxyHandler = $this->getMeta()->getProxyHandler();
+        $elements = $this->getElements()->all();
 
-            foreach ($this->getElements()->all() as $value) {
-                $name = static::replaceInTemplate($this->getConfig('elements.proxy.name_template'), [
-                    'methodname' => 'is',
-                    'elementname' => Str::camel((string) $value),
-                    'fieldname' => Str::camel($this->name),
-                ]);
+        foreach ($proxies as $methodName => $data) {
+            if (\is_null($data)) {
+                continue;
+            }
 
-                $proxyHandler->add($proxy = new $class($name, $this, 'is', $data['requirements'], $data['targets']));
-                $proxy->setCallback(function ($element) use ($value) {
-                    return $this->is($value, $element);
-                });
+            foreach ($elements as $element) {
+                $proxyHandler->add(new $class(
+                    $this, $element, $methodName,
+                    Arr::get($data, 'static', false), Arr::get($data, 'needs_value', false),
+                    Arr::get($data, 'templates.name'), Arr::get($data, 'templates.multi_name')
+                ));
             }
         }
     }

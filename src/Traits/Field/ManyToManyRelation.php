@@ -13,37 +13,38 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
-use Laramore\Eloquent\Builder;
-use Laramore\Fields\AttributeField;
-use Laramore\Interfaces\{
-    IsALaramoreModel, IsProxied
+use Laramore\Fields\BaseAttribute;
+use Laramore\Contracts\{
+    Eloquent\LaramoreModel, Eloquent\Builder, Proxied
 };
 
 trait ManyToManyRelation
 {
+    use ModelRelation;
+
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $off;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
     protected $from;
 
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $on;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
@@ -105,7 +106,7 @@ trait ManyToManyRelation
      * Transform the value to be used as a correct model.
      *
      * @param  mixed $value
-     * @return IsALaramoreModel
+     * @return LaramoreModel
      */
     public function transformToModel($value)
     {
@@ -114,7 +115,7 @@ trait ManyToManyRelation
         }
 
         $model = new $this->on;
-        $model->setRawAttribute($model->getKeyName(), $value);
+        $model->setAttributeValue($model->getKeyName(), $value);
 
         return $model;
     }
@@ -152,10 +153,10 @@ trait ManyToManyRelation
     /**
      * Retrieve values from the relation field.
      *
-     * @param  IsALaramoreModel $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function retrieve(IsALaramoreModel $model)
+    public function retrieve(LaramoreModel $model)
     {
         return $this->relate($model)->getResults();
     }
@@ -163,13 +164,13 @@ trait ManyToManyRelation
     /**
      * Return all pivot attributes.
      *
-     * @return array<AttributeField>
+     * @return array<BaseAttribute>
      */
     public function getPivotAttributes(): array
     {
-        return \array_map(function (AttributeField $field) {
+        return \array_map(function (BaseAttribute $field) {
             return $field->attname;
-        }, \array_filter(\array_values($this->getPivotMeta()->getAttributes()), function (AttributeField $field) {
+        }, \array_filter(\array_values($this->getPivotMeta()->getFields()), function (BaseAttribute $field) {
             return $field->visible;
         }));
     }
@@ -177,10 +178,10 @@ trait ManyToManyRelation
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  Proxied $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(Proxied $model)
     {
         return $model->belongsToMany(
             $this->on, $this->getPivotMeta()->getTableName(), $this->pivotTo->from,
@@ -281,11 +282,11 @@ trait ManyToManyRelation
     /**
      * Use the relation to set the other field values.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return mixed
      */
-    public function consume(IsALaramoreModel $model, $value)
+    public function consume(LaramoreModel $model, $value)
     {
         $relationName = $this->getReversed()->name;
         $collections = collect();
@@ -306,11 +307,11 @@ trait ManyToManyRelation
     /**
      * Reverbate the relation into database.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return boolean
      */
-    public function reverbate(IsALaramoreModel $model, $value): bool
+    public function reverbate(LaramoreModel $model, $value): bool
     {
         $this->sync($model, $value);
 
@@ -320,11 +321,11 @@ trait ManyToManyRelation
     /**
      * Attach value to the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function attach(IsALaramoreModel $model, $value)
+    public function attach(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->attach($value);
 
@@ -334,11 +335,11 @@ trait ManyToManyRelation
     /**
      * Detach value from the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function detach(IsALaramoreModel $model, $value)
+    public function detach(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->detach($value);
 
@@ -348,11 +349,11 @@ trait ManyToManyRelation
     /**
      * Sync value with the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function sync(IsALaramoreModel $model, $value)
+    public function sync(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->sync($value);
 
@@ -362,11 +363,11 @@ trait ManyToManyRelation
     /**
      * Toggle value to the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function toggle(IsALaramoreModel $model, $value)
+    public function toggle(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->toggle($value);
 
@@ -376,11 +377,11 @@ trait ManyToManyRelation
     /**
      * Sync without detaching value from the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function syncWithoutDetaching(IsALaramoreModel $model, $value)
+    public function syncWithoutDetaching(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->syncWithoutDetaching($value);
 
@@ -390,11 +391,11 @@ trait ManyToManyRelation
     /**
      * Update existing pivot for the value with the model relation.
      *
-     * @param IsALaramoreModel $model
-     * @param mixed            $value
-     * @return IsALaramoreModel
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return LaramoreModel
      */
-    public function updateExistingPivot(IsALaramoreModel $model, $value)
+    public function updateExistingPivot(LaramoreModel $model, $value)
     {
         \call_user_func([$model, $this->name])->updateExistingPivot($value);
 

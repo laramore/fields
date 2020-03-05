@@ -10,7 +10,7 @@
 
 namespace Laramore\Fields;
 
-class Text extends AttributeField
+class Text extends BaseAttribute
 {
     /**
      * Dry the value in a simple format.

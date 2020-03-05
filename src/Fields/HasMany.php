@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a reverse foreign field.
+ * Define a reverse OneToMany field.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,9 +12,8 @@ namespace Laramore\Fields;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
-use Laramore\Eloquent\Builder;
-use Laramore\Interfaces\{
-    IsProxied, IsALaramoreModel
+use Laramore\Contracts\{
+    Proxied, Eloquent\LaramoreModel, Eloquent\Builder
 };
 
 class HasMany extends HasOne
@@ -105,11 +104,11 @@ class HasMany extends HasOne
     /**
      * Use the relation to set the other field values.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return mixed
      */
-    public function consume(IsALaramoreModel $model, $value)
+    public function consume(LaramoreModel $model, $value)
     {
         $relationName = $this->getReversed()->name;
         $collections = collect();
@@ -130,10 +129,10 @@ class HasMany extends HasOne
     /**
      * Return the query with this field as condition.
      *
-     * @param  IsProxied $model
+     * @param  Proxied $model
      * @return Builder
      */
-    public function relate(IsProxied $model)
+    public function relate(Proxied $model)
     {
         return $model->hasMany($this->on, $this->to, $this->from);
     }
@@ -141,11 +140,11 @@ class HasMany extends HasOne
     /**
      * Reverbate the relation into database.
      *
-     * @param  IsALaramoreModel $model
-     * @param  mixed            $value
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
      * @return boolean
      */
-    public function reverbate(IsALaramoreModel $model, $value): bool
+    public function reverbate(LaramoreModel $model, $value): bool
     {
         $primary = $this->on::getMeta()->getPrimary();
         $attname = $primary->getNative();

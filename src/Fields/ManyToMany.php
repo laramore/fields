@@ -10,13 +10,14 @@
 
 namespace Laramore\Fields;
 
+use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
-use Laramore\Fields\LinkField;
+use Laramore\Fields\BaseLink;
 use Laramore\Fields\Constraint\Unique;
 
-class ManyToMany extends CompositeField
+class ManyToMany extends BaseComposed
 {
     use ManyToManyRelation;
 
@@ -47,6 +48,13 @@ class ManyToMany extends CompositeField
      * @var string
      */
     protected $reversedPivotName;
+
+    /**
+     * Unique relation.
+     *
+     * @var bool
+     */
+    protected $uniqueRelation = false;
 
     /**
      * Define the pivot and reversed pivot names.
@@ -81,25 +89,25 @@ class ManyToMany extends CompositeField
     {
         parent::__construct($options);
 
-        $this->pivotName($this->getConfig('pivot_name_template'), $this->getConfig('reversed_pivot_name_template'));
+        $this->pivotName($this->getConfig('templates.pivot'), $this->getConfig('templates.reversed_pivot'));
 
         if (\is_null($this->pivotName)) {
-            throw new ConfigException($this->getConfigPath('pivot_name_template'), ['any string name'], null);
+            throw new ConfigException($this->getConfigPath('templates.pivot'), ['any string name'], null);
         }
 
         if (\is_null($this->reversedPivotName)) {
-            throw new ConfigException($this->getConfigPath('reversed_pivot_name_template'), ['any string name'], null);
+            throw new ConfigException($this->getConfigPath('templates.reversed_pivot'), ['any string name'], null);
         }
     }
 
     /**
      * Return the reversed field.
      *
-     * @return LinkField
+     * @return BaseLink
      */
-    public function getReversed(): LinkField
+    public function getReversed(): BaseLink
     {
-        return $this->getLink('reversed');
+        return $this->getField('reversed');
     }
 
     /**
@@ -116,14 +124,14 @@ class ManyToMany extends CompositeField
         if ($model === 'self') {
             $this->defineProperty('on', $model);
         } else {
-            $this->defineProperty('on', $this->getLink('reversed')->off = $model);
+            $this->defineProperty('on', $this->getField('reversed')->off = $model);
             $this->to($model::getMeta()->getPrimary()->all()[0]->attname);
         }
 
         if ($reversedName) {
             $this->reversedName($reversedName);
         } else if ($model === 'self') {
-            $this->reversedName($this->getConfig('self_reversed_name_template'));
+            $this->reversedName($this->getConfig('templates.self_reversed'));
         }
 
         return $this;
@@ -149,7 +157,7 @@ class ManyToMany extends CompositeField
     {
         $this->needsToBeUnlocked();
 
-        $this->defineProperty('to', $this->getLink('reversed')->from = $name);
+        $this->defineProperty('to', $this->getField('reversed')->from = $name);
 
         return $this;
     }
@@ -165,7 +173,7 @@ class ManyToMany extends CompositeField
         $this->needsToBeUnlocked();
         $this->needsToBeUnowned();
 
-        $this->linksName['reversed'] = $reversedName;
+        $this->fieldsName['reversed'] = $reversedName;
 
         return $this;
     }
@@ -218,18 +226,18 @@ class ManyToMany extends CompositeField
 
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
 
-            $this->pivotMeta->setComposite(
+            $this->pivotMeta->setField(
                 $offName,
-                Foreign::field()->on($this->getMeta()->getModelClass())
+                OneToMany::field()->on($this->getMeta()->getModelClass())
             );
 
-            $offField = Foreign::field()->on($this->on);
+            $offField = OneToMany::field()->on($this->on);
 
             if ($this->isOnSelf()) {
-                $offField->reversedName($this->getConfig('self_pivot_reversed_name_template'));
+                $offField->reversedName($this->getConfig('templates.self_pivot_reversed'));
             }
 
-            $this->pivotMeta->setComposite(
+            $this->pivotMeta->setField(
                 $onName,
                 $offField
             );
@@ -240,10 +248,8 @@ class ManyToMany extends CompositeField
         $this->setProperty('pivotTo', $to);
         $this->setProperty('pivotFrom', $from);
 
-        if (isset($this->constraints['unique'])) {
-            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], ...$this->constraints['unique']);
-
-            unset($this->constraints['unique']);
+        if ($this->uniqueRelation) {
+            $this->unique($this->uniqueRelation === true ? null : $this->uniqueRelation);
         }
     }
 
@@ -258,9 +264,11 @@ class ManyToMany extends CompositeField
             $this->on($this->getMeta()->getModelClass());
         }
 
-        $this->loadPivotMeta();
+        if (\is_null($this->pivotMeta)) {
+            $this->loadPivotMeta();
+        }
 
-        $this->defineProperty('off', $this->getLink('reversed')->on = $this->getMeta()->getModelClass());
+        $this->defineProperty('off', $this->getField('reversed')->on = $this->getMeta()->getModelClass());
 
         parent::owned();
     }
@@ -276,8 +284,8 @@ class ManyToMany extends CompositeField
             throw new \Exception('Related model settings needed. Set it by calling `on` method');
         }
 
-        $this->defineProperty('reversedName', $this->getLink('reversed')->name);
-        $this->defineProperty('from', $this->getLink('reversed')->to = $this->getMeta()->getPrimary()->all()[0]->attname);
+        $this->defineProperty('reversedName', $this->getField('reversed')->name);
+        $this->defineProperty('from', $this->getField('reversed')->to = $this->getMeta()->getPrimary()->all()[0]->attname);
 
         parent::locking();
     }
@@ -295,27 +303,18 @@ class ManyToMany extends CompositeField
     /**
      * Define a unique constraint.
      *
-     * @param  string  $name
-     * @param  string  $class
-     * @param  integer $priority
+     * @param  string $name
      * @return self
      */
-    public function unique(string $name=null, string $class=null, int $priority=Unique::MEDIUM_PRIORITY)
+    public function unique(string $name=null)
     {
         $this->needsToBeUnlocked();
 
-        if (isset($this->constraints['unique'])) {
-            throw new \LogicException("This field cannot have multiple unique constraints");
-        }
-
-        if (\is_null($class)) {
-            $class = config('field.constraints.configurations.unique.class');
-        }
-
         if (\is_null($this->pivotMeta)) {
-            $this->constraints['unique'] = \func_get_args();
+            $this->uniqueRelation = $name ?: true;
         } else {
-            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], ...\func_get_args());
+            $this->uniqueRelation = true;
+            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], $name);
         }
 
         return $this;

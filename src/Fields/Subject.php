@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a one to one field.
+ * Define an uuid foreign field.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,9 +10,7 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Traits\Field\OneToRelation;
-
-class OneToOne extends BaseComposed
+class Name extends BaseComposed
 {
-    use OneToRelation;
+
 }

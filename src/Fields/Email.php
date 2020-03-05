@@ -11,9 +11,9 @@
 namespace Laramore\Fields;
 
 use Laramore\Facades\Option;
-use Laramore\Interfaces\IsAPatternField;
+use Laramore\Contracts\Field\PatternField;
 
-class Email extends Char implements IsAPatternField
+class Email extends Char implements PatternField
 {
     /**
      * All defined allowed domains.

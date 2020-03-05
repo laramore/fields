@@ -10,8 +10,45 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Interfaces\IsAPrimaryField;
+use Laramore\Contracts\Field\Constraint\PrimaryField;
+use Laramore\Fields\Constraint\{
+    Primary, PrimaryConstraintHandler
+};
 
-class PrimaryId extends Increment implements IsAPrimaryField
+class PrimaryId extends Increment implements PrimaryField
 {
+    /**
+     * Create a Constraint handler for this meta.
+     *
+     * @return void
+     */
+    protected function setConstraintHandler()
+    {
+        $this->constraintHanlder = new PrimaryConstraintHandler($this);
+    }
+
+    /**
+     * Return the relation handler for this meta.
+     *
+     * @return PrimaryConstraintHandler
+     */
+    public function getConstraintHandler(): PrimaryConstraintHandler
+    {
+        return $this->constraintHanlder;
+    }
+
+    /**
+     * Define a primary constraint.
+     *
+     * @param  string $name
+     * @return self
+     */
+    public function primary(string $name=null)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->getConstraintHandler()->getPrimary()->setName($name);
+
+        return $this;
+    }
 }

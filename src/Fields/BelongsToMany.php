@@ -11,18 +11,18 @@
 namespace Laramore\Fields;
 
 use Laramore\Traits\Field\ManyToManyRelation;
-use Laramore\Fields\CompositeField;
+use Laramore\Fields\BaseComposed;
 
-class BelongsToMany extends LinkField
+class BelongsToMany extends BaseLink
 {
     use ManyToManyRelation;
 
     /**
      * Return the reversed field.
      *
-     * @return CompositeField
+     * @return BaseComposed
      */
-    public function getReversed(): CompositeField
+    public function getReversed(): BaseComposed
     {
         return $this->getOwner();
     }
