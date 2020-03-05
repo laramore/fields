@@ -87,24 +87,6 @@ trait OneToRelation
     }
 
     /**
-     * Define the shared field for our fk attribute.
-     *
-     * @return void
-     */
-    protected function defineSharedField()
-    {
-        // A shared field cannot only been set if the attribute is already owned.
-        // We also require the shared field data.
-        if ($this->hasProperty('on') && $this->hasProperty('to') && $this->getProperty('on') !== 'self') {
-            $attribute = $this->getField('id');
-
-            if ($attribute->isOwned()) {
-                $attribute->sharedField($this->on::getMeta()->getField($this->to));
-            }
-        }
-    }
-
-    /**
      * Define the attribute name.
      *
      * @param string $name
@@ -112,10 +94,9 @@ trait OneToRelation
      */
     public function to(string $name)
     {
-        $this->needsToBeUnlocked();
+        $this->needsToBeUnowned();
 
         $this->defineProperty('to', $this->getReversed()->from = $name);
-        $this->defineSharedField();
 
         return $this;
     }
@@ -130,7 +111,7 @@ trait OneToRelation
      */
     public function on(string $model, string $reversedName=null, string $relationName=null)
     {
-        $this->needsToBeUnlocked();
+        $this->needsToBeUnowned();
 
         if ($model === 'self') {
             $this->defineProperty('on', $model);
@@ -148,8 +129,6 @@ trait OneToRelation
         if ($relationName) {
             $this->setProperty('relationName', $relationName);
         }
-
-        $this->defineSharedField();
 
         return $this;
     }
@@ -188,28 +167,17 @@ trait OneToRelation
     public function owned()
     {
         if ($this->on === 'self') {
-            $this->on($this->getMeta()->getModelClass());
+            $this->defineProperty('on', $this->getReversed()->off = $this->getMeta()->getModelClass());
+            $this->defineProperty('to', $this->getReversed()->off::getMeta()->getPrimary()->getAttribute()->attname);
         }
 
         parent::owned();
 
         $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
         $this->defineProperty('from', $this->getReversed()->to = $this->getField('id')->attname);
-        $this->defineSharedField();
-    }
-
-    /**
-     * Define all constraints for this field.
-     *
-     * @return void
-     */
-    protected function setConstraints()
-    {
-        parent::setConstraints();
 
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
-
-        $this->foreign('id', $this->on::getMeta()->getAttribute($this->to), $relationName);
+        $this->foreign($this->on::getMeta()->getField($this->to), $relationName);
     }
 
     /**

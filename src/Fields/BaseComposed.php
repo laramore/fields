@@ -250,7 +250,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     {
         $keyValues = [
             'modelname' => static::parseName($this->getMeta()->getModelClassName()),
-            'fieldname' => $fieldname,
+            'identifier' => $fieldname,
             'name' => $this->getName(),
         ];
 

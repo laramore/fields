@@ -18,6 +18,7 @@ use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
     Field\AttributeField, Eloquent\LaramoreModel, Eloquent\Builder
 };
+use Laramore\Fields\Constraint\BaseConstraint;
 use Laramore\Traits\Field\HasConstraints;
 
 abstract class BaseAttribute extends BaseField implements AttributeField
@@ -32,15 +33,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
      * @var string
      */
     protected $attname;
-
-    /**
-     * Field whose this field is linked to.
-     * If this field is a fk on another field, just share its options.
-     *
-     * TODO: Utiliser constraint fk
-     * @var AttributeField
-     */
-    protected $sharedField;
 
     /**
      * Create a new field with basic options.
@@ -108,27 +100,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     }
 
     /**
-     * Define a shared field.
-     * Usefull to link this attribute as fk to another.
-     *
-     * @param AttributeField $field
-     * @return self
-     */
-    public function sharedField(AttributeField $field)
-    {
-        $this->needsToBeOwned();
-        $this->needsToBeUnlocked();
-
-        if (!($this->getOwner() instanceof BaseComposed)) {
-            throw new \Exception('Only attributes owned by a composed field can have a shared field');
-        }
-
-        $this->defineProperty('sharedField', $field);
-
-        return $this;
-    }
-
-    /**
      * Each class locks in a specific way.
      *
      * @return void
@@ -137,8 +108,12 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     {
         parent::locking();
 
-        if ($this->hasProperty('sharedField')) {
-            $this->updateFromSharedField($this->sharedField);
+        if ($this->getConstraintHandler()->count(BaseConstraint::FOREIGN) > 0) {
+            $constraint = $this->getConstraintHandler()->all(BaseConstraint::FOREIGN)[0];
+
+            if ($constraint->getOffField() === $this) {
+                $this->addOptions(\array_merge($constraint->getOnField()->options, $this->options));
+            }
         }
     }
 
@@ -152,18 +127,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
         parent::owned();
 
         $this->ownConstraintHandler();
-    }
-
-    /**
-     * Update a field
-     *
-     * @param BaseField $field
-     *
-     * @return void
-     */
-    protected function updateFromSharedField(BaseField $field)
-    {
-        $this->addOptions(\array_merge($field->options, $this->options));
     }
 
     /**

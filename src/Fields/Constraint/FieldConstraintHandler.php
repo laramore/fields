@@ -178,7 +178,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function createForeign(ConstraintedField $field, string $name=null)
     {
-        if ($this->count($this->getForeigns())) {
+        if ($this->count(BaseConstraint::FOREIGN)) {
             throw new \LogicException('Cannot have multiple primary constraints.');
         }
 

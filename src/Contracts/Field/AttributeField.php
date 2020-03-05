@@ -32,15 +32,6 @@ interface AttributeField extends Field, ConstraintedField
     public function getAttname(): string;
 
     /**
-     * Define a shared field.
-     * Usefull to link this attribute as fk to another.
-     *
-     * @param AttributeField $field
-     * @return self
-     */
-    public function sharedField(AttributeField $field);
-
-    /**
      * Add an operation to a query builder.
      *
      * @param Builder $builder
