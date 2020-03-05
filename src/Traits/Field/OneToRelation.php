@@ -12,36 +12,41 @@ namespace Laramore\Traits\Field;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
-use Laramore\Eloquent\Builder;
 use Laramore\Facades\Operator;
-use Laramore\Fields\LinkField;
-use Laramore\Interfaces\IsALaramoreModel;
+use Laramore\Fields\{
+    BaseLink, Constraint\FieldConstraintHandler
+};
+use Laramore\Contracts\Eloquent\{
+    LaramoreModel, Builder,
+};
 
-trait OneToOneRelation
+trait OneToRelation
 {
+    use ModelRelation, Constraints;
+
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $off;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
     protected $from;
 
     /**
-     * Model from the relation is.
+     * LaramoreModel from the relation is.
      *
-     * @var IsALaramoreModel
+     * @var LaramoreModel
      */
     protected $on;
 
     /**
-     * Attribute name from the relation is.
+     * AttributeField name from the relation is.
      *
      * @var string
      */
@@ -64,11 +69,21 @@ trait OneToOneRelation
     /**
      * Return the reversed field.
      *
-     * @return LinkField
+     * @return BaseLink
      */
-    public function getReversed(): LinkField
+    public function getReversed(): BaseLink
     {
-        return $this->getLink('reversed');
+        return $this->getField('reversed');
+    }
+
+    /**
+     * Return the relation handler for this meta.
+     *
+     * @return FieldConstraintHandler
+     */
+    public function getConstraintHandler(): FieldConstraintHandler
+    {
+        return $this->getField('id')->getConstraintHandler();
     }
 
     /**
@@ -81,10 +96,10 @@ trait OneToOneRelation
         // A shared field cannot only been set if the attribute is already owned.
         // We also require the shared field data.
         if ($this->hasProperty('on') && $this->hasProperty('to') && $this->getProperty('on') !== 'self') {
-            $attribute = $this->getAttribute('id');
+            $attribute = $this->getField('id');
 
             if ($attribute->isOwned()) {
-                $attribute->sharedField($this->on::getMeta()->getAttribute($this->to));
+                $attribute->sharedField($this->on::getMeta()->getField($this->to));
             }
         }
     }
@@ -127,7 +142,7 @@ trait OneToOneRelation
         if ($reversedName) {
             $this->setProperty('reversedName', $reversedName);
         } else if ($model === 'self') {
-            $this->reversedName($this->getConfig('self_reversed_name_template'));
+            $this->reversedName($this->getConfig('self_reversed'));
         }
 
         if ($relationName) {
@@ -160,7 +175,7 @@ trait OneToOneRelation
         $this->needsToBeUnowned();
         $this->needsToBeUnlocked();
 
-        $this->linksName['reversed'] = $reversedName;
+        $this->fieldsName['reversed'] = $reversedName;
 
         return $this;
     }
@@ -179,7 +194,7 @@ trait OneToOneRelation
         parent::owned();
 
         $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
-        $this->defineProperty('from', $this->getReversed()->to = $this->getAttribute('id')->attname);
+        $this->defineProperty('from', $this->getReversed()->to = $this->getField('id')->attname);
         $this->defineSharedField();
     }
 
@@ -260,7 +275,7 @@ trait OneToOneRelation
         }
 
         $model = new $this->on;
-        $model->setRawAttribute($this->to, $value);
+        $model->setAttributeValue($this->to, $value);
 
         return $model;
     }
@@ -279,10 +294,10 @@ trait OneToOneRelation
     /**
      * Retrieve values from the relation field.
      *
-     * @param  IsALaramoreModel $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function retrieve(IsALaramoreModel $model)
+    public function retrieve(LaramoreModel $model)
     {
         return $this->relate($model)->getResults();
     }
@@ -298,7 +313,7 @@ trait OneToOneRelation
      */
     public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder
     {
-        return $this->getAttribute('id')->addBuilderOperation($builder, 'whereNull', $boolean, $not);
+        return $this->getField('id')->addBuilderOperation($builder, 'whereNull', $boolean, $not);
     }
 
     /**
@@ -325,7 +340,7 @@ trait OneToOneRelation
      */
     public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
     {
-        return $this->getAttribute('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
+        return $this->getField('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
     /**
@@ -356,6 +371,6 @@ trait OneToOneRelation
             return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));
         }
 
-        return $this->getAttribute('id')->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+        return $this->getField('id')->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 }
