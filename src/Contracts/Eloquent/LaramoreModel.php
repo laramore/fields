@@ -37,20 +37,57 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     /**
      * Get the model meta.
      *
-     * @return Meta
+     * @return LaramoreMeta
      */
     public static function getMeta();
 
     /**
      * Reset a specific field.
      *
-     * @param  string $key Name of the field.
-     * @return $this
+     * @param  mixed $key
+     * @return self
      */
-    public function resetAttribute(string $key);
+    public function resetAttribute($key);
 
     /**
-     * Get an attribute from the model.
+     * Reset all attributes.
+     *
+     * @return self
+     */
+    public function resetAttributes();
+
+    /**
+     * Return all attributes.
+     *
+     * @return array
+     */
+    public function getAttributes(): array;
+
+    /**
+     * Return all attributes from array.
+     *
+     * @return array
+     */
+    public function getAttributeValues(): array;
+
+    /**
+     * Indicate if it has a specific attribute.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasAttribute($key): bool;
+
+    /**
+     * Indicate if it has a loaded attribute.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasAttributeValue($key): bool;
+
+    /**
+     * Get the attribute value for a specific key.
      *
      * @param  mixed $key
      * @return mixed
@@ -58,20 +95,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function getAttribute($key);
 
     /**
-     * Set a given attribute on the model.
-     * Override the original method.
-     *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return mixed
-     *
-     * @throws Exception Except if the field is not fillable.
-     */
-    public function setAttribute($key, $value);
-
-    /**
-     * Get a plain attribute (not a relationship).
-     * Override the original method.
+     * Get an attribute value.
      *
      * @param  mixed $key
      * @return mixed
@@ -79,21 +103,99 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function getAttributeValue($key);
 
     /**
+     * Return the attribute value from array.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    public function getAttributeFromArray($key);
+
+    /**
+     * Set an attribute on the model.
+     *
+     * @param mixed $key
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setAttribute($key, $value);
+
+    /**
+     * Set the given attributeship into the model array.
+     *
+     * @param mixed $key
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setAttributeValue($key, $value);
+
+    /**
+     * Reset a specific field.
+     *
+     * @param mixed $key
+     * @return self
+     */
+    public function resetRelation($key);
+
+    /**
+     * Reset all relations.
+     *
+     * @return self
+     */
+    public function resetRelations();
+
+    /**
+     * Return all relations.
+     *
+     * @return array
+     */
+    public function getRelations(): array;
+
+    /**
+     * Return all relations from array.
+     *
+     * @return array
+     */
+    public function getRelationValues(): array;
+
+    /**
+     * Indicate if it has a specific relation.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasRelation($key): bool;
+
+    /**
+     * Indicate if it has a loaded relation.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasRelationValue($key): bool;
+
+    /**
      * Get the relation value for a specific key.
      *
-     * @param  mixed $key Not specified because Model has no parameter types.
+     * @param  mixed $key
      * @return mixed
      */
     public function getRelation($key);
 
     /**
      * Get a relationship.
-     * Override the original method.
      *
      * @param  mixed $key
      * @return mixed
      */
     public function getRelationValue($key);
+
+    /**
+     * Return the relation value from array.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    public function getRelationFromArray($key);
 
     /**
      * Set the given relationship on the model.
@@ -102,5 +204,110 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      * @param  mixed $value
      * @return $this
      */
+    public function setRelation($key, $value);
+
+    /**
+     * Set the given relationship into the model array.
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     * @return $this
+     */
     public function setRelationValue($key, $value);
+
+    /**
+     * Reset a specific field.
+     *
+     * @param  mixed $key
+     * @return self
+     */
+    public function resetExtra($key);
+
+    /**
+     * Reset all extras.
+     *
+     * @return self
+     */
+    public function resetExtras();
+
+    /**
+     * Return all extras.
+     *
+     * @return array
+     */
+    public function getExtras(): array;
+
+    /**
+     * Return all extras from array.
+     *
+     * @return array
+     */
+    public function getExtraValues(): array;
+
+    /**
+     * Indicate if it has a specific extra.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasExtra($key): bool;
+
+    /**
+     * Indicate if it has a loaded extra.
+     *
+     * @param  mixed $key
+     * @return boolean
+     */
+    public function hasExtraValue($key): bool;
+
+    /**
+     * Get the extra value for a specific key.
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function getExtra($key);
+
+    /**
+     * Get a extraship.
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function getExtraValue($key);
+
+    /**
+     * Return the extra value from array.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    public function getExtraFromArray($key);
+
+    /**
+     * Set the given extraship on the model.
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setExtra($key, $value);
+
+    /**
+     * Set the given extraship into the model array.
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setExtraValue($key, $value);
+
+    /**
+     * Set the array of model attributes. No checking is done.
+     *
+     * @param  array $attributes
+     * @param  mixed $sync
+     * @return $this
+     */
+    public function setRawAttributes(array $attributes, $sync=false);
 }
