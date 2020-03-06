@@ -35,8 +35,8 @@ interface AttributeField extends Field, ConstraintedField
      * Add an operation to a query builder.
      *
      * @param LaramoreBuilder $builder
-     * @param string  $operation
-     * @param mixed   ...$params
+     * @param string          $operation
+     * @param mixed           ...$params
      * @return LaramoreBuilder
      */
     public function addBuilderOperation(LaramoreBuilder $builder, string $operation, ...$params): LaramoreBuilder;

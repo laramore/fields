@@ -129,7 +129,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function createPrimary(string $name=null, $fields=[])
     {
-        if (!\is_null($this->getPrimary())) {
+        if ($this->count(BaseConstraint::PRIMARY)) {
             throw new \LogicException('Cannot have multiple primary constraints.');
         }
 
@@ -196,7 +196,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     {
         parent::locking();
 
-        if (\count($this->getPrimary()) > 1) {
+        if ($this->count(BaseConstraint::PRIMARY) > 1) {
             throw new LockException('A field cannot have multiple primary constraints', 'primary');
         }
     }
