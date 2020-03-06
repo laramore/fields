@@ -18,20 +18,38 @@ use Laramore\Contracts\Field\{
 
 class OneToMany extends BaseComposed implements RelationField, ConstraintedField
 {
-    use OneToRelation;
+    use OneToRelation {
+        OneToRelation::set as protected setRelation;
+        OneToRelation::reset as protected resetRelation;
+    }
 
     /**
-     * Use the relation to set the other field values.
+     * Set the value for the field.
      *
      * @param  LaramoreModel $model
      * @param  mixed         $value
      * @return mixed
      */
-    public function consume(LaramoreModel $model, $value)
+    public function set(LaramoreModel $model, $value)
     {
-        $model->setAttribute($this->getField('id')->attname, $value[$this->to]);
+        $this->getField('id')->set($model, $value[$this->to]);
+        
+        $this->setRelation($model, $value);
 
         return $value;
+    }
+
+    /**
+     * Reet the value for the field.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function reset(LaramoreModel $model)
+    {
+        $this->getField('id')->reset($model);
+        
+        return $this->resetRelation($model);
     }
 
     /**

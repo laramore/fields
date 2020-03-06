@@ -10,7 +10,9 @@
 
 namespace Laramore\Traits\Field;
 
-use Laramore\Contracts\Eloquent\LaramoreModel;
+use Laramore\Contracts\{
+    Eloquent\LaramoreModel, Field\Field
+};
 
 trait ModelRelation
 {
@@ -46,5 +48,20 @@ trait ModelRelation
     public function reset(LaramoreModel $model)
     {
         return $model->setRelationValue($this->getNative(), $this->getDefault());
+    }
+
+    /**
+     * Return the set value for a specific field.
+     *
+     * @param Field         $field
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return mixed
+     */
+    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    {
+        $this->reset($model);
+        
+        return parent::setFieldValue($field, $model, $value);
     }
 }
