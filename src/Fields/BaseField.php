@@ -22,6 +22,7 @@ use Laramore\Facades\{
 use Laramore\Contracts\{
     Eloquent\LaramoreMeta, Field\Field, Configured
 };
+use Laramore\Contracts\Field\RelationField;
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties, HasOptions, HasLockedMacros
 };
@@ -399,6 +400,10 @@ abstract class BaseField implements Field, Configured
 
         if ($this->hasOption(Option::notNullable()) && $this->hasOption(Option::nullable())) {
             throw new \LogicException("The field `$name` cannot be nullable and not nullable on the same time");
+        }
+
+        if (($this->hasOption(Option::with()) || $this->hasOption(Option::withCount())) && !($this instanceof RelationField)) {
+            throw new \LogicException("The field `$name` cannot be autoloaded if it is not a relation field");
         }
     }
 

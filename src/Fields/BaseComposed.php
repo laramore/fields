@@ -184,7 +184,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
             $option = Option::get($option);
         }
 
-        if (!$option->has('heritable') || $option->heritable !== false) {
+        if (!$option->has('propagate') || $option->propagate !== false) {
             foreach ($this->getFields(AttributeField::class) as $attribute) {
                 $attribute->addOption($option);
             }
