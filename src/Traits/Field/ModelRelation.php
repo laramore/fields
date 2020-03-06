@@ -61,7 +61,7 @@ trait ModelRelation
     public function setFieldValue(Field $field, LaramoreModel $model, $value)
     {
         $this->reset($model);
-        
+
         return parent::setFieldValue($field, $model, $value);
     }
 }

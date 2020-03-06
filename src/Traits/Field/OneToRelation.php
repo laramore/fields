@@ -274,9 +274,9 @@ trait OneToRelation
      * Add a where null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed   $value
-     * @param  string  $boolean
-     * @param  boolean $not
+     * @param  mixed           $value
+     * @param  string          $boolean
+     * @param  boolean         $not
      * @return LaramoreBuilder
      */
     public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and', bool $not=false): LaramoreBuilder
@@ -288,8 +288,8 @@ trait OneToRelation
      * Add a where not null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed   $value
-     * @param  string  $boolean
+     * @param  mixed           $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
     public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and'): LaramoreBuilder
@@ -300,13 +300,14 @@ trait OneToRelation
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
-     * @param  boolean    $notIn
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): LaramoreBuilder
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+                            string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         return $this->getField('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
@@ -314,9 +315,9 @@ trait OneToRelation
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
     public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
@@ -327,13 +328,14 @@ trait OneToRelation
     /**
      * Add a where condition from this field.
      *
-     * @param  LaramoreBuilder         $builder
+     * @param  LaramoreBuilder $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function where(LaramoreBuilder $builder, OperatorElement $operator=null, $value=null, string $boolean='and'): LaramoreBuilder
+    public function where(LaramoreBuilder $builder, OperatorElement $operator=null,
+                          $value=null, string $boolean='and'): LaramoreBuilder
     {
         if ($operator->needs === 'collection') {
             return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));

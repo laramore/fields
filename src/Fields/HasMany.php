@@ -51,13 +51,14 @@ class HasMany extends HasOne
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
-     * @param  boolean    $notIn
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): LaramoreBuilder
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+                            string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
@@ -69,9 +70,9 @@ class HasMany extends HasOne
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  Collection $value
-     * @param  string     $boolean
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
     public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
@@ -82,7 +83,7 @@ class HasMany extends HasOne
     /**
      * Add a where condition from this field.
      *
-     * @param  LaramoreBuilder         $builder
+     * @param  LaramoreBuilder $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
