@@ -15,7 +15,7 @@ use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
 use Laramore\Fields\BaseAttribute;
 use Laramore\Contracts\{
-    Eloquent\LaramoreModel, Eloquent\Builder, Proxied
+    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Proxied
 };
 
 trait ManyToManyRelation
@@ -179,7 +179,7 @@ trait ManyToManyRelation
      * Return the query with this field as condition.
      *
      * @param  Proxied $model
-     * @return Builder
+     * @return mixed
      */
     public function relate(Proxied $model)
     {
@@ -192,15 +192,15 @@ trait ManyToManyRelation
     /**
      * Add a where null condition from this field.
      *
-     * @param  Builder       $builder
+     * @param  LaramoreBuilder       $builder
      * @param  mixed         $value
      * @param  string        $boolean
      * @param  boolean       $notIn
      * @param  \Closure|null $callback
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and',
-                              bool $notIn=false, \Closure $callback=null): Builder
+    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and',
+                              bool $notIn=false, \Closure $callback=null): LaramoreBuilder
     {
         if ($notIn) {
             return $this->whereNotNull($builder, $value, $boolean, null, null, $callback);
@@ -212,16 +212,16 @@ trait ManyToManyRelation
     /**
      * Add a where not null condition from this field.
      *
-     * @param  Builder       $builder
+     * @param  LaramoreBuilder       $builder
      * @param  mixed         $value
      * @param  string        $boolean
      * @param  mixed         $operator
      * @param  integer       $count
      * @param  \Closure|null $callback
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and', $operator=null,
-                                 int $count=1, \Closure $callback=null): Builder
+    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and', $operator=null,
+                                 int $count=1, \Closure $callback=null): LaramoreBuilder
     {
         return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
@@ -229,13 +229,13 @@ trait ManyToManyRelation
     /**
      * Add a where in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
@@ -247,12 +247,12 @@ trait ManyToManyRelation
     /**
      * Add a where not in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -260,15 +260,15 @@ trait ManyToManyRelation
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder         $builder
+     * @param  LaramoreBuilder         $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
      * @param  integer         $count
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null,
-                          string $boolean='and', int $count=null): Builder
+    public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
+                          string $boolean='and', int $count=null): LaramoreBuilder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 

@@ -12,14 +12,10 @@ namespace Laramore\Contracts\Field;
 
 use Illuminate\Support\Collection;
 use Laramore\Contracts\{
-    Locked,
-    Owned,
-    Eloquent\LaramoreModel,
-    Eloquent\Builder
+    Locked, Owned, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Elements\{
-    TypeElement,
-    OperatorElement
+    TypeElement, OperatorElement
 };
 
 interface Field extends Locked, Owned
@@ -172,55 +168,55 @@ interface Field extends Locked, Owned
     /**
      * Add a where null condition from this field.
      *
-     * @param  Builder $builder
+     * @param  LaramoreBuilder $builder
      * @param  mixed   $value
      * @param  string  $boolean
      * @param  boolean $not
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder;
+    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and', bool $not=false): LaramoreBuilder;
 
     /**
      * Add a where not null condition from this field.
      *
-     * @param  Builder $builder
+     * @param  LaramoreBuilder $builder
      * @param  mixed   $value
      * @param  string  $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder;
+    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and'): LaramoreBuilder;
 
-    /**
+    /**LaramoreBuilder
      * Add a where in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereIn(Builder $builder, Collection $value=null,
-                            string $boolean='and', bool $notIn=false): Builder;
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+                            string $boolean='and', bool $notIn=false): LaramoreBuilder;
 
     /**
      * Add a where not in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder;
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder;
 
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder         $builder
+     * @param  LaramoreBuilder         $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function where(Builder $builder, OperatorElement $operator,
-                          $value=null, string $boolean='and'): Builder;
+    public function where(LaramoreBuilder $builder, OperatorElement $operator,
+                          $value=null, string $boolean='and'): LaramoreBuilder;
 }

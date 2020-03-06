@@ -16,7 +16,7 @@ use Illuminate\Support\{
 };
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Field\AttributeField, Eloquent\LaramoreModel, Eloquent\Builder
+    Field\AttributeField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Fields\Constraint\BaseConstraint;
 use Laramore\Traits\Field\HasConstraints;
@@ -166,12 +166,12 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add an operation to a query builder.
      *
-     * @param Builder $builder
+     * @param LaramoreBuilder $builder
      * @param string  $operation
      * @param mixed   ...$params
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function addBuilderOperation(Builder $builder, string $operation, ...$params): Builder
+    public function addBuilderOperation(LaramoreBuilder $builder, string $operation, ...$params): LaramoreBuilder
     {
         \call_user_func([$builder->getQuery(), $operation], $this->getFullName(), ...$params);
 
@@ -181,13 +181,13 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where null condition from this field.
      *
-     * @param  Builder $builder
+     * @param  LaramoreBuilder $builder
      * @param  mixed   $value
      * @param  string  $boolean
      * @param  boolean $not
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNull(Builder $builder, $value=null, string $boolean='and', bool $not=false): Builder
+    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and', bool $not=false): LaramoreBuilder
     {
         return $this->addBuilderOperation($builder, 'whereNull', $boolean, $not);
     }
@@ -195,12 +195,12 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where not null condition from this field.
      *
-     * @param  Builder $builder
+     * @param  LaramoreBuilder $builder
      * @param  mixed   $value
      * @param  string  $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotNull(Builder $builder, $value=null, string $boolean='and'): Builder
+    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereNull($builder, $value, $boolean, true);
     }
@@ -208,13 +208,13 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         return $this->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
@@ -222,12 +222,12 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where not in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -235,13 +235,13 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder         $builder
+     * @param  LaramoreBuilder         $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null, string $boolean='and'): Builder
+    public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }

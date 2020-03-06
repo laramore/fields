@@ -18,7 +18,7 @@ interface RelationField extends ExtraField
      * Return the relation with this field.
      *
      * @param  LaramoreModel $instance
-     * @return Builder
+     * @return mixed
      */
     public function relate(LaramoreModel $instance);
 

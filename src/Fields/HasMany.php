@@ -13,7 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Eloquent\Builder
+    Proxied, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 
 class HasMany extends HasOne
@@ -51,13 +51,13 @@ class HasMany extends HasOne
     /**
      * Add a where in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
      * @param  boolean    $notIn
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereIn(Builder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): Builder
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
@@ -69,12 +69,12 @@ class HasMany extends HasOne
     /**
      * Add a where not in condition from this field.
      *
-     * @param  Builder    $builder
+     * @param  LaramoreBuilder    $builder
      * @param  Collection $value
      * @param  string     $boolean
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function whereNotIn(Builder $builder, Collection $value=null, string $boolean='and'): Builder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -82,15 +82,15 @@ class HasMany extends HasOne
     /**
      * Add a where condition from this field.
      *
-     * @param  Builder         $builder
+     * @param  LaramoreBuilder         $builder
      * @param  OperatorElement $operator
      * @param  mixed           $value
      * @param  string          $boolean
      * @param  integer         $count
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function where(Builder $builder, OperatorElement $operator, $value=null,
-                          string $boolean='and', int $count=null): Builder
+    public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
+                          string $boolean='and', int $count=null): LaramoreBuilder
     {
         $attname = $this->on::getMeta()->getPrimary()->attname;
 
@@ -130,7 +130,7 @@ class HasMany extends HasOne
      * Return the query with this field as condition.
      *
      * @param  Proxied $model
-     * @return Builder
+     * @return mixed
      */
     public function relate(Proxied $model)
     {

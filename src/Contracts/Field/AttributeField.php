@@ -11,7 +11,7 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\{
-    Eloquent\Builder, Field\Constraint\ConstraintedField
+    Eloquent\LaramoreBuilder, Field\Constraint\ConstraintedField
 };
 
 interface AttributeField extends Field, ConstraintedField
@@ -34,10 +34,10 @@ interface AttributeField extends Field, ConstraintedField
     /**
      * Add an operation to a query builder.
      *
-     * @param Builder $builder
+     * @param LaramoreBuilder $builder
      * @param string  $operation
      * @param mixed   ...$params
-     * @return Builder
+     * @return LaramoreBuilder
      */
-    public function addBuilderOperation(Builder $builder, string $operation, ...$params): Builder;
+    public function addBuilderOperation(LaramoreBuilder $builder, string $operation, ...$params): LaramoreBuilder;
 }
