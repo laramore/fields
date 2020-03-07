@@ -22,7 +22,9 @@ use Laramore\Facades\{
 use Laramore\Contracts\{
     Eloquent\LaramoreMeta, Field\Field, Configured
 };
-use Laramore\Contracts\Field\RelationField;
+use Laramore\Contracts\Field\{
+    RelationField, ExtraField
+};
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties, HasOptions, HasLockedMacros
 };
@@ -400,6 +402,10 @@ abstract class BaseField implements Field, Configured
 
         if ($this->hasOption(Option::notNullable()) && $this->hasOption(Option::nullable())) {
             throw new \LogicException("The field `$name` cannot be nullable and not nullable on the same time");
+        }
+
+        if ($this->hasOption(Option::append()) && !($this instanceof ExtraField)) {
+            throw new \LogicException("The field `$name` cannot be appended if it is not an extra field");
         }
 
         if (($this->hasOption(Option::with()) || $this->hasOption(Option::withCount())) && !($this instanceof RelationField)) {

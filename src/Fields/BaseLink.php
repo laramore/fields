@@ -54,7 +54,7 @@ abstract class BaseLink extends BaseField implements LinkField
      */
     public function set(LaramoreModel $model, $value)
     {
-        $model->setRawRelationValue($this->getNative, $value);
+        $model->setRelationValue($this->getNative(), $value);
     }
 
     /**
@@ -65,6 +65,6 @@ abstract class BaseLink extends BaseField implements LinkField
      */
     public function reset(LaramoreModel $model)
     {
-        return $model->setRawRelation($this->getNative(), $this->getProperty('default'));
+        return $model->setRelation($this->getNative(), $this->getProperty('default'));
     }
 }

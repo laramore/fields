@@ -11,6 +11,6 @@
 namespace Laramore\Contracts\Field;
 
 
-interface ComposedField extends Field, FieldsOwner
+interface ComposedField extends ExtraField, FieldsOwner
 {
 }

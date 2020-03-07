@@ -32,7 +32,9 @@ class OneToMany extends BaseComposed implements RelationField, ConstraintedField
      */
     public function set(LaramoreModel $model, $value)
     {
-        $this->getField('id')->set($model, $value[$this->to]);
+        if (!\is_null($value)) {
+            $this->getField('id')->set($model, $value[$this->to]);
+        }
 
         $this->setRelation($model, $value);
 
