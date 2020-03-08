@@ -21,7 +21,7 @@ trait HasConstraints
      *
      * @var FieldConstraintHandler
      */
-    protected $constraintHanlder;
+    protected $constraintHandler;
 
     /**
      * Create a Constraint handler for this meta.
@@ -30,7 +30,7 @@ trait HasConstraints
      */
     protected function setConstraintHandler()
     {
-        $this->constraintHanlder = new FieldConstraintHandler($this);
+        $this->constraintHandler = new FieldConstraintHandler($this);
     }
 
     /**
@@ -40,7 +40,7 @@ trait HasConstraints
      */
     public function getConstraintHandler(): FieldConstraintHandler
     {
-        return $this->constraintHanlder;
+        return $this->constraintHandler;
     }
 
     /**
@@ -50,6 +50,6 @@ trait HasConstraints
      */
     protected function owned()
     {
-        $this->getMeta()->getConstraintHandler()->addFieldHandler($this->getConstraintHandler());
+        $this->getMeta()->getConstraintHandler()->addFieldHandler($this->constraintHandler);
     }
 }

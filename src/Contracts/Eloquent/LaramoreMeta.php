@@ -14,9 +14,7 @@ use Laramore\Contracts\Field\{
     FieldsOwner, Contraint\ConstraintedField
 };
 use Laramore\Proxies\ProxyHandler;
-use Laramore\Fields\Constraint\{
-    ConstraintHandler, BaseConstraint
-};
+use Laramore\Fields\Constraint\ConstraintHandler;
 
 interface LaramoreMeta extends FieldsOwner
 {

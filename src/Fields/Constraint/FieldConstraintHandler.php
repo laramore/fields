@@ -111,7 +111,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      *
      * @return void
      */
-    public function owned()
+    protected function owned()
     {
         foreach ($this->all() as $constraints) {
             foreach ($constraints as $constraint) {

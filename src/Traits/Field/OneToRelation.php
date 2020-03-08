@@ -164,7 +164,7 @@ trait OneToRelation
      *
      * @return void
      */
-    public function owned()
+    protected function owned()
     {
         if ($this->on === 'self') {
             $this->defineProperty('on', $this->getReversed()->off = $this->getMeta()->getModelClass());
@@ -334,7 +334,7 @@ trait OneToRelation
      * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function where(LaramoreBuilder $builder, OperatorElement $operator=null,
+    public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
         if ($operator->needs === 'collection') {

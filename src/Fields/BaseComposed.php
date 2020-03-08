@@ -217,7 +217,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
      *
      * @return void
      */
-    public function owned()
+    protected function owned()
     {
         parent::owned();
 
@@ -369,7 +369,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
      * @param mixed                ...$args
      * @return mixed
      */
-    public function whereFieldValue(Field $attribute, Proxied $builder, $operator=null, $value=null, ...$args)
+    public function whereFieldValue(Field $attribute, Proxied $builder, $operator, $value=null, ...$args)
     {
         if (func_num_args() === 3) {
             return $this->getOwner()->whereFieldValue($attribute, $builder, $operator);

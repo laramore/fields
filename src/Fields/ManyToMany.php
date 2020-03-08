@@ -10,12 +10,10 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\BaseLink;
-use Laramore\Fields\Constraint\Unique;
 
 class ManyToMany extends BaseComposed
 {
@@ -258,7 +256,7 @@ class ManyToMany extends BaseComposed
      *
      * @return void
      */
-    public function owned()
+    protected function owned()
     {
         if ($this->on === 'self') {
             $this->on($this->getMeta()->getModelClass());

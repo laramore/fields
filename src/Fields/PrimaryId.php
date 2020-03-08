@@ -11,9 +11,7 @@
 namespace Laramore\Fields;
 
 use Laramore\Contracts\Field\Constraint\PrimaryField;
-use Laramore\Fields\Constraint\{
-    Primary, PrimaryConstraintHandler
-};
+use Laramore\Fields\Constraint\PrimaryConstraintHandler;
 
 class PrimaryId extends Increment implements PrimaryField
 {
@@ -24,7 +22,7 @@ class PrimaryId extends Increment implements PrimaryField
      */
     protected function setConstraintHandler()
     {
-        $this->constraintHanlder = new PrimaryConstraintHandler($this);
+        $this->constraintHandler = new PrimaryConstraintHandler($this);
     }
 
     /**
@@ -34,7 +32,7 @@ class PrimaryId extends Increment implements PrimaryField
      */
     public function getConstraintHandler(): PrimaryConstraintHandler
     {
-        return $this->constraintHanlder;
+        return parent::getConstraintHandler();
     }
 
     /**

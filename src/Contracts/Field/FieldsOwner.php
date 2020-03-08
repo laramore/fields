@@ -117,7 +117,7 @@ interface FieldsOwner
      * @param mixed                       ...$args
      * @return mixed
      */
-    public function whereFieldValue(Field $field, Proxied $builder, $operator=null, $value=null, ...$args);
+    public function whereFieldValue(Field $field, Proxied $builder, $operator, $value=null, ...$args);
 
     /**
      * Transform a value for a specific field.
