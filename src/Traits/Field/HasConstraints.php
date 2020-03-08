@@ -40,6 +40,10 @@ trait HasConstraints
      */
     public function getConstraintHandler(): FieldConstraintHandler
     {
+        if ($this->isOwned()) {
+            return $this->getMeta()->getConstraintHandler()->getFieldHandler($this->getNative());
+        }
+
         return $this->constraintHandler;
     }
 
@@ -51,5 +55,7 @@ trait HasConstraints
     protected function owned()
     {
         $this->getMeta()->getConstraintHandler()->addFieldHandler($this->constraintHandler);
+
+        unset($this->constraintHandler);
     }
 }

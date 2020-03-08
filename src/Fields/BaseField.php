@@ -42,11 +42,11 @@ abstract class BaseField implements Field, Configured
     }
 
     /**
-     * LaramoreMeta that owns this field.
+     * Model that owns this field.
      *
-     * @var \Laramore\LaramoreMeta
+     * @var \Laramore\Contracts\Eloquent\LaramoreModel
      */
-    protected $meta;
+    protected $model;
 
     /**
      * Default value of this field.
@@ -293,12 +293,17 @@ abstract class BaseField implements Field, Configured
     {
         $this->setOwnerFromTrait($owner);
 
-        if (!$this->hasProperty('meta')) {
+        if (!$this->hasProperty('model')) {
             while (!($owner instanceof LaramoreMeta)) {
                 $owner = $owner->getOwner();
             }
 
             $this->setMeta($owner);
+        } 
+        
+        // Only define the owner if it is different from the meta.
+        if ($this->owner === $this->getMeta()) {
+            $this->owner = $this->model;
         }
     }
 
@@ -326,6 +331,22 @@ abstract class BaseField implements Field, Configured
         Event::dispatch('fields.owned', $this);
 
         return $this;
+    }
+
+    /**
+     * Return the owner of this instance.
+     *
+     * @return mixed
+     */
+    public function getOwner()
+    {
+        $owner = $this->owner;
+
+        if (\is_string($owner) && $owner === $this->model) {
+            $owner = $this->getMeta();
+        }
+
+        return $owner;
     }
 
     /**
@@ -449,11 +470,11 @@ abstract class BaseField implements Field, Configured
     {
         $this->needsToBeUnlocked();
 
-        if ($this->hasProperty('meta')) {
+        if ($this->hasProperty('model')) {
             throw new \LogicException('The meta cannot be defined multiple times');
         }
 
-        $this->defineProperty('meta', $meta);
+        $this->defineProperty('model', $meta->getModelClass());
 
         return $this;
     }
@@ -466,9 +487,7 @@ abstract class BaseField implements Field, Configured
      */
     public function getMeta(): LaramoreMeta
     {
-        $this->needsToBeOwned();
-
-        return $this->meta;
+        return $this->model::getMeta();
     }
 
     /**
