@@ -18,8 +18,9 @@ use Laramore\Fields\Constraint\{
     Primary, BaseConstraint
 };
 use Laramore\Contracts\Configured;
+use Laramore\Contracts\Field\Constraint\TargetConstraint;
 
-class BaseConstraintHandler extends BaseHandler implements Configured
+abstract class BaseConstraintHandler extends BaseHandler implements Configured
 {
     /**
      * List of all observers to apply on the observable class.
@@ -143,4 +144,32 @@ class BaseConstraintHandler extends BaseHandler implements Configured
     {
         return $this->all(BaseConstraint::FOREIGN);
     }
+
+    /**
+     * Return all target constraints.
+     *
+     * @return array<TargetConstraint>
+     */
+    public function getTargets(): array
+    {
+        $targets = [];
+
+        foreach ($this->all() as $constraints) {
+            foreach ($constraints as $constraint) {
+                if ($constraint instanceof TargetConstraint) {
+                    $targets[] = $constraint;
+                }
+            }
+        }
+
+        return $targets;
+    }
+
+    /**
+     * Return the targeted constraint.
+     *
+     * @param array $attributes
+     * @return void
+     */
+    abstract public function getTarget(array $attributes);
 }

@@ -188,6 +188,29 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     }
 
     /**
+     * Return the targeted constraint.
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function getTarget(array $attributes)
+    {
+        foreach ($this->getTargets() as $targetable) {
+            $intersec = \array_diff(
+                $targetable->getNatives(), 
+                \array_merge($attributes, [$this->getConstrainted()->getNative()])
+            );
+
+            if (\count($intersec) === 0) {
+                return $targetable;
+            }
+        }
+
+        throw new \Exception('No target were find for this field.'.
+                             'A field used as a target must have a primary, unique or index constraint');
+    }
+
+    /**
      * Actions during locking.
      *
      * @return void

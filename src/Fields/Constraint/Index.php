@@ -10,8 +10,13 @@
 
 namespace Laramore\Fields\Constraint;
 
-class Index extends BaseConstraint
+use Laramore\Contracts\Field\Constraint\TargetConstraint;
+use Laramore\Traits\Field\Constraint\ManipulateConstraintedFields;
+
+class Index extends BaseConstraint implements TargetConstraint
 {
+    use ManipulateConstraintedFields;
+
     /**
      * Define the name of the constraint.
      *

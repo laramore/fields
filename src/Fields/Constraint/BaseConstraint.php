@@ -150,7 +150,7 @@ abstract class BaseConstraint extends BaseObserver
     }
 
     /**
-     * Return the main attirbute
+     * Return the main attribute
      *
      * @return AttributeField
      */
@@ -167,6 +167,28 @@ abstract class BaseConstraint extends BaseObserver
     public function getAttributes(): array
     {
         return $this->all();
+    }
+
+    /**
+     * Return the main attribute names.
+     *
+     * @return string
+     */
+    public function getMainNative(): string
+    {
+        return $this->getAttributes()[0]->getNative();
+    }
+
+    /**
+     * Return all concerned attribute names.
+     *
+     * @return array<string>
+     */
+    public function getNatives(): array
+    {
+        return \array_map(function ($attribute) {
+            return $attribute->getNative();
+        }, $this->all());
     }
 
     /**

@@ -10,10 +10,15 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Contracts\Field\AttributeField;
+use Laramore\Contracts\Field\{
+    AttributeField, Constraint\TargetConstraint
+};
+use Laramore\Traits\Field\Constraint\ManipulateConstraintedFields;
 
-class Primary extends BaseConstraint
+class Primary extends BaseConstraint implements TargetConstraint
 {
+    use ManipulateConstraintedFields;
+
     /**
      * Define the name of the constraint.
      *

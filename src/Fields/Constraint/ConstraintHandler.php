@@ -36,7 +36,7 @@ class ConstraintHandler extends BaseConstraintHandler
      */
     public function addFieldHandler(FieldConstraintHandler $handler)
     {
-        $name = $handler->getConstrainted()->getName();
+        $name = $handler->getConstrainted()->getNative();
 
         $this->fieldConstraints[$name] = $handler->own($this, $name);
 
@@ -51,7 +51,7 @@ class ConstraintHandler extends BaseConstraintHandler
      */
     public function hasFieldHandler(string $name): bool
     {
-        return isset($this->getFieldHandlers()[$name]);
+        return isset($this->fieldConstraints[$name]);
     }
 
     /**
@@ -62,7 +62,7 @@ class ConstraintHandler extends BaseConstraintHandler
      */
     public function getFieldHandler(string $name): FieldConstraintHandler
     {
-        return $this->getFieldHandlers()[$name];
+        return $this->fieldConstraints[$name];
     }
 
     /**
@@ -73,6 +73,21 @@ class ConstraintHandler extends BaseConstraintHandler
     public function getFieldHandlers(): array
     {
         return $this->fieldConstraints;
+    }
+    
+    /**
+     * Return the targeted constraint.
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function getTarget(array $attributes)
+    {
+        if (\count($attributes) === 0) {
+            throw new \LogicException('Cannot retrieve a target with no attributes');
+        }
+
+        return $this->getFieldHandler(\array_shift($attributes))->getTarget($attributes);
     }
 
     /**
