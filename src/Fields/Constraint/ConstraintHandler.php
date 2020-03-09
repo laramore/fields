@@ -74,12 +74,12 @@ class ConstraintHandler extends BaseConstraintHandler
     {
         return $this->fieldConstraints;
     }
-    
+
     /**
      * Return the targeted constraint.
      *
      * @param array $attributes
-     * @return void
+     * @return array
      */
     public function getTarget(array $attributes)
     {

@@ -22,10 +22,10 @@ class OneToMany extends BaseComposed implements RelationField, ConstraintedField
         OneToRelation::set as protected setRelation;
         OneToRelation::reset as protected resetRelation;
     }
-    
+
     /**
      * Define the target.
-     * 
+     *
      * @return void
      */
     protected function locking()

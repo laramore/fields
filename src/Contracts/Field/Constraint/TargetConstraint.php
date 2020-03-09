@@ -22,14 +22,14 @@ interface TargetConstraint extends Locked
      * @return string
      */
     public function getConstraintType(): string;
-    
+
     /**
      * Return the main attirbute
      *
      * @return AttributeField
      */
     public function getMainAttribute(): AttributeField;
-    
+
     /**
      * Return all concerned attribute fields.
      *
@@ -56,7 +56,7 @@ interface TargetConstraint extends Locked
      * Set values from constraint attributes.
      *
      * @param LaramoreModel $model
-     * @param array $values
+     * @param array         $values
      * @return array
      */
     public function setModelValues(LaramoreModel $model, array $values);
@@ -81,7 +81,7 @@ interface TargetConstraint extends Locked
      * Set value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @param array $values
+     * @param array         $values
      * @return array
      */
     public function setModelValue(LaramoreModel $model, $value);

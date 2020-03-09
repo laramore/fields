@@ -36,8 +36,8 @@ trait ManipulateConstraintedFields
      * Set values from constraint attributes.
      *
      * @param LaramoreModel $model
-     * @param array $values
-     * @return array
+     * @param array         $values
+     * @return void
      */
     public function setModelValues(LaramoreModel $model, array $values)
     {
@@ -52,7 +52,7 @@ trait ManipulateConstraintedFields
      * Reset values from constraint attributes.
      *
      * @param LaramoreModel $model
-     * @return array
+     * @return void
      */
     public function resetModelValues(LaramoreModel $model)
     {
@@ -78,8 +78,8 @@ trait ManipulateConstraintedFields
      * Set value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @param array $values
-     * @return array
+     * @param mixed         $value
+     * @return void
      */
     public function setModelValue(LaramoreModel $model, $value)
     {
@@ -92,7 +92,7 @@ trait ManipulateConstraintedFields
      * Reset value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @return array
+     * @return void
      */
     public function resetModelValue(LaramoreModel $model)
     {

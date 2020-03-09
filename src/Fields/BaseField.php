@@ -299,8 +299,8 @@ abstract class BaseField implements Field, Configured
             }
 
             $this->setMeta($owner);
-        } 
-        
+        }
+
         // Only define the owner if it is different from the meta.
         if ($this->owner === $this->getMeta()) {
             $this->owner = $this->model;

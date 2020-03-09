@@ -18,10 +18,10 @@ class OneToOne extends BaseComposed
 
     /**
      * Define the target.
-     * 
+     *
      * @return void
      */
-    protected function locking() 
+    protected function locking()
     {
         parent::locking();
 

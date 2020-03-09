@@ -200,6 +200,11 @@ trait OneToRelation
         $this->foreign($this->on::getMeta()->getField($this->to), $relationName);
     }
 
+    /**
+     * Define the target of this relation.
+     *
+     * @return void
+     */
     protected function setTarget()
     {
         $this->needsToBeUnlocked();
