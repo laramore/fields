@@ -11,6 +11,9 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\Eloquent\LaramoreModel;
+use Laramore\Contracts\Field\Constraint\{
+    SourceConstraint, TargetConstraint
+};
 
 interface RelationField extends ExtraField
 {
@@ -30,4 +33,18 @@ interface RelationField extends ExtraField
      * @return boolean
      */
     public function reverbate(LaramoreModel $model, $value): bool;
+
+    /**
+     * Return the source of the relation.
+     *
+     * @return SourceConstraint
+     */
+    public function getSource(): SourceConstraint;
+
+    /**
+     * Return the target of the relation.
+     *
+     * @return TargetConstraint
+     */
+    public function getTarget(): TargetConstraint;
 }
