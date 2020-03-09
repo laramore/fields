@@ -73,7 +73,7 @@ interface TargetConstraint extends Locked
      * Return value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @return array
+     * @return mixed
      */
     public function getModelValue(LaramoreModel $model);
 
@@ -81,8 +81,8 @@ interface TargetConstraint extends Locked
      * Set value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @param array         $values
-     * @return array
+     * @param mixed         $value
+     * @return mixed
      */
     public function setModelValue(LaramoreModel $model, $value);
 
@@ -90,7 +90,7 @@ interface TargetConstraint extends Locked
      * Reset value from constraint main attribute.
      *
      * @param LaramoreModel $model
-     * @return array
+     * @return mixed
      */
     public function resetModelValue(LaramoreModel $model);
 }
