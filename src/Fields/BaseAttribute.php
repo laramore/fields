@@ -111,8 +111,8 @@ abstract class BaseAttribute extends BaseField implements AttributeField
         if ($this->getConstraintHandler()->count(BaseConstraint::FOREIGN) > 0) {
             $constraint = $this->getConstraintHandler()->all(BaseConstraint::FOREIGN)[0];
 
-            if ($constraint->getOffField() === $this) {
-                $this->addOptions(\array_merge($constraint->getOnField()->options, $this->options));
+            if ($constraint->getSourceAttribute() === $this) {
+                $this->addOptions(\array_merge($constraint->getTargetAttribute()->options, $this->options));
             }
         }
     }

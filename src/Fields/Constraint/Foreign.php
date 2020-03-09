@@ -29,9 +29,33 @@ class Foreign extends BaseConstraint
      */
     protected function locking()
     {
-        if ($this->count() !== 2) {
-            throw new LockException('You must define two fields for a foreign constraint', 'fields');
+        if (($this->count() % 2) !== 0) {
+            throw new LockException('You must define at least one source and target fields for a foreign constraint', 'fields');
         }
+    }
+
+    /**
+     * Return the attributes that points to another.
+     *
+     * @return array<AttributeField>
+     */
+    public function getSourceAttributes(): array
+    {
+        $attributes = $this->all();
+
+        return \array_slice($attributes, 0, (\count($attributes) / 2));
+    }
+
+    /**
+     * Return the attributes that is pointed by this foreign relation.
+     *
+     * @return array<AttributeField>
+     */
+    public function getTargetAttributes(): array
+    {
+        $attributes = $this->all();
+
+        return \array_slice($attributes, (\count($attributes) / 2));
     }
 
     /**
@@ -39,7 +63,7 @@ class Foreign extends BaseConstraint
      *
      * @return AttributeField
      */
-    public function getOffField(): AttributeField
+    public function getSourceAttribute(): AttributeField
     {
         return $this->all()[0];
     }
@@ -49,8 +73,10 @@ class Foreign extends BaseConstraint
      *
      * @return AttributeField
      */
-    public function getOnField(): AttributeField
+    public function getTargetAttribute(): AttributeField
     {
-        return $this->all()[1];
+        $attributes = $this->all();
+
+        return $attributes[(\count($attributes) / 2)];
     }
 }
