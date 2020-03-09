@@ -19,7 +19,9 @@ use Laramore\Fields\{
 use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder,
 };
-use Laramore\Contracts\Field\Constraint\TargetConstraint;
+use Laramore\Contracts\Field\Constraint\{
+    SourceConstraint, TargetConstraint
+};
 
 trait OneToRelation
 {
@@ -54,13 +56,6 @@ trait OneToRelation
     protected $to;
 
     /**
-     * Targeted constraint.
-     *
-     * @var TargetConstraint
-     */
-    protected $target;
-
-    /**
      * Reversed name of this relation.
      *
      * @var string
@@ -82,18 +77,6 @@ trait OneToRelation
     public function getReversed(): BaseLink
     {
         return $this->getField('reversed');
-    }
-
-    /**
-     * Return the targeted constraint.
-     *
-     * @return TargetConstraint
-     */
-    public function getTarget(): TargetConstraint
-    {
-        $this->needsToBeLocked();
-
-        return $this->target;
     }
 
     /**
@@ -154,6 +137,30 @@ trait OneToRelation
     }
 
     /**
+     * Return the source of the relation.
+     *
+     * @return SourceConstraint
+     */
+    public function getSource(): SourceConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->on::getMeta()->getConstraintHandler()->getSource([$this->from]);
+    }
+
+    /**
+     * Return the target of the relation.
+     *
+     * @return TargetConstraint
+     */
+    public function getTarget(): TargetConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->on::getMeta()->getConstraintHandler()->getTarget([$this->to]);
+    }
+
+    /**
      * Define on self.
      *
      * @return self
@@ -198,18 +205,6 @@ trait OneToRelation
 
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
         $this->foreign($this->on::getMeta()->getField($this->to), $relationName);
-    }
-
-    /**
-     * Define the target of this relation.
-     *
-     * @return void
-     */
-    protected function setTarget()
-    {
-        $this->needsToBeUnlocked();
-
-        $this->defineProperty('target', $this->on::getMeta()->getConstraintHandler()->getTarget([$this->to]));
     }
 
     /**

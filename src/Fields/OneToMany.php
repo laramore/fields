@@ -24,18 +24,6 @@ class OneToMany extends BaseComposed implements RelationField, ConstraintedField
     }
 
     /**
-     * Define the target.
-     *
-     * @return void
-     */
-    protected function locking()
-    {
-        parent::locking();
-
-        $this->setTarget();
-    }
-
-    /**
      * Set the value for the field.
      *
      * @param  LaramoreModel $model

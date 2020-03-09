@@ -12,6 +12,9 @@ namespace Laramore\Fields;
 
 use Laramore\Traits\Field\ManyToManyRelation;
 use Laramore\Fields\BaseComposed;
+use Laramore\Contracts\Field\Constraint\{
+    SourceConstraint, TargetConstraint
+};
 
 class BelongsToMany extends BaseLink
 {
@@ -25,6 +28,30 @@ class BelongsToMany extends BaseLink
     public function getReversed(): BaseComposed
     {
         return $this->getOwner();
+    }
+
+    /**
+     * Return the source of the relation.
+     *
+     * @return SourceConstraint
+     */
+    public function getSource(): SourceConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->getReversed()->getSource();
+    }
+
+    /**
+     * Return the target of the relation.
+     *
+     * @return TargetConstraint
+     */
+    public function getTarget(): TargetConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->getReversed()->getTarget();
     }
 
     /**
