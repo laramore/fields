@@ -11,7 +11,10 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Contracts\{
-    Owned, Configured, Field\Constraint\ConstraintedField
+    Owned, Configured
+};
+use Laramore\Contracts\Field\Constraint\{
+    ConstraintedField, SourceConstraint, TargetConstraint
 };
 use Laramore\Exceptions\LockException;
 use Laramore\Observers\BaseObserver;
@@ -189,12 +192,36 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     }
 
     /**
+     * Return the sourced constraint.
+     *
+     * @param array $attributes
+     * @return SourceConstraint
+     */
+    public function getSource(array $attributes=[]): SourceConstraint
+    {
+        foreach ($this->getSources() as $sourcable) {
+            $intersec = \array_diff(
+                \array_map(function ($constrainted) {
+                    return $constrainted->getNative();
+                }, $sourcable->getSourceAttributes()),
+                \array_merge($attributes, [$this->getConstrainted()->getNative()])
+            );
+
+            if (\count($intersec) === 0) {
+                return $sourcable;
+            }
+        }
+
+        throw new \Exception('No source found. A field used as a source must have a primary, unique or index constraint');
+    }
+
+    /**
      * Return the targeted constraint.
      *
      * @param array $attributes
      * @return TargetConstraint
      */
-    public function getTarget(array $attributes=[])
+    public function getTarget(array $attributes=[]): TargetConstraint
     {
         foreach ($this->getTargets() as $targetable) {
             $intersec = \array_diff(

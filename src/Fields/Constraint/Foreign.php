@@ -11,9 +11,11 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Exceptions\LockException;
-use Laramore\Contracts\Field\AttributeField;
+use Laramore\Contracts\Field\{
+    AttributeField, Constraint\SourceConstraint
+};
 
-class Foreign extends BaseConstraint
+class Foreign extends BaseConstraint implements SourceConstraint
 {
     /**
      * Define the name of the constraint.

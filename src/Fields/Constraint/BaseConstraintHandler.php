@@ -18,7 +18,9 @@ use Laramore\Fields\Constraint\{
     Primary, BaseConstraint
 };
 use Laramore\Contracts\Configured;
-use Laramore\Contracts\Field\Constraint\TargetConstraint;
+use Laramore\Contracts\Field\Constraint\{
+    SourceConstraint, TargetConstraint
+};
 
 abstract class BaseConstraintHandler extends BaseHandler implements Configured
 {
@@ -146,6 +148,26 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
     }
 
     /**
+     * Return all source constraints.
+     *
+     * @return array<SourceConstraint>
+     */
+    public function getSources(): array
+    {
+        $sources = [];
+
+        foreach ($this->all() as $constraints) {
+            foreach ($constraints as $constraint) {
+                if ($constraint instanceof SourceConstraint) {
+                    $sources[] = $constraint;
+                }
+            }
+        }
+
+        return $sources;
+    }
+
+    /**
      * Return all target constraints.
      *
      * @return array<TargetConstraint>
@@ -164,6 +186,14 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
 
         return $targets;
     }
+
+    /**
+     * Return the sourced constraint.
+     *
+     * @param array $attributes
+     * @return void
+     */
+    abstract public function getSource(array $attributes);
 
     /**
      * Return the targeted constraint.
