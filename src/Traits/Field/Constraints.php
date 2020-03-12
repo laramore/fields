@@ -17,14 +17,15 @@ trait Constraints
     /**
      * Define a primary constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function primary(string $name=null)
+    public function primary(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->createPrimary($name);
+        $this->getConstraintHandler()->createPrimary($name, $fields);
 
         return $this;
     }
@@ -32,14 +33,15 @@ trait Constraints
     /**
      * Define a index constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function index(string $name=null)
+    public function index(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->createIndex($name);
+        $this->getConstraintHandler()->createIndex($name, $fields);
 
         return $this;
     }
@@ -47,14 +49,15 @@ trait Constraints
     /**
      * Define a unique constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function unique(string $name=null)
+    public function unique(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->createUnique($name);
+        $this->getConstraintHandler()->createUnique($name, $fields);
 
         return $this;
     }
@@ -62,15 +65,15 @@ trait Constraints
     /**
      * Define a foreign constraint.
      *
-     * @param  ConstraintedField $constrainedField
-     * @param  string            $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
+     * @param  string                                     $name
      * @return self
      */
-    public function foreign(ConstraintedField $constrainedField, string $name=null)
+    public function foreign(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->createForeign($constrainedField, $name);
+        $this->getConstraintHandler()->createForeign($name, $fields);
 
         return $this;
     }

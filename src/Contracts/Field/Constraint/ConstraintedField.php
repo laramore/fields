@@ -25,33 +25,36 @@ interface ConstraintedField extends Field
     /**
      * Define a primary constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function primary(string $name=null);
+    public function primary(string $name=null, $fields=[]);
 
     /**
      * Define a index constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function index(string $name=null);
+    public function index(string $name=null, $fields=[]);
 
     /**
      * Define a unique constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function unique(string $name=null);
+    public function unique(string $name=null, $fields=[]);
 
     /**
      * Define a foreign constraint.
      *
-     * @param  ConstraintedField $constrainedField
-     * @param  string            $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function foreign(ConstraintedField $constrainedField, string $name=null);
+    public function foreign(string $name=null, $fields=[]);
 }

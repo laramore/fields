@@ -172,19 +172,20 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     /**
      * Create a foreign constraint and add it.
      *
-     * @param  ConstraintedField $field
-     * @param  string            $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function createForeign(ConstraintedField $field, string $name=null)
+    public function createForeign(string $name=null, $fields=[])
     {
         if ($this->count(BaseConstraint::FOREIGN)) {
             throw new \LogicException('Cannot have multiple primary constraints.');
         }
 
+        $fields = is_array($fields) ? [$this->getConstrainted(), ...$fields] : [$this->getConstrainted(), $fields];
         $class = $this->getConfig('classes.'.BaseConstraint::FOREIGN);
 
-        return $this->add($class::constraint([$this->getConstrainted(), $field], $name));
+        return $this->add($class::constraint($fields, $name));
     }
 
     /**

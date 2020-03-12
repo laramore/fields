@@ -38,13 +38,15 @@ class PrimaryId extends Increment implements PrimaryField
     /**
      * Define a primary constraint.
      *
-     * @param  string $name
+     * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function primary(string $name=null)
+    public function primary(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
 
+        // TODO: Handle fields
         $this->getConstraintHandler()->getPrimary()->setName($name);
 
         return $this;
