@@ -23,7 +23,10 @@ use Laramore\Contracts\Field\{
 
 trait OneToRelation
 {
-    use ModelRelation, Constraints;
+    use ModelRelation, Constraints {
+        ModelRelation::set as protected setRelation;
+        ModelRelation::reset as protected resetRelation;
+    }
 
     /**
      * Model the relation is on.
@@ -332,6 +335,64 @@ trait OneToRelation
     }
 
     /**
+     * Set the value for the field.
+     *
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
+     * @return mixed
+     */
+    public function set(LaramoreModel $model, $value)
+    {
+        if (!\is_null($value)) {
+            $this->getField('id')->set($model, $this->getTarget()->getModelValue($value));
+        }
+
+        $this->setRelation($model, $value);
+
+        return $value;
+    }
+
+    /**
+     * Reet the value for the field.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function reset(LaramoreModel $model)
+    {
+        $this->getField('id')->reset($model);
+
+        return $this->resetRelation($model);
+    }
+
+    /**
+     * Return the query with this field as condition.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function relate(LaramoreModel $model)
+    {
+        return $model->belongsTo(
+            $this->getTargetModel(),
+            $this->getSourceAttribute()->getNative(),
+            $this->getTargetAttribute()->getNative()
+        );
+    }
+
+    /**
+     * Reverbate the relation into database.
+     *
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
+     * @return boolean
+     */
+    public function reverbate(LaramoreModel $model, $value): bool
+    {
+        return $value->save();
+    }
+
+    /**
      * Add a where null condition from this field.
      *
      * @param  LaramoreBuilder $builder
@@ -415,7 +476,9 @@ trait OneToRelation
      */
     public function setFieldValue(Field $field, LaramoreModel $model, $value)
     {
-        $this->reset($model);
+        if ($this->getFieldValue($field, $model) !== $value) {
+            $this->reset($model);
+        }
 
         return parent::setFieldValue($field, $model, $value);
     }

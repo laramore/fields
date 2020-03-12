@@ -42,11 +42,14 @@ class PrimaryId extends Increment implements PrimaryField
      * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
-    public function primary(string $name=null, $fields=[])
+    public function primary(string $name=null, $fields=null)
     {
         $this->needsToBeUnlocked();
 
-        // TODO: Handle fields
+        if (!\is_null($fields) && (\is_array($fields) || \count($fields) > 0)) {
+            throw new \LogicException('An incremental field cannot have co-primary fields');
+        }
+
         $this->getConstraintHandler()->getPrimary()->setName($name);
 
         return $this;
