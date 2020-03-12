@@ -35,6 +35,15 @@ interface FieldsOwner
     public function getField(string $name, string $class=null): Field;
 
     /**
+     * Return a field with its native name.
+     *
+     * @param  string $nativeName
+     * @param  string $class      The field must be an instance of the class.
+     * @return Field
+     */
+    public function findField(string $nativeName, string $class=null): Field;
+
+    /**
      * Define a field with a given name.
      *
      * @param string $name

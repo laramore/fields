@@ -81,7 +81,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
             return null;
         }
 
-        $field = $creating ?: new static($fields);
+        $field = $creating ?: new static($options, $fields);
 
         Event::dispatch('fields.created', $field);
 
@@ -153,6 +153,24 @@ abstract class BaseComposed extends BaseField implements ComposedField
         } else {
             throw new \Exception("The field `$name` does not exist");
         }
+    }
+
+    /**
+     * Return the field with its native name.
+     *
+     * @param  string $nativeName
+     * @param  string $class      The field must be an instance of the class.
+     * @return Field
+     */
+    public function findField(string $nativeName, string $class=null): Field
+    {
+        foreach ($this->getFields() as $field) {
+            if ($field->getNative() === $nativeName && (\is_null($class) || ($field instanceof $class))) {
+                return $field;
+            }
+        }
+
+        throw new \Exception("The native field `$nativeName` does not exist");
     }
 
     /**
@@ -236,6 +254,8 @@ abstract class BaseComposed extends BaseField implements ComposedField
             $name = $this->replaceInFieldTemplate($template, $key);
 
             $this->fields[$key] = $field->own($this, $name);
+
+            $field->getMeta()->setField($field->getName(), $field);
         }
     }
 
@@ -299,7 +319,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
 
     /**
      * Return the set value for a specific field.
-     * z
+     *
      * @param Field         $field
      * @param LaramoreModel $model
      * @param mixed         $value
