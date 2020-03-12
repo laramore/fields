@@ -13,14 +13,12 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
-use Laramore\Fields\{
-    BaseLink, Constraint\FieldConstraintHandler
-};
+use Laramore\Fields\Constraint\FieldConstraintHandler;
 use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder,
 };
-use Laramore\Contracts\Field\Constraint\{
-    SourceConstraint, TargetConstraint
+use Laramore\Contracts\Field\{
+    Field, AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
 };
 
 trait OneToRelation
@@ -28,39 +26,11 @@ trait OneToRelation
     use ModelRelation, Constraints;
 
     /**
-     * LaramoreModel from the relation is.
+     * Model the relation is on.
      *
      * @var LaramoreModel
      */
-    protected $off;
-
-    /**
-     * AttributeField name from the relation is.
-     *
-     * @var string
-     */
-    protected $from;
-
-    /**
-     * LaramoreModel from the relation is.
-     *
-     * @var LaramoreModel
-     */
-    protected $on;
-
-    /**
-     * Attribute name or array of attribute names.
-     *
-     * @var string|array
-     */
-    protected $to;
-
-    /**
-     * Reversed name of this relation.
-     *
-     * @var string
-     */
-    protected $reversedName;
+    protected $targetModel;
 
     /**
      * Name for this relation.
@@ -72,9 +42,9 @@ trait OneToRelation
     /**
      * Return the reversed field.
      *
-     * @return BaseLink
+     * @return RelationField
      */
-    public function getReversed(): BaseLink
+    public function getReversed(): RelationField
     {
         return $this->getField('reversed');
     }
@@ -90,21 +60,6 @@ trait OneToRelation
     }
 
     /**
-     * Define the attribute name.
-     *
-     * @param string $name
-     * @return self
-     */
-    public function to(string $name)
-    {
-        $this->needsToBeUnowned();
-
-        $this->defineProperty('to', $this->getReversed()->from = $name);
-
-        return $this;
-    }
-
-    /**
      * Define the model on which to point.
      *
      * @param string $model
@@ -114,26 +69,139 @@ trait OneToRelation
      */
     public function on(string $model, string $reversedName=null, string $relationName=null)
     {
-        $this->needsToBeUnowned();
+        $this->defineProperty('targetModel', $model);
 
-        if ($model === 'self') {
-            $this->defineProperty('on', $model);
-        } else {
-            $this->defineProperty('on', $this->getReversed()->off = $model);
-            $this->to($this->getReversed()->off::getMeta()->getPrimary()->getAttribute()->attname);
+        if ($model !== 'self') {
+            $this->getField('reversed')->setMeta($model::getMeta());
         }
 
         if ($reversedName) {
             $this->setProperty('reversedName', $reversedName);
         } else if ($model === 'self') {
-            $this->reversedName($this->getConfig('self_reversed'));
+            $this->reversedName($this->getConfig('templates.self_reversed'));
         }
 
         if ($relationName) {
-            $this->setProperty('relationName', $relationName);
+            $this->relationName($relationName);
         }
 
         return $this;
+    }
+
+    /**
+     * Define on self.
+     *
+     * @return self
+     */
+    public function onSelf()
+    {
+        $this->needsToBeUnowned();
+
+        return $this->on('self');
+    }
+
+    /**
+     * Indicate if it is a relation on itself.
+     *
+     * @return boolean
+     */
+    public function isOnSelf()
+    {
+        return \in_array($this->targetModel, [$this->getMeta()->getModelClass(), 'self']);
+    }
+
+    /**
+     * Define the reversed name of the relation.
+     *
+     * @param string $reversedName
+     * @return self
+     */
+    public function reversedName(string $reversedName)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->fieldsName['reversed'] = $reversedName;
+
+        return $this;
+    }
+
+    /**
+     * Indicate if the relation is head on or not.
+     * Usefull to know which to use between source and target.
+     *
+     * @return boolean
+     */
+    public function isRelationHeadOn(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Model where the relation is set from.
+     *
+     * @return string
+     */
+    public function getSourceModel(): string
+    {
+        $this->needsToBeOwned();
+
+        return $this->getMeta()->getModelClass();
+    }
+
+    /**
+     * Return all attributes where to start the relation from.
+     *
+     * @return array<AttributeField>
+     */
+    public function getSourceAttributes(): array
+    {
+        $this->needsToBeOwned();
+
+        return [$this->getField('id')];
+    }
+
+    /**
+     * Return the main attribute where to start the relation from.
+     *
+     * @return AttributeField
+     */
+    public function getSourceAttribute(): AttributeField
+    {
+        return $this->getSourceAttributes()[0];
+    }
+
+    /**
+     * Model where the relation is set to.
+     *
+     * @return string
+     */
+    public function getTargetModel(): string
+    {
+        $this->needsToBeOwned();
+
+        return $this->targetModel;
+    }
+
+    /**
+     * Return all attributes where to start the relation to.
+     *
+     * @return array<AttributeField>
+     */
+    public function getTargetAttributes(): array
+    {
+        $this->needsToBeOwned();
+
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttributes();
+    }
+
+    /**
+     * Return the main attribute where to start the relation to.
+     *
+     * @return AttributeField
+     */
+    public function getTargetAttribute(): AttributeField
+    {
+        return $this->getTargetAttributes()[0];
     }
 
     /**
@@ -145,7 +213,8 @@ trait OneToRelation
     {
         $this->needsToBeOwned();
 
-        return $this->on::getMeta()->getConstraintHandler()->getSource([$this->from]);
+        return $this->getSourceModel()::getMeta()
+            ->getConstraintHandler()->getSource($this->getSourceAttributes());
     }
 
     /**
@@ -157,33 +226,8 @@ trait OneToRelation
     {
         $this->needsToBeOwned();
 
-        return $this->on::getMeta()->getConstraintHandler()->getTarget([$this->to]);
-    }
-
-    /**
-     * Define on self.
-     *
-     * @return self
-     */
-    public function onSelf()
-    {
-        return $this->on('self');
-    }
-
-    /**
-     * Define the reversed name of the relation.
-     *
-     * @param string $reversedName
-     * @return self
-     */
-    public function reversedName(string $reversedName=null)
-    {
-        $this->needsToBeUnowned();
-        $this->needsToBeUnlocked();
-
-        $this->fieldsName['reversed'] = $reversedName;
-
-        return $this;
+        return $this->getTargetModel()::getMeta()
+            ->getConstraintHandler()->getTarget($this->getTargetAttributes());
     }
 
     /**
@@ -193,18 +237,14 @@ trait OneToRelation
      */
     protected function owned()
     {
-        if ($this->on === 'self') {
-            $this->defineProperty('on', $this->getReversed()->off = $this->getMeta()->getModelClass());
-            $this->defineProperty('to', $this->getReversed()->off::getMeta()->getPrimary()->getAttribute()->attname);
+        if ($this->getTargetModel() === 'self') {
+            $this->on($this->getSourceModel());
         }
 
         parent::owned();
 
-        $this->defineProperty('off', $this->getReversed()->on = $this->getMeta()->getModelClass());
-        $this->defineProperty('from', $this->getReversed()->to = $this->getField('id')->attname);
-
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
-        $this->foreign($this->on::getMeta()->getField($this->to), $relationName);
+        $this->foreign($relationName, $this->getTargetAttributes());
     }
 
     /**
@@ -214,23 +254,13 @@ trait OneToRelation
      */
     protected function checkOptions()
     {
-        if (!$this->on) {
+        if (!$this->targetModel) {
             throw new \Exception('Related model settings needed. Set it by calling `on` method');
         }
 
         $this->defineProperty('reversedName', $this->getReversed()->name);
 
         parent::checkOptions();
-    }
-
-    /**
-     * Indicate if it is a relation on itself.
-     *
-     * @return boolean
-     */
-    public function isOnSelf()
-    {
-        return \in_array($this->on, [$this->getMeta()->getModelClass(), 'self']);
     }
 
     /**
@@ -242,8 +272,9 @@ trait OneToRelation
     public function dry($value)
     {
         $value = $this->transform($value);
+        $name = $this->getTargetAttribute()->getNative();
 
-        return isset($value[$this->to]) ? $value[$this->to] : $value;
+        return isset($value[$name]) ? $value[$name] : $value;
     }
 
     /**
@@ -265,12 +296,15 @@ trait OneToRelation
      */
     public function transform($value)
     {
-        if (\is_null($value) || $value instanceof $this->on || \is_array($value) || $value instanceof Collection) {
+        $model = $this->getTargetModel();
+        $name = $this->getTargetAttribute()->getNative();
+
+        if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof Collection) {
             return $value;
         }
 
-        $model = new $this->on;
-        $model->setAttributeValue($this->to, $value);
+        $model = new $model;
+        $model->setAttributeValue($name, $value);
 
         return $model;
     }
@@ -369,5 +403,20 @@ trait OneToRelation
         }
 
         return $this->getField('id')->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+    }
+
+    /**
+     * Return the set value for a specific field.
+     *
+     * @param Field         $field
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return mixed
+     */
+    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    {
+        $this->reset($model);
+
+        return parent::setFieldValue($field, $model, $value);
     }
 }
