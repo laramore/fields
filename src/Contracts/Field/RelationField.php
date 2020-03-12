@@ -20,10 +20,10 @@ interface RelationField extends ExtraField
     /**
      * Return the relation with this field.
      *
-     * @param  LaramoreModel $instance
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function relate(LaramoreModel $instance);
+    public function relate(LaramoreModel $model);
 
     /**
      * Reverbate the relation into database.

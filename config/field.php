@@ -137,6 +137,7 @@ return [
         ],
         'many_to_many' => [
             'type' => 'composed',
+            'pivot_namespace' => 'App\\Pivots',
             'fields' => [
                 'reversed' => Laramore\Fields\BelongsToMany::class,
             ],
@@ -155,11 +156,25 @@ return [
             'type' => 'composed',
             'fields' => [
                 'id' => Laramore\Fields\Integer::class,
+                'reversed' => Laramore\Fields\HasMany::class,
+            ],
+            'templates' => [
+                'id' => '${name}_${identifier}',
+                'reversed' => '+{modelname}',
+                'self_reversed' => 'reversed_+{name}',
+            ],
+            'proxies' => [],
+        ],
+        'one_to_one' => [
+            'type' => 'composed',
+            'fields' => [
+                'id' => Laramore\Fields\UniqueId::class,
                 'reversed' => Laramore\Fields\HasOne::class,
             ],
             'templates' => [
                 'id' => '${name}_${identifier}',
                 'reversed' => '+{modelname}',
+                'self_reversed' => 'reversed_+{name}',
             ],
             'proxies' => [],
         ],
@@ -185,6 +200,11 @@ return [
         ],
         'primary_id' => [
             'type' => 'primary_id',
+            'proxies' => [],
+        ],
+        'unique_id' => [
+            'type' => 'integer',
+            'unsigned_type' => 'unsigned_integer',
             'proxies' => [],
         ],
         'text' => [

@@ -65,8 +65,8 @@ trait Constraints
     /**
      * Define a foreign constraint.
      *
-     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @param  string                                     $name
+     * @param  ConstraintedField|array<ConstraintedField> $fields
      * @return self
      */
     public function foreign(string $name=null, $fields=[])
