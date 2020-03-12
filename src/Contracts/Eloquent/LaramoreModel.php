@@ -310,4 +310,40 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      * @return $this
      */
     public function setRawAttributes(array $attributes, $sync=false);
+
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  mixed $related
+     * @param  mixed $foreignKey
+     * @param  mixed $ownerKey
+     * @param  mixed $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function belongsTo($related, $foreignKey=null, $ownerKey=null, $relation=null);
+
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @param  mixed $related
+     * @param  mixed $table
+     * @param  mixed $foreignPivotKey
+     * @param  mixed $relatedPivotKey
+     * @param  mixed $parentKey
+     * @param  mixed $relatedKey
+     * @param  mixed $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function belongsToMany($related, $table=null, $foreignPivotKey=null, $relatedPivotKey=null,
+                                  $parentKey=null, $relatedKey=null, $relation=null);
+
+    /**
+     * Define a one-to-one relationship.
+     *
+     * @param  mixed $related
+     * @param  mixed $foreignKey
+     * @param  mixed $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function hasOne($related, $foreignKey=null, $localKey=null);
 }
