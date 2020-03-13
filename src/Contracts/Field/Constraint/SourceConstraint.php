@@ -11,7 +11,7 @@
 namespace Laramore\Contracts\Field\Constraint;
 
 use Laramore\Contracts\{
-    Locked, Field\AttributeField
+    Locked, Field\AttributeField, Eloquent\LaramoreModel
 };
 
 interface SourceConstraint extends Locked
@@ -71,4 +71,54 @@ interface SourceConstraint extends Locked
      * @return AttributeField
      */
     public function getTargetAttribute(): AttributeField;
+
+    /**
+     * Return values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @return array
+     */
+    public function getModelValues(LaramoreModel $model): array;
+
+    /**
+     * Set values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @param array         $values
+     * @return array
+     */
+    public function setModelValues(LaramoreModel $model, array $values);
+
+    /**
+     * Reset values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @return array
+     */
+    public function resetModelValues(LaramoreModel $model);
+
+    /**
+     * Return value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @return mixed
+     */
+    public function getModelValue(LaramoreModel $model);
+
+    /**
+     * Set value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return mixed
+     */
+    public function setModelValue(LaramoreModel $model, $value);
+
+    /**
+     * Reset value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @return mixed
+     */
+    public function resetModelValue(LaramoreModel $model);
 }

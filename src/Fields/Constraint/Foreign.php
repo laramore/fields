@@ -11,6 +11,7 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Exceptions\LockException;
+use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
     AttributeField, Constraint\SourceConstraint
 };
@@ -80,5 +81,91 @@ class Foreign extends BaseConstraint implements SourceConstraint
         $attributes = $this->all();
 
         return $attributes[(\count($attributes) / 2)];
+    }
+    
+    /**
+     * Return values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @return array
+     */
+    public function getModelValues(LaramoreModel $model): array
+    {
+        $values = [];
+
+        foreach ($this->getSourceAttributes() as $attribute) {
+            $values[$attribute->getNative()] = $attribute->getOwner()->getFieldValue($attribute, $model);
+        }
+
+        return $values;
+    }
+
+    /**
+     * Set values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @param array         $values
+     * @return void
+     */
+    public function setModelValues(LaramoreModel $model, array $values)
+    {
+        foreach (\array_values($this->getSourceAttributes()) as $index => $attribute) {
+            $value = Arr::isAssoc($values) ? $values[$attribute->getNative()] : $values[$index];
+
+            $attribute->getOwner()->setFieldValue($attribute, $model, $value);
+        }
+    }
+
+    /**
+     * Reset values from constraint attributes.
+     *
+     * @param LaramoreModel $model
+     * @return void
+     */
+    public function resetModelValues(LaramoreModel $model)
+    {
+        foreach (\array_values($this->getSourceAttributes()) as $attribute) {
+            $attribute->getOwner()->resetFieldValue($attribute, $model);
+        }
+    }
+
+    /**
+     * Return value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @return array
+     */
+    public function getModelValue(LaramoreModel $model)
+    {
+        $attribute = $this->getMainAttribute();
+
+        return $attribute->getOwner()->getFieldValue($attribute, $model);
+    }
+
+    /**
+     * Set value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return void
+     */
+    public function setModelValue(LaramoreModel $model, $value)
+    {
+        $attribute = $this->getMainAttribute();
+
+        $attribute->getOwner()->setFieldValue($attribute, $model, $value);
+    }
+
+    /**
+     * Reset value from constraint main attribute.
+     *
+     * @param LaramoreModel $model
+     * @return void
+     */
+    public function resetModelValue(LaramoreModel $model)
+    {
+        $attribute = $this->getMainAttribute();
+
+        $attribute->getOwner()->resetFieldValue($attribute, $model);
     }
 }
