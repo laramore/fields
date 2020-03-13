@@ -82,7 +82,7 @@ class Foreign extends BaseConstraint implements SourceConstraint
 
         return $attributes[(\count($attributes) / 2)];
     }
-    
+
     /**
      * Return values from constraint attributes.
      *

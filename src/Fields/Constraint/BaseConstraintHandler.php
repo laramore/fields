@@ -96,7 +96,9 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
             throw new \Exception("The constraint type `$type` does not exist");
         }
 
-        \array_push($constraints[$type], $constraint);
+        if (!\in_array($constraint, $constraints[$type])) {
+            \array_push($constraints[$type], $constraint);
+        }
 
         return $this;
     }

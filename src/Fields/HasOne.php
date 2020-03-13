@@ -148,7 +148,7 @@ class HasOne extends BaseField implements RelationField
     {
         $value = $this->transform($value);
         $name = $this->getSourceAttribute()->getNative();
-        
+
         return $this->transform($value)->map(function ($value) use ($name) {
             return isset($value[$name]) ? $value[$name] : $value;
         });
@@ -245,7 +245,8 @@ class HasOne extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->getSourceModel()::getMeta()->getPrimary()->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
+        return $this->getSourceModel()::getMeta()->getPrimary()->getAttribute()
+            ->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
     /**
@@ -273,7 +274,8 @@ class HasOne extends BaseField implements RelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->getSourceModel()::getMeta()->getPrimary()->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+        return $this->getSourceModel()::getMeta()->getPrimary()->getAttribute()
+            ->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
     /**

@@ -350,9 +350,9 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     /**
      * Define a one-to-many relationship.
      *
-     * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
+     * @param  mixed $related
+     * @param  mixed $foreignKey
+     * @param  mixed $localKey
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function hasMany($related, $foreignKey=null, $localKey=null);
