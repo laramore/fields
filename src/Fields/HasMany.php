@@ -13,7 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
+    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 
 class HasMany extends HasOne
@@ -128,14 +128,18 @@ class HasMany extends HasOne
     }
 
     /**
-     * Return the query with this field as condition.
+     * Return the relation with this field.
      *
-     * @param  Proxied $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function relate(Proxied $model)
+    public function relate(LaramoreModel $model)
     {
-        return $model->hasMany($this->on, $this->to, $this->from);
+        return $model->hasMany(
+            $this->getSourceModel(),
+            $this->getSourceAttribute()->getNative(),
+            $this->getTargetAttribute()->getNative()
+        );
     }
 
     /**

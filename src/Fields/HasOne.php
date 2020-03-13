@@ -14,10 +14,10 @@ use Illuminate\Support\Collection;
 use Laramore\Facades\Operator;
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
+    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
-    RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
+    AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
 };
 use Laramore\Traits\Field\ModelRelation;
 
@@ -71,6 +71,16 @@ class HasOne extends BaseField implements RelationField
     }
 
     /**
+     * Return the main attribute where to start the relation from.
+     *
+     * @return AttributeField
+     */
+    public function getSourceAttribute(): AttributeField
+    {
+        return $this->getSourceAttributes()[0];
+    }
+
+    /**
      * Model where the relation is set to.
      *
      * @return string
@@ -92,6 +102,16 @@ class HasOne extends BaseField implements RelationField
         $this->needsToBeOwned();
 
         return $this->getReversed()->getTargetAttributes();
+    }
+
+    /**
+     * Return the main attribute where to start the relation to.
+     *
+     * @return AttributeField
+     */
+    public function getTargetAttribute(): AttributeField
+    {
+        return $this->getTargetAttributes()[0];
     }
 
     /**
@@ -126,8 +146,11 @@ class HasOne extends BaseField implements RelationField
      */
     public function dry($value)
     {
-        return $this->transform($value)->map(function ($value) {
-            return $value[$this->from];
+        $value = $this->transform($value);
+        $name = $this->getSourceAttribute()->getNative();
+        
+        return $this->transform($value)->map(function ($value) use ($name) {
+            return isset($value[$name]) ? $value[$name] : $value;
         });
     }
 
@@ -150,11 +173,13 @@ class HasOne extends BaseField implements RelationField
      */
     public function transform($value)
     {
-        if (\is_null($value) || ($value instanceof $this->on)) {
+        $modelClass = $this->getSourceModel();
+
+        if (\is_null($value) || ($value instanceof $modelClass)) {
             return $value;
         }
 
-        $model = new $this->on;
+        $model = new $modelClass;
         $model->setAttributeValue($model->getKeyName(), $value);
 
         return $model;
@@ -220,7 +245,7 @@ class HasOne extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->on::getMeta()->getPrimary()->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
+        return $this->getSourceModel()::getMeta()->getPrimary()->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
     /**
@@ -248,7 +273,7 @@ class HasOne extends BaseField implements RelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->on::getMeta()->getPrimary()->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+        return $this->getSourceModel()::getMeta()->getPrimary()->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
     /**
@@ -277,14 +302,18 @@ class HasOne extends BaseField implements RelationField
     }
 
     /**
-     * Return the query with this field as condition.
+     * Return the relation with this field.
      *
-     * @param  Proxied $model
-     * @return LaramoreBuilder
+     * @param  LaramoreModel $model
+     * @return mixed
      */
-    public function relate(Proxied $model)
+    public function relate(LaramoreModel $model)
     {
-        return $model->hasOne($this->on, $this->to, $this->from);
+        return $model->hasOne(
+            $this->getSourceModel(),
+            $this->getTargetAttribute()->getNative(),
+            $this->getSourceAttribute()->getNative()
+        );
     }
 
     /**
@@ -296,18 +325,20 @@ class HasOne extends BaseField implements RelationField
      */
     public function reverbate(LaramoreModel $model, $value): bool
     {
-        $primary = $this->on::getMeta()->getPrimary();
+        $modelClass = $this->getSourceModel();
+        $modelClass = $this->getSourceModel();
+        $primary = $modelClass::getMeta()->getPrimary()->getAttribute();
         $id = $model->getKey();
         $valueId = $value[$primary->getNative()];
 
         $primary->addBuilderOperation(
-            $this->on::where($this->to, $id),
+            $modelClass::where($this->to, $id),
             'where',
             $valueId
         )->update([$this->to => null]);
 
         $primary->addBuilderOperation(
-            (new $this->on)->newQuery(),
+            (new $modelClass)->newQuery(),
             'where',
             $valueId
         )->update([$this->to => $id]);
