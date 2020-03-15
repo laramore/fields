@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df515f6f47b636af02816d1a25690498",
+    "content-hash": "fb4938a8a4f22255deb8c596186ca064",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -507,16 +507,16 @@
         },
         {
             "name": "laramore/types",
-            "version": "v0.4.3",
+            "version": "v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "7caafe6d6288a85741c5eac2494c7d2d191a01b3"
+                "reference": "dd7f84b19e8bc590f4850508283919bd4dd3defb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/7caafe6d6288a85741c5eac2494c7d2d191a01b3",
-                "reference": "7caafe6d6288a85741c5eac2494c7d2d191a01b3",
+                "url": "https://api.github.com/repos/laramore/types/zipball/dd7f84b19e8bc590f4850508283919bd4dd3defb",
+                "reference": "dd7f84b19e8bc590f4850508283919bd4dd3defb",
                 "shasum": ""
             },
             "require": {
@@ -574,7 +574,7 @@
                 "model",
                 "types"
             ],
-            "time": "2020-03-06T22:53:02+00:00"
+            "time": "2020-03-15T15:48:46+00:00"
         },
         {
             "name": "nesbot/carbon",
