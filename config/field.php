@@ -59,6 +59,11 @@ return [
                 'resize' => [],
             ],
         ],
+        'datetime' => [
+            'type' => 'datetime',
+            'format' => 'Y-m-d H:i:s',
+            'proxies' => [],
+        ],
         'decimal' => [
             'type' => 'decimal',
             'types' =>  [
@@ -229,7 +234,13 @@ return [
         ],
         'unique_id' => [
             'type' => 'integer',
-            'unsigned_type' => 'unsigned_integer',
+            'types' =>  [
+                'big' => 'big_integer',
+                'small' => 'small_integer',
+                'unsigned' => 'unsigned_integer',
+                'big_unsigned' => 'big_unsigned_integer',
+                'small_unsigned' => 'small_unsigned_integer',
+            ],
             'proxies' => [],
         ],
         'text' => [
@@ -238,6 +249,7 @@ return [
         ],
         'timestamp' => [
             'type' => 'timestamp',
+            'format' => 'timestamp',
             'proxies' => [],
         ],
 
