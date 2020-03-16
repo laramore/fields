@@ -38,6 +38,10 @@ return [
                 'updateExistingPivot' => [],
             ],
         ],
+        'binary' => [
+            'type' => 'boolean',
+            'proxies' => [],
+        ],
         'boolean' => [
             'type' => 'boolean',
             'proxies' => [
