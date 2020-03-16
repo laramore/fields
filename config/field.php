@@ -55,6 +55,17 @@ return [
                 'resize' => [],
             ],
         ],
+        'decimal' => [
+            'type' => 'decimal',
+            'types' =>  [
+                'big' => 'big_decimal',
+                'small' => 'small_decimal',
+                'unsigned' => 'unsigned_decimal',
+                'big_unsigned' => 'big_unsigned_decimal',
+                'small_unsigned' => 'small_unsigned_decimal',
+            ],
+            'proxies' => [],
+        ],
         'email' => [
             'type' => 'email',
             'proxies' => [
@@ -132,7 +143,17 @@ return [
         ],
         'integer' => [
             'type' => 'integer',
-            'unsigned_type' => 'unsigned_integer',
+            'types' =>  [
+                'big' => 'big_integer',
+                'small' => 'small_integer',
+                'unsigned' => 'unsigned_integer',
+                'big_unsigned' => 'big_unsigned_integer',
+                'small_unsigned' => 'small_unsigned_integer',
+            ],
+            'proxies' => [],
+        ],
+        'json' => [
+            'type' => 'json',
             'proxies' => [],
         ],
         'many_to_many' => [
