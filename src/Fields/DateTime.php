@@ -17,6 +17,11 @@ class DateTime extends BaseAttribute
 {
     protected $format;
 
+    /**
+     * Return the format for serialization.
+     *
+     * @return string
+     */
     public function getFormat(): string
     {
         return $this->format ?: $this->getConfig('format');

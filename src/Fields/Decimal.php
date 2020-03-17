@@ -22,8 +22,8 @@ class Decimal extends BaseAttribute
     /**
      * Define the precision of this float field.
      *
-     * @param int $left
-     * @param int $right
+     * @param integer $left
+     * @param integer $right
      * @return self
      */
     public function precision(int $left=null, int $right=null)

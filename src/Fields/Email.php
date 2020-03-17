@@ -11,9 +11,11 @@
 namespace Laramore\Fields;
 
 use Laramore\Facades\Option;
-use Laramore\Contracts\Field\PatternField;
+use Laramore\Contracts\Field\{
+    PatternField, FixableField
+};
 
-class Email extends Char implements PatternField
+class Email extends Char implements PatternField, FixableField
 {
     /**
      * All defined allowed domains.
@@ -61,7 +63,7 @@ class Email extends Char implements PatternField
      */
     public function getMainDomain(): string
     {
-        return \reset($this->getDomains());
+        return \reset($this->getAllowedDomains());
     }
 
     /**
@@ -101,7 +103,32 @@ class Email extends Char implements PatternField
      */
     public function getPatternFlags()
     {
-        return null;
+        return $this->getConfig('patterns.flags');
+    }
+
+    /**
+     * Indicate if the value needs to be fixed.
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public function isFixable($value): bool
+    {
+        return $this->hasOption(Option::fixable()) && !\preg_match($this->getPattern(), $value);
+    }
+
+    /**
+     * Check all properties and options before locking the field.
+     *
+     * @return void
+     */
+    protected function checkOptions()
+    {
+        parent::checkOptions();
+
+        if ($this->hasOption(Option::fixable()) && (\is_null($this->allowedDomains) || \count($this->allowedDomains) === 0)) {
+            throw new \LogicException("The field `{$this->getFullName()}` cannot be fixable and have no allowed domains");
+        }
     }
 
     /**
@@ -114,11 +141,11 @@ class Email extends Char implements PatternField
     {
         $value = parent::transform($value);
 
-        if (\is_null($value)) {
-            return $value;
+        if ($this->isFixable($value)) {
+            return $this->fix($value);
         }
 
-        return $this->fix($value);
+        return $value;
     }
 
     /**
@@ -135,15 +162,15 @@ class Email extends Char implements PatternField
     /**
      * Fix the wrong value.
      *
-     * @param string $value
+     * @param mixed $value
      * @return mixed
      */
-    public function fix(string $value)
+    public function fix($value)
     {
-        if ($this->hasOption(Option::acceptUsername())) {
-            return $value.'@'.$this->getMainDomain();
+        if (\is_null($value)) {
+            return $value;
         }
 
-        return $value;
+        return $value.$this->getConfig('patterns.separator').$this->getMainDomain();
     }
 }
