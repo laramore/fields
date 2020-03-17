@@ -260,9 +260,9 @@ return [
                 'fix' => [],
             ],
             'patterns' => [
-                'identifier' => '/^\s+$/',
-                'protocol' => '/^\s+:\/{,2}$/',
-                'uri' => '/^\s+:\/{,2}\s+$/',
+                'identifier' => '/^\S+$/',
+                'protocol' => '/^\S+:\/{0,2}$/',
+                'uri' => '/^\S+:\/{0,2}\S+$/',
                 'separator' => '',
                 'flags' => null,
             ]

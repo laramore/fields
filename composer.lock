@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb4938a8a4f22255deb8c596186ca064",
+    "content-hash": "1af252578e3cc36d7a963ee377dcb50b",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -440,16 +440,16 @@
         },
         {
             "name": "laramore/proxies",
-            "version": "v0.3.0",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/proxies.git",
-                "reference": "24a170237cefd7f66296c98732654918f9c29acb"
+                "reference": "5fd9ee171462b8d52abf76f19b3bbd50113aff5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/proxies/zipball/24a170237cefd7f66296c98732654918f9c29acb",
-                "reference": "24a170237cefd7f66296c98732654918f9c29acb",
+                "url": "https://api.github.com/repos/laramore/proxies/zipball/5fd9ee171462b8d52abf76f19b3bbd50113aff5b",
+                "reference": "5fd9ee171462b8d52abf76f19b3bbd50113aff5b",
                 "shasum": ""
             },
             "require": {
@@ -503,20 +503,20 @@
                 "table",
                 "validations"
             ],
-            "time": "2020-03-04T00:18:59+00:00"
+            "time": "2020-03-17T18:38:17+00:00"
         },
         {
             "name": "laramore/types",
-            "version": "v0.4.5",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "dd7f84b19e8bc590f4850508283919bd4dd3defb"
+                "reference": "ca3942903b69777560a83c581f273f570990cdb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/dd7f84b19e8bc590f4850508283919bd4dd3defb",
-                "reference": "dd7f84b19e8bc590f4850508283919bd4dd3defb",
+                "url": "https://api.github.com/repos/laramore/types/zipball/ca3942903b69777560a83c581f273f570990cdb2",
+                "reference": "ca3942903b69777560a83c581f273f570990cdb2",
                 "shasum": ""
             },
             "require": {
@@ -574,7 +574,7 @@
                 "model",
                 "types"
             ],
-            "time": "2020-03-15T15:48:46+00:00"
+            "time": "2020-03-17T16:01:12+00:00"
         },
         {
             "name": "nesbot/carbon",

@@ -63,7 +63,9 @@ class Uri extends Char implements PatternField, FixableField
      */
     public function getMainProtocol(): string
     {
-        return \reset($this->getAllowedProtocols());
+        $allowedProtocols = $this->getAllowedProtocols();
+
+        return \reset($allowedProtocols);
     }
 
     /**
@@ -126,8 +128,9 @@ class Uri extends Char implements PatternField, FixableField
     {
         parent::checkOptions();
 
-        if ($this->hasOption(Option::fixable()) && (\is_null($this->allowedDomains) || \count($this->allowedDomains) === 0)) {
-            throw new \LogicException("The field `{$this->getFullName()}` cannot be fixable and have no allowed domains");
+        if ($this->hasOption(Option::fixable())
+            && (\is_null($this->getProperty('allowedProtocols')) || \count($this->getProperty('allowedProtocols')) === 0)) {
+            throw new \LogicException("The field `{$this->getFullName()}` cannot be fixable and have no allowed protocols");
         }
     }
 
@@ -162,15 +165,15 @@ class Uri extends Char implements PatternField, FixableField
     /**
      * Fix the wrong value.
      *
-     * @param string $value
+     * @param mixed $value
      * @return mixed
      */
-    public function fix(string $value)
+    public function fix($value)
     {
         if (\is_null($value)) {
             return $value;
         }
 
-        return $value.$this->getConfig('patterns.separator').$this->getMainDomain();
+        return $this->getMainProtocol().$this->getConfig('patterns.separator').$value;
     }
 }

@@ -63,7 +63,9 @@ class Email extends Char implements PatternField, FixableField
      */
     public function getMainDomain(): string
     {
-        return \reset($this->getAllowedDomains());
+        $allowedDomains = $this->getAllowedDomains();
+
+        return \reset($allowedDomains);
     }
 
     /**
@@ -126,7 +128,9 @@ class Email extends Char implements PatternField, FixableField
     {
         parent::checkOptions();
 
-        if ($this->hasOption(Option::fixable()) && (\is_null($this->allowedDomains) || \count($this->allowedDomains) === 0)) {
+        if ($this->hasOption(Option::fixable())
+            && (\is_null($this->getProperty('allowedDomains')) || \count($this->getProperty('allowedDomains')) === 0)
+        ) {
             throw new \LogicException("The field `{$this->getFullName()}` cannot be fixable and have no allowed domains");
         }
     }
