@@ -56,18 +56,21 @@ return [
             'requirements' => ['instance'],
             'templates' => [
                 'name' => 'scope^{methodname}^{identifier}',
+                'multi_name' => 'scope^{methodname}',
             ],
         ],
         'doesntHave' => [
             'requirements' => ['instance'],
             'templates' => [
                 'name' => 'scope^{methodname}^{identifier}',
+                'multi_name' => 'scope^{methodname}',
             ],
         ],
         'has' => [
             'requirements' => ['instance'],
             'templates' => [
                 'name' => 'scope^{methodname}^{identifier}',
+                'multi_name' => 'scope^{methodname}',
             ],
         ],
     ],
