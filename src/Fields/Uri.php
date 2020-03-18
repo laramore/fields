@@ -130,7 +130,7 @@ class Uri extends Char implements PatternField, FixableField
 
         if ($this->hasOption(Option::fixable())
             && (\is_null($this->getProperty('allowedProtocols')) || \count($this->getProperty('allowedProtocols')) === 0)) {
-            throw new \LogicException("The field `{$this->getFullName()}` cannot be fixable and have no allowed protocols");
+            throw new \LogicException("The field `{$this->getQualifiedName()}` cannot be fixable and have no allowed protocols");
         }
     }
 

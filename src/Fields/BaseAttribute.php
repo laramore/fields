@@ -173,7 +173,7 @@ abstract class BaseAttribute extends BaseField implements AttributeField
      */
     public function addBuilderOperation(LaramoreBuilder $builder, string $operation, ...$params): LaramoreBuilder
     {
-        \call_user_func([$builder->getQuery(), $operation], $this->getFullName(), ...$params);
+        \call_user_func([$builder->getQuery(), $operation], $this->getQualifiedName(), ...$params);
 
         return $builder;
     }

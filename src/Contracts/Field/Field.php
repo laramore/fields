@@ -40,7 +40,7 @@ interface Field extends Locked, Owned
      *
      * @return string
      */
-    public function getFullName(): string;
+    public function getQualifiedName(): string;
 
     /**
      * Indicate if a propery exists.

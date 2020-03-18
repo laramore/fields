@@ -234,7 +234,7 @@ abstract class BaseField implements Field, Configured
      *
      * @return string
      */
-    public function getFullName(): string
+    public function getQualifiedName(): string
     {
         $this->needsToBeOwned();
 
@@ -403,7 +403,7 @@ abstract class BaseField implements Field, Configured
      */
     protected function checkOptions()
     {
-        $name = $this->getFullName();
+        $name = $this->getQualifiedName();
 
         if ($this->hasProperty('default')) {
             if (\is_null($this->getDefault())) {
