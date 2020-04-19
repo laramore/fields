@@ -160,7 +160,9 @@ abstract class BaseAttribute extends BaseField implements AttributeField
      */
     public function reset(LaramoreModel $model)
     {
-        return $model->setAttributeValue($this->getNative(), $this->getDefault());
+        $model->setAttributeValue($this->getNative(), $value = $this->getDefault());
+
+        return $value;
     }
 
     /**
