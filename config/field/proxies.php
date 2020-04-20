@@ -26,25 +26,25 @@ return [
         'serialize' => [
             'static' => true,
         ],
-        'getDefault' => [
+        'get_default' => [
             'static' => true,
         ],
         'get' => [
             'templates' => [
-                'name' => '${methodname}^{identifier}Attribute',
-                'multi_name' => '${methodname}Attribute',
+                'name' => '-{methodname}^{identifier}Attribute',
+                'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'set' => [
             'templates' => [
-                'name' => '${methodname}^{identifier}Attribute',
-                'multi_name' => '${methodname}Attribute',
+                'name' => '-{methodname}^{identifier}Attribute',
+                'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'reset' => [
             'templates' => [
-                'name' => '${methodname}^{identifier}Attribute',
-                'multi_name' => '${methodname}Attribute',
+                'name' => '-{methodname}^{identifier}Attribute',
+                'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'relate' => [
@@ -59,7 +59,7 @@ return [
                 'multi_name' => 'scope^{methodname}',
             ],
         ],
-        'doesntHave' => [
+        'doesnt_have' => [
             'requirements' => ['instance'],
             'templates' => [
                 'name' => 'scope^{methodname}^{identifier}',

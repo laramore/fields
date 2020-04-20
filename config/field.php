@@ -15,6 +15,7 @@ return [
     'templates' => [
         'name' => '_{name}',
         'attname' => '_{attname}',
+        'method_owner' => '-{methodname}FieldValue',
     ],
 
     /*
@@ -34,8 +35,8 @@ return [
                 'detach' => [],
                 'sync' => [],
                 'toggle' => [],
-                'syncWithoutDetaching' => [],
-                'updateExistingPivot' => [],
+                'sync_without_detaching' => [],
+                'update_existing_pivot' => [],
             ],
         ],
         'binary' => [
@@ -48,7 +49,7 @@ return [
                 'is' => [
                     'needs_value' => true,
                 ],
-                'isNot' => [
+                'is_not' => [
                     'needs_value' => true,
                 ],
             ],
@@ -59,7 +60,7 @@ return [
                 'resize' => [],
             ],
         ],
-        'datetime' => [
+        'date_time' => [
             'type' => 'datetime',
             'format' => 'Y-m-d H:i:s',
             'proxies' => [],
@@ -95,19 +96,19 @@ return [
                 'proxies' => [
                     'is' => [
                         'templates' => [
-                            'name' => '${methodname}^{elementname}',
+                            'name' => '-{methodname}^{elementname}',
                         ],
                         'needs_value' => true,
                     ]
                 ],
             ],
             'proxies' => [
-                'getElements' => [
+                'get_elements' => [
                     'templates' => [
                         'name' => 'get^{identifier}Elements',
                     ],
                 ],
-                'getElementsValue' => [
+                'get_elements_value' => [
                     'templates' => [
                         'name' => 'get*{identifier}',
                     ],
@@ -115,7 +116,7 @@ return [
                 'is' => [
                     'needs_value' => true,
                 ],
-                'isNot' => [
+                'is_not' => [
                     'needs_value' => true,
                 ],
             ],
@@ -127,8 +128,8 @@ return [
                 'detach' => [],
                 'sync' => [],
                 'toggle' => [],
-                'syncWithoutDetaching' => [],
-                'updateExistingPivot' => [],
+                'sync_without_detaching' => [],
+                'update_existing_pivot' => [],
             ],
         ],
         'has_many_through' => [
@@ -138,8 +139,8 @@ return [
                 'detach' => [],
                 'sync' => [],
                 'toggle' => [],
-                'syncWithoutDetaching' => [],
-                'updateExistingPivot' => [],
+                'sync_without_detaching' => [],
+                'update_existing_pivot' => [],
             ],
         ],
         'has_one' => [
@@ -215,7 +216,7 @@ return [
             'proxies' => [
                 'resize' => [],
                 'hash' => [],
-                'isCorrect' => [
+                'is_correct' => [
                     'templates' => [
                         'name' => 'is^{identifier}Correct',
                     ],

@@ -11,6 +11,7 @@
 namespace Laramore\Proxies;
 
 use Illuminate\Support\Str;
+use Illuminate\Container\Container;
 use Laramore\Contracts\Field\Field;
 use Closure;
 
@@ -116,6 +117,24 @@ class FieldProxy extends Proxy
     }
 
     /**
+     * Parse the method owner name with proxy data.
+     *
+     * @param string $methodOwnerNameTemplate
+     * @return string
+     */
+    protected function parseMethodOwnerName(string $methodOwnerNameTemplate): string
+    {
+        return Str::replaceInTemplate(
+            $methodOwnerNameTemplate,
+            [
+                'name' => $this->getName(),
+                'identifier' => $this->getIdentifier(),
+                'methodname' => $this->getMethodName(),
+            ],
+        );
+    }
+
+    /**
      * Resolve one time the callback and save it so it can be callable.
      *
      * @param mixed ...$args
@@ -125,7 +144,8 @@ class FieldProxy extends Proxy
     {
         $field = $this->getField();
         $owner = $field->getOwner();
-        $methodOwnerName = "{$this->getMethodName()}FieldValue";
+        $config = Container::getInstance()->config;
+        $methodOwnerName = $this->parseMethodOwnerName($config->get('field.templates.method_owner'));
 
         $this->callback = function (...$args) use ($owner, $field, $methodOwnerName) {
             return \call_user_func([$owner, $methodOwnerName], $field, ...$args);
