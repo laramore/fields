@@ -312,6 +312,14 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function setRawAttributes(array $attributes, $sync=false);
 
     /**
+     * Reload the current model instance with fresh attributes from the database.
+     *
+     * @param  array $attributes
+     * @return $this
+     */
+    public function refresh(array $attributes=['*']);
+
+    /**
      * Define an inverse one-to-one or many relationship.
      *
      * @param  mixed $related

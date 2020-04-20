@@ -11,7 +11,9 @@
 namespace Laramore\Fields;
 
 use Carbon\Carbon;
-use Laramore\Facades\Option;
+use Laramore\Facades\{
+    Option, Type
+};
 
 class DateTime extends BaseAttribute
 {
@@ -25,6 +27,16 @@ class DateTime extends BaseAttribute
     public function getFormat(): string
     {
         return $this->format ?: $this->getConfig('format');
+    }
+
+    /**
+     * Indicate if this field is timestamped.
+     *
+     * @return boolean
+     */
+    public function isTimestamped(): bool
+    {
+        return $this->getType() === Type::timestamp();
     }
 
     /**
@@ -82,6 +94,16 @@ class DateTime extends BaseAttribute
      */
     public function serialize($value)
     {
+        if (\is_null($value)) {
+            return $value;
+        }
+
+        $format = $this->getFormat();
+
+        if ($format === Type::timestamp()->native) {
+            return $value->getTimestamp();
+        }
+
         return $value->format($this->getFormat());
     }
 }
