@@ -376,7 +376,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
      */
     public function reverbateFieldValue(RelationField $field, LaramoreModel $model, $value): bool
     {
-        return $this->getOwner()->reverbateFieldValue($attribute, $model, $value);
+        return $this->getOwner()->reverbateFieldValue($field, $model, $value);
     }
 
     /**

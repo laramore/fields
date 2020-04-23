@@ -26,13 +26,14 @@ interface RelationField extends ExtraField
     public function relate(LaramoreModel $model);
 
     /**
-     * Reverbate the relation into database.
+     * Reverbate the relation into database or other fields.
+     * It should be called by the set method.
      *
      * @param  LaramoreModel $model
      * @param  mixed         $value
-     * @return boolean
+     * @return mixed
      */
-    public function reverbate(LaramoreModel $model, $value): bool;
+    public function reverbate(LaramoreModel $model, $value);
 
     /**
      * Indicate if the relation is head on or not.

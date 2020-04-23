@@ -143,13 +143,14 @@ class HasMany extends HasOne
     }
 
     /**
-     * Reverbate the relation into database.
+     * Reverbate the relation into database or other fields.
+     * It should be called by the set method.
      *
      * @param  LaramoreModel $model
      * @param  mixed         $value
-     * @return boolean
+     * @return mixed
      */
-    public function reverbate(LaramoreModel $model, $value): bool
+    public function reverbate(LaramoreModel $model, $value)
     {
         $primary = $this->on::getMeta()->getPrimary();
         $attname = $primary->getNative();
@@ -170,6 +171,6 @@ class HasMany extends HasOne
             $valueIds
         )->update([$this->to => $id]);
 
-        return true;
+        return $value;
     }
 }

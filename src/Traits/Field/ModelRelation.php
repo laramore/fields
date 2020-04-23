@@ -1,6 +1,6 @@
 <?php
 /**
- * Add management for field constraints.
+ * Add management for relation fields.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
