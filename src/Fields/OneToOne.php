@@ -11,12 +11,12 @@
 namespace Laramore\Fields;
 
 use Laramore\Contracts\Field\Constraint\UniqueField;
-use Laramore\Traits\Field\OneToRelation;
+use Laramore\Traits\Field\ToOneRelation;
 use Laramore\Contracts\Field\RelationField;
 
 class OneToOne extends BaseComposed implements RelationField
 {
-    use OneToRelation;
+    use ToOneRelation;
 
     /**
      * This composed field needs to have a unique id field.

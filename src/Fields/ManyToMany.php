@@ -11,20 +11,65 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
+use Laramore\Contracts\Eloquent\LaramoreModel;
+use Laramore\Contracts\Field\{
+    Field, RelationField
+};
 use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
-use Laramore\Fields\BaseLink;
 
-class ManyToMany extends BaseComposed
+class ManyToMany extends BaseComposed implements RelationField
 {
     use ManyToManyRelation;
 
     /**
-     * Defined reversed name.
+     * Model the relation is on.
+     *
+     * @var LaramoreModel
+     */
+    protected $targetModel;
+
+    /**
+     * Reversed name of this relation.
      *
      * @var string
      */
     protected $reversedName;
+
+    /**
+     * Name for this relation.
+     *
+     * @var string
+     */
+    protected $relationName;
+
+    /**
+     * Pivot meta name.
+     *
+     * @var string
+     */
+    protected $pivotMeta;
+
+    /**
+     * Pivot to name.
+     *
+     * @var string
+     */
+    protected $pivotTo;
+
+    /**
+     * Pivot from name.
+     *
+     * @var string
+     */
+    protected $pivotFrom;
+
+    /**
+     * Pivot name.
+     *
+     * @var string
+     */
+    protected $pivotName;
 
     /**
      * Indicate if this use a specific pivot.
@@ -101,9 +146,9 @@ class ManyToMany extends BaseComposed
     /**
      * Return the reversed field.
      *
-     * @return BaseLink
+     * @return RelationField
      */
-    public function getReversed(): BaseLink
+    public function getReversed(): RelationField
     {
         return $this->getField('reversed');
     }
@@ -119,11 +164,10 @@ class ManyToMany extends BaseComposed
     {
         $this->needsToBeUnlocked();
 
-        if ($model === 'self') {
-            $this->defineProperty('on', $model);
-        } else {
-            $this->defineProperty('on', $this->getField('reversed')->off = $model);
-            $this->to($model::getMeta()->getPrimary()->all()[0]->attname);
+        $this->defineProperty('targetModel', $model);
+
+        if ($model !== 'self') {
+            $this->getField('reversed')->setMeta($model::getMeta());
         }
 
         if ($reversedName) {
@@ -146,18 +190,13 @@ class ManyToMany extends BaseComposed
     }
 
     /**
-     * Define the attribute name.
+     * Indicate if it is a relation on itself.
      *
-     * @param string $name
-     * @return self
+     * @return boolean
      */
-    public function to(string $name)
+    public function isOnSelf()
     {
-        $this->needsToBeUnlocked();
-
-        $this->defineProperty('to', $this->getField('reversed')->from = $name);
-
-        return $this;
+        return \in_array($this->targetModel, [$this->getMeta()->getModelClass(), 'self']);
     }
 
     /**
@@ -169,7 +208,6 @@ class ManyToMany extends BaseComposed
     public function reversedName(string $reversedName)
     {
         $this->needsToBeUnlocked();
-        $this->needsToBeUnowned();
 
         $this->fieldsName['reversed'] = $reversedName;
 
@@ -200,10 +238,9 @@ class ManyToMany extends BaseComposed
     protected function loadPivotMeta()
     {
         $offMeta = $this->getMeta();
-        $onMeta = $this->on::getMeta();
         $offName = Str::snake($offMeta->getModelClassName());
         $onName = Str::snake(Str::singular($this->name));
-        $namespaceName = 'App\\Pivots';
+        $namespaceName = $this->getConfig('pivot_namespace');
         $pivotClassName = ucfirst($offName).ucfirst($onName);
         $pivotClass = "$namespaceName\\$pivotClassName";
 
@@ -258,44 +295,15 @@ class ManyToMany extends BaseComposed
      */
     protected function owned()
     {
-        if ($this->on === 'self') {
-            $this->on($this->getMeta()->getModelClass());
+        if ($this->getTargetModel() === 'self') {
+            $this->on($this->getSourceModel());
         }
 
         if (\is_null($this->pivotMeta)) {
             $this->loadPivotMeta();
         }
 
-        $this->defineProperty('off', $this->getField('reversed')->on = $this->getMeta()->getModelClass());
-
         parent::owned();
-    }
-
-    /**
-     * Check and set variables during locking.
-     *
-     * @return void
-     */
-    protected function locking()
-    {
-        if (!$this->on) {
-            throw new \Exception('Related model settings needed. Set it by calling `on` method');
-        }
-
-        $this->defineProperty('reversedName', $this->getField('reversed')->name);
-        $this->defineProperty('from', $this->getField('reversed')->to = $this->getMeta()->getPrimary()->all()[0]->attname);
-
-        parent::locking();
-    }
-
-    /**
-     * Indicate if it is a relation on itself.
-     *
-     * @return boolean
-     */
-    public function isOnSelf()
-    {
-        return \in_array($this->on, [$this->getMeta()->getModelClass(), 'self']);
     }
 
     /**
@@ -316,5 +324,107 @@ class ManyToMany extends BaseComposed
         }
 
         return $this;
+    }
+
+    /**
+     * Indicate if the relation is head on or not.
+     * Usefull to know which to use between source and target.
+     *
+     * @return boolean
+     */
+    public function isRelationHeadOn(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Model where the relation is set from.
+     *
+     * @return string
+     */
+    public function getSourceModel(): string
+    {
+        $this->needsToBeOwned();
+
+        return $this->getMeta()->getModelClass();
+    }
+
+    /**
+     * Return all attributes where to start the relation from.
+     *
+     * @return array<AttributeField>
+     */
+    public function getSourceAttributes(): array
+    {
+        $this->needsToBeOwned();
+
+        return $this->getMeta()->getConstraintHandler()->getPrimary()->getAttributes();
+    }
+
+    /**
+     * Model where the relation is set to.
+     *
+     * @return string
+     */
+    public function getTargetModel(): string
+    {
+        $this->needsToBeOwned();
+
+        return $this->targetModel;
+    }
+
+    /**
+     * Return all attributes where to start the relation to.
+     *
+     * @return array<AttributeField>
+     */
+    public function getTargetAttributes(): array
+    {
+        $this->needsToBeOwned();
+
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttributes();
+    }
+
+    /**
+     * Return the source of the relation.
+     *
+     * @return SourceConstraint
+     */
+    public function getSource(): SourceConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->getSourceModel()::getMeta()
+            ->getConstraintHandler()->getSource($this->getSourceAttributes());
+    }
+
+    /**
+     * Return the target of the relation.
+     *
+     * @return TargetConstraint
+     */
+    public function getTarget(): TargetConstraint
+    {
+        $this->needsToBeOwned();
+
+        return $this->getTargetModel()::getMeta()
+            ->getConstraintHandler()->getTarget($this->getTargetAttributes());
+    }
+
+    /**
+     * Return the set value for a specific field.
+     *
+     * @param Field         $field
+     * @param LaramoreModel $model
+     * @param mixed         $value
+     * @return mixed
+     */
+    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    {
+        if ($this->getFieldValue($field, $model) !== $value) {
+            $this->reset($model);
+        }
+
+        return parent::setFieldValue($field, $model, $value);
     }
 }

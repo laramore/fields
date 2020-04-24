@@ -21,7 +21,7 @@ use Laramore\Contracts\Field\{
     Field, AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
 };
 
-trait OneToRelation
+trait ToOneRelation
 {
     use ModelRelation, Constraints;
 
@@ -448,7 +448,7 @@ trait OneToRelation
      */
     public function setFieldValue(Field $field, LaramoreModel $model, $value)
     {
-        if ($this->getFieldValue($field, $model) !== $value) {
+        if ($model->hasAttributeValue($field->getNative()) && $this->getFieldValue($field, $model) !== $value) {
             $this->reset($model);
         }
 
