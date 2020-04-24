@@ -8,11 +8,12 @@
  * @license MIT
  */
 
-namespace Laramore\Fields;
+namespace Laramore\Fields\Reversed;
 
 use Illuminate\Support\Collection;
 use Laramore\Facades\Operator;
 use Laramore\Elements\OperatorElement;
+use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };

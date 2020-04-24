@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-namespace Laramore\Fields;
+namespace Laramore\Fields\Reversed;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;

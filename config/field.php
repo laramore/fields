@@ -172,7 +172,7 @@ return [
             'type' => 'composed',
             'pivot_namespace' => 'App\\Pivots',
             'fields' => [
-                'reversed' => Laramore\Fields\BelongsToMany::class,
+                'reversed' => Laramore\Fields\Reversed\BelongsToMany::class,
             ],
             'templates' => [
                 'reversed' => '+{modelname}',
@@ -185,11 +185,11 @@ return [
                 'attach' => [],
             ],
         ],
-        'one_to_many' => [
+        'many_to_one' => [
             'type' => 'composed',
             'fields' => [
                 'id' => Laramore\Fields\Integer::class,
-                'reversed' => Laramore\Fields\HasMany::class,
+                'reversed' => Laramore\Fields\Reversed\HasMany::class,
             ],
             'templates' => [
                 'id' => '${name}_${identifier}',
@@ -202,7 +202,7 @@ return [
             'type' => 'composed',
             'fields' => [
                 'id' => Laramore\Fields\UniqueId::class,
-                'reversed' => Laramore\Fields\HasOne::class,
+                'reversed' => Laramore\Fields\Reversed\HasOne::class,
             ],
             'templates' => [
                 'id' => '${name}_${identifier}',

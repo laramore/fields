@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a OneToMany field.
+ * Define a foreign field.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -10,10 +10,10 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Traits\Field\OneToRelation;
+use Laramore\Traits\Field\ToOneRelation;
 use Laramore\Contracts\Field\RelationField;
 
-class OneToMany extends BaseComposed implements RelationField
+class ManyToOne extends BaseComposed implements RelationField
 {
-    use OneToRelation;
+    use ToOneRelation;
 }
