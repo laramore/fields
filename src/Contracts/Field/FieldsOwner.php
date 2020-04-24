@@ -107,14 +107,14 @@ interface FieldsOwner
     public function retrieveFieldValue(ExtraField $field, LaramoreModel $model);
 
     /**
-     * Reverbate a saved relation value for a specific field.
+     * Reverbate the relation value for a specific field.
      *
      * @param RelationField $field
      * @param LaramoreModel $model
      * @param mixed         $value
-     * @return boolean
+     * @return mixed
      */
-    public function reverbateFieldValue(RelationField $field, LaramoreModel $model, $value): bool;
+    public function reverbateFieldValue(RelationField $field, LaramoreModel $model, $value);
 
     /**
      * Return generally a Builder after adding to it a condition.
