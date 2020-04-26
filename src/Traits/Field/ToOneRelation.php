@@ -15,7 +15,7 @@ use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
 use Laramore\Fields\Constraint\FieldConstraintHandler;
 use Laramore\Contracts\Eloquent\{
-    LaramoreModel, LaramoreBuilder,
+    LaramoreModel, LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
     Field, AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint

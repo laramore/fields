@@ -119,13 +119,13 @@ class FieldProxy extends Proxy
     /**
      * Parse the method owner name with proxy data.
      *
-     * @param string $methodOwnerNameTemplate
+     * @param string $nameTemplate
      * @return string
      */
-    protected function parseMethodOwnerName(string $methodOwnerNameTemplate): string
+    protected function parseMethodOwnerName(string $nameTemplate): string
     {
         return Str::replaceInTemplate(
-            $methodOwnerNameTemplate,
+            $nameTemplate,
             [
                 'name' => $this->getName(),
                 'identifier' => $this->getIdentifier(),
