@@ -1,6 +1,6 @@
 <?php
 /**
- * Add multiple methods for many to many relations.
+ * Add multiple methods for many/one to one relations.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *

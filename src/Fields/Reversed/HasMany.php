@@ -12,21 +12,17 @@ namespace Laramore\Fields\Reversed;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
+use Laramore\Contracts\Field\RelationField;
+use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
+use Laramore\Traits\Field\HasOneRelation;
 
-class HasMany extends HasOne
+class HasMany extends BaseField implements RelationField
 {
-    /**
-     * Transform the value to be used as a correct model.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transformToModel($value)
-    {
-        return parent::transform($value);
+    use HasOneRelation {
+        HasOneRelation::transform as protected transformToModel;
     }
 
     /**
