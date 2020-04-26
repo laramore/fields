@@ -291,20 +291,6 @@ class HasOne extends BaseField implements RelationField
     }
 
     /**
-     * Use the relation to set the other field values.
-     *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
-     * @return mixed
-     */
-    public function consume(LaramoreModel $model, $value)
-    {
-        $value->setAttribute($this->getReversed()->name, $model);
-
-        return $value;
-    }
-
-    /**
      * Return the relation with this field.
      *
      * @param  LaramoreModel $model
@@ -321,13 +307,12 @@ class HasOne extends BaseField implements RelationField
 
     /**
      * Reverbate the relation into database or other fields.
-     * It should be called by the set method.
      *
      * @param  LaramoreModel $model
      * @param  mixed         $value
-     * @return mixed
+     * @return boolean
      */
-    public function reverbate(LaramoreModel $model, $value)
+    public function reverbate(LaramoreModel $model, $value): bool
     {
         if (!\is_null($value)) {
             $this->getField('id')->set($model, $this->getTarget()->getModelValue($value));

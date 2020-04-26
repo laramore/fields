@@ -103,31 +103,6 @@ class HasMany extends HasOne
     }
 
     /**
-     * Use the relation to set the other field values.
-     *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
-     * @return mixed
-     */
-    public function consume(LaramoreModel $model, $value)
-    {
-        $relationName = $this->getReversed()->name;
-        $collections = collect();
-
-        foreach ($value as $element) {
-            if ($element instanceof $this->on) {
-                $collections->add($element);
-            } else {
-                $collections->add($element = $this->transformToModel($element));
-            }
-
-            $element->setAttribute($relationName, $model);
-        }
-
-        return $collections;
-    }
-
-    /**
      * Return the relation with this field.
      *
      * @param  LaramoreModel $model
