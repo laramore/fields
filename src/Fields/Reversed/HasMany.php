@@ -17,6 +17,7 @@ use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
+use Laramore\Facades\Operator;
 use Laramore\Traits\Field\HasOneRelation;
 
 class HasMany extends BaseField implements RelationField
@@ -56,7 +57,7 @@ class HasMany extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        $attname = $this->on::getMeta()->getPrimary()->attname;
+        $attname = $this->getTargetModel()::getMeta()->getPrimary()->attname;
 
         return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
@@ -107,9 +108,9 @@ class HasMany extends BaseField implements RelationField
     public function relate(LaramoreModel $model)
     {
         return $model->hasMany(
-            $this->getSourceModel(),
-            $this->getSourceAttribute()->getNative(),
-            $this->getTargetAttribute()->getNative()
+            $this->getTargetModel(),
+            $this->getTargetAttribute()->getNative(),
+            $this->getSourceAttribute()->getNative()
         );
     }
 
@@ -123,24 +124,29 @@ class HasMany extends BaseField implements RelationField
      */
     public function reverbate(LaramoreModel $model, $value)
     {
-        $primary = $this->on::getMeta()->getPrimary();
-        $attname = $primary->getNative();
-        $id = $model->getKey();
-        $valueIds = $value->map(function ($element) use ($attname) {
-            return $element[$attname];
-        });
+        $modelClass = $this->getTargetModel();
+        $foreignAttname = $this->getTargetAttribute()->getNative();
 
-        $primary->addBuilderOperation(
-            $this->on::where($this->to, $id),
+        $primaryField = $modelClass::getMeta()->getPrimary()->getAttribute();
+        $primaryAttname = $primaryField->getNative();
+
+        $foreignId = $model->getKey();
+        $valueIds = $value->map(function ($subModel) use ($primaryAttname) {
+            return $subModel->getAttribute($primaryAttname);
+        });
+        $default = \is_null($this->getDefault()) ? null : $this->default->getAttribute($foreignAttname);
+
+        $primaryField->addBuilderOperation(
+            $modelClass::where($foreignAttname, Operator::equal(), $foreignId),
             'whereNotIn',
             $valueIds
-        )->update([$this->to => null]);
+        )->update([$foreignAttname => $default]);
 
-        $primary->addBuilderOperation(
-            (new $this->on)->newQuery(),
+        $primaryField->addBuilderOperation(
+            (new $modelClass)->newQuery(),
             'whereIn',
             $valueIds
-        )->update([$this->to => $id]);
+        )->update([$foreignAttname => $foreignId]);
 
         return $value;
     }

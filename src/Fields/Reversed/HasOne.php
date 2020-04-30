@@ -35,7 +35,7 @@ class HasOne extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->getSourceModel()::getMeta()->getPrimary()->getAttribute()
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute()
             ->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
@@ -64,7 +64,7 @@ class HasOne extends BaseField implements RelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->getSourceModel()::getMeta()->getPrimary()->getAttribute()
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute()
             ->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
@@ -77,7 +77,7 @@ class HasOne extends BaseField implements RelationField
     public function relate(LaramoreModel $model)
     {
         return $model->hasOne(
-            $this->getSourceModel(),
+            $this->getTargetModel(),
             $this->getTargetAttribute()->getNative(),
             $this->getSourceAttribute()->getNative()
         );
@@ -93,10 +93,12 @@ class HasOne extends BaseField implements RelationField
     public function reverbate(LaramoreModel $model, $value)
     {
         if (!\is_null($value)) {
-            $this->getField('id')->set($model, $this->getTarget()->getModelValue($value));
+            $this->getField('id')->set(
+                $model,
+                \is_null($value) ? null : $this->getTargetAttribute()->get($value)
+            );
         }
 
-        $modelClass = $this->getSourceModel();
         $modelClass = $this->getSourceModel();
         $primary = $modelClass::getMeta()->getPrimary()->getAttribute();
         $id = $model->getKey();
