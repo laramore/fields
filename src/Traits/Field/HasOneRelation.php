@@ -15,7 +15,7 @@ use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
-    AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
+    AttributeField, RelationField, Constraint\Constraint
 };
 
 trait HasOneRelation
@@ -52,19 +52,7 @@ trait HasOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getReversed()->getSourceModel();
-    }
-
-    /**
-     * Return all attributes where to start the relation from.
-     *
-     * @return array<AttributeField>
-     */
-    public function getSourceAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSourceAttributes();
+        return $this->getReversed()->getTargetModel();
     }
 
     /**
@@ -74,7 +62,9 @@ trait HasOneRelation
      */
     public function getSourceAttribute(): AttributeField
     {
-        return $this->getSourceAttributes()[0];
+        $this->needsToBeOwned();
+
+        return $this->getReversed()->getTargetAttribute();
     }
 
     /**
@@ -86,19 +76,7 @@ trait HasOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getReversed()->getTargetModel();
-    }
-
-    /**
-     * Return all attributes where to start the relation to.
-     *
-     * @return array<AttributeField>
-     */
-    public function getTargetAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTargetAttributes();
+        return $this->getReversed()->getSourceModel();
     }
 
     /**
@@ -108,31 +86,33 @@ trait HasOneRelation
      */
     public function getTargetAttribute(): AttributeField
     {
-        return $this->getTargetAttributes()[0];
+        $this->needsToBeOwned();
+
+        return $this->getReversed()->getSourceAttribute();
     }
 
     /**
      * Return the source of the relation.
      *
-     * @return SourceConstraint
+     * @return Constraint
      */
-    public function getSource(): SourceConstraint
+    public function getSource(): Constraint
     {
         $this->needsToBeOwned();
 
-        return $this->getReversed()->getSource();
+        return $this->getReversed()->getTarget();
     }
 
     /**
      * Return the target of the relation.
      *
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(): TargetConstraint
+    public function getTarget(): Constraint
     {
         $this->needsToBeOwned();
 
-        return $this->getReversed()->getTarget();
+        return $this->getReversed()->getSource();
     }
 
     /**
@@ -144,7 +124,7 @@ trait HasOneRelation
     public function dry($value)
     {
         $value = $this->transform($value);
-        $name = $this->getSourceAttribute()->getNative();
+        $name = $this->getTargetAttribute()->getNative();
 
         return $this->transform($value)->map(function ($value) use ($name) {
             return isset($value[$name]) ? $value[$name] : $value;
@@ -170,7 +150,7 @@ trait HasOneRelation
      */
     public function transform($value)
     {
-        $modelClass = $this->getSourceModel();
+        $modelClass = $this->getTargetModel();
 
         if (\is_null($value) || ($value instanceof $modelClass)) {
             return $value;

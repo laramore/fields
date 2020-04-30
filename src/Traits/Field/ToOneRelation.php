@@ -18,7 +18,7 @@ use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
-    Field, AttributeField, RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
+    Field, AttributeField, RelationField, Constraint\Constraint
 };
 
 trait ToOneRelation
@@ -149,25 +149,13 @@ trait ToOneRelation
     }
 
     /**
-     * Return all attributes where to start the relation from.
-     *
-     * @return array<AttributeField>
-     */
-    public function getSourceAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return [$this->getField('id')];
-    }
-
-    /**
      * Return the main attribute where to start the relation from.
      *
      * @return AttributeField
      */
     public function getSourceAttribute(): AttributeField
     {
-        return $this->getSourceAttributes()[0];
+        return $this->getField('id');
     }
 
     /**
@@ -183,51 +171,41 @@ trait ToOneRelation
     }
 
     /**
-     * Return all attributes where to start the relation to.
-     *
-     * @return array<AttributeField>
-     */
-    public function getTargetAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttributes();
-    }
-
-    /**
      * Return the main attribute where to start the relation to.
      *
      * @return AttributeField
      */
     public function getTargetAttribute(): AttributeField
     {
-        return $this->getTargetAttributes()[0];
+        $this->needsToBeOwned();
+
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute();
     }
 
     /**
      * Return the source of the relation.
      *
-     * @return SourceConstraint
+     * @return Constraint
      */
-    public function getSource(): SourceConstraint
+    public function getSource(): Constraint
     {
         $this->needsToBeOwned();
 
         return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource($this->getSourceAttributes());
+            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
     }
 
     /**
      * Return the target of the relation.
      *
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(): TargetConstraint
+    public function getTarget(): Constraint
     {
         $this->needsToBeOwned();
 
         return $this->getTargetModel()::getMeta()
-            ->getConstraintHandler()->getTarget($this->getTargetAttributes());
+            ->getConstraintHandler()->getTarget([$this->getTargetAttribute()]);
     }
 
     /**
@@ -244,7 +222,7 @@ trait ToOneRelation
         parent::owned();
 
         $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
-        $this->foreign($relationName, $this->getTargetAttributes());
+        $this->foreign($relationName, $this->getTargetAttribute());
     }
 
     /**
@@ -343,7 +321,7 @@ trait ToOneRelation
     {
         $this->getField('id')->set(
             $model,
-            \is_null($value) ? null : $this->getTarget()->getModelValue($value)
+            \is_null($value) ? null : $this->getTargetAttribute()->get($value)
         );
 
         return $value;
