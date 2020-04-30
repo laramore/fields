@@ -149,9 +149,11 @@ abstract class BaseField implements Field, Configured
     public function getProperty(string $key)
     {
         if ($key === 'type') {
-            return $this->getType();
-        } else if ($key === 'native') {
-            return $this->getNative();
+            return \call_user_func([$this, 'getType']);
+        } else if ($key === 'native' || $key === 'attname') {
+            return \call_user_func([$this, 'getNative']);
+        } else if ($key === 'reversed' && \method_exists($this, 'getReversed')) {
+            return \call_user_func([$this, 'getReversed']);
         }
 
         if ($this->hasProperty($key)) {

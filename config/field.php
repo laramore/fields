@@ -206,7 +206,7 @@ return [
             ],
             'templates' => [
                 'id' => '${name}_${identifier}',
-                'reversed' => '+{modelname}',
+                'reversed' => '${modelname}',
                 'self_reversed' => 'reversed_+{name}',
             ],
             'proxies' => [],

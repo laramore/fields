@@ -42,6 +42,13 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public static function getMeta();
 
     /**
+     * Get the value of the model's primary key.
+     *
+     * @return string|array Depending if the key is composed or not.
+     */
+    public function getKey();
+
+    /**
      * Reset a specific field.
      *
      * @param  mixed $key
