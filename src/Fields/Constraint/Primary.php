@@ -11,14 +11,11 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Contracts\Field\{
-    AttributeField, Constraint\TargetConstraint
+    AttributeField, Constraint\Constraint
 };
-use Laramore\Traits\Field\Constraint\ManipulateConstraintedFields;
 
-class Primary extends BaseConstraint implements TargetConstraint
+class Primary extends BaseConstraint implements Constraint
 {
-    use ManipulateConstraintedFields;
-
     /**
      * Define the name of the constraint.
      *
@@ -33,6 +30,10 @@ class Primary extends BaseConstraint implements TargetConstraint
      */
     public function getAttribute(): AttributeField
     {
+        if ($this->isComposed()) {
+            throw new \LogicException("The `{$this->constraintType}` constraint `{$this->getName()}` is composed");
+        }
+
         return $this->all()[0];
     }
 

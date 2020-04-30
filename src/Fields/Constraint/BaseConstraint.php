@@ -13,11 +13,11 @@ namespace Laramore\Fields\Constraint;
 use Illuminate\Support\Facades\Event;
 use Laramore\Exceptions\LockException;
 use Laramore\Contracts\Field\{
-    AttributeField, Constraint\ConstraintedField
+    AttributeField, Constraint\ConstraintedField, Constraint\Constraint
 };
 use Laramore\Observers\BaseObserver;
 
-abstract class BaseConstraint extends BaseObserver
+abstract class BaseConstraint extends BaseObserver implements Constraint
 {
     /**
      * Define the name of the constraint.

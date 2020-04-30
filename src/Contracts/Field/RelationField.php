@@ -12,7 +12,7 @@ namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
-    AttributeField, Constraint\SourceConstraint, Constraint\TargetConstraint
+    AttributeField, Constraint\Constraint
 };
 
 interface RelationField extends ExtraField
@@ -51,13 +51,6 @@ interface RelationField extends ExtraField
     public function getSourceModel(): string;
 
     /**
-     * Return all attributes where to start the relation from.
-     *
-     * @return array<AttributeField>
-     */
-    public function getSourceAttributes(): array;
-
-    /**
      * Return the main attribute where to start the relation from.
      *
      * @return AttributeField
@@ -72,13 +65,6 @@ interface RelationField extends ExtraField
     public function getTargetModel(): string;
 
     /**
-     * Return all attributes where to start the relation to.
-     *
-     * @return array<AttributeField>
-     */
-    public function getTargetAttributes(): array;
-
-    /**
      * Return the main attribute where to start the relation to.
      *
      * @return AttributeField
@@ -88,14 +74,14 @@ interface RelationField extends ExtraField
     /**
      * Return the source of the relation.
      *
-     * @return SourceConstraint
+     * @return Constraint
      */
-    public function getSource(): SourceConstraint;
+    public function getSource(): Constraint;
 
     /**
      * Return the target of the relation.
      *
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(): TargetConstraint;
+    public function getTarget(): Constraint;
 }
