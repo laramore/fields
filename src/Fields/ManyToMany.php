@@ -13,7 +13,7 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
-    Field, RelationField
+    AttributeField, Field, RelationField, Constraint\Constraint
 };
 use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
@@ -263,19 +263,21 @@ class ManyToMany extends BaseComposed implements RelationField
 
             $this->pivotMeta->setField(
                 $offName,
-                OneToMany::field()->on($this->getMeta()->getModelClass())
+                $offField = ManyToOne::field()->on($this->getMeta()->getModelClass())
             );
 
-            $offField = OneToMany::field()->on($this->on);
+            $onField = ManyToOne::field()->on($this->getTargetModel());
 
             if ($this->isOnSelf()) {
-                $offField->reversedName($this->getConfig('templates.self_pivot_reversed'));
+                $onField->reversedName($this->getConfig('templates.self_pivot_reversed'));
             }
 
             $this->pivotMeta->setField(
                 $onName,
-                $offField
+                $onField
             );
+
+            $this->pivotMeta->setPivot($onField, $offField);
         }
 
         [$to, $from] = $this->pivotMeta->getPivots();
@@ -350,15 +352,15 @@ class ManyToMany extends BaseComposed implements RelationField
     }
 
     /**
-     * Return all attributes where to start the relation from.
+     * Return the attribute where to start the relation from.
      *
-     * @return array<AttributeField>
+     * @return AttributeField
      */
-    public function getSourceAttributes(): array
+    public function getSourceAttribute(): AttributeField
     {
         $this->needsToBeOwned();
 
-        return $this->getMeta()->getConstraintHandler()->getPrimary()->getAttributes();
+        return $this->getMeta()->getConstraintHandler()->getPrimary()->getAttribute();
     }
 
     /**
@@ -374,41 +376,41 @@ class ManyToMany extends BaseComposed implements RelationField
     }
 
     /**
-     * Return all attributes where to start the relation to.
+     * Return the attribute where to start the relation to.
      *
-     * @return array<AttributeField>
+     * @return AttributeField
      */
-    public function getTargetAttributes(): array
+    public function getTargetAttribute(): AttributeField
     {
         $this->needsToBeOwned();
 
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttributes();
+        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute();
     }
 
     /**
      * Return the source of the relation.
      *
-     * @return SourceConstraint
+     * @return Constraint
      */
-    public function getSource(): SourceConstraint
+    public function getSource(): Constraint
     {
         $this->needsToBeOwned();
 
         return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource($this->getSourceAttributes());
+            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
     }
 
     /**
      * Return the target of the relation.
      *
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(): TargetConstraint
+    public function getTarget(): Constraint
     {
         $this->needsToBeOwned();
 
         return $this->getTargetModel()::getMeta()
-            ->getConstraintHandler()->getTarget($this->getTargetAttributes());
+            ->getConstraintHandler()->getTarget([$this->getTargetAttribute()]);
     }
 
     /**

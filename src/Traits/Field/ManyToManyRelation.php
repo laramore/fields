@@ -13,70 +13,13 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
-use Laramore\Fields\BaseAttribute;
 use Laramore\Contracts\{
-    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Proxied
+    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Field\AttributeField
 };
 
 trait ManyToManyRelation
 {
     use ModelRelation;
-
-    /**
-     * LaramoreModel from the relation is.
-     *
-     * @var LaramoreModel
-     */
-    protected $off;
-
-    /**
-     * AttributeField name from the relation is.
-     *
-     * @var string
-     */
-    protected $from;
-
-    /**
-     * LaramoreModel from the relation is.
-     *
-     * @var LaramoreModel
-     */
-    protected $on;
-
-    /**
-     * AttributeField name from the relation is.
-     *
-     * @var string
-     */
-    protected $to;
-
-    /**
-     * Pivot meta name.
-     *
-     * @var string
-     */
-    protected $pivotMeta;
-
-    /**
-     * Pivot to name.
-     *
-     * @var string
-     */
-    protected $pivotTo;
-
-    /**
-     * Pivot from name.
-     *
-     * @var string
-     */
-    protected $pivotFrom;
-
-    /**
-     * Pivot name.
-     *
-     * @var string
-     */
-    protected $pivotName;
 
     /**
      * Dry the value in a simple format.
@@ -86,8 +29,10 @@ trait ManyToManyRelation
      */
     public function dry($value)
     {
-        return $this->transform($value)->map(function ($value) {
-            return $value[$this->from];
+        $attribute = $this->getTargetAttribute();
+
+        return $this->transform($value)->map(function ($model) use ($attribute) {
+            return $attribute->get($model);
         });
     }
 
@@ -110,11 +55,13 @@ trait ManyToManyRelation
      */
     public function transformToModel($value)
     {
-        if ($value instanceof $this->on) {
+        $model = $this->getTargetModel();
+
+        if ($value instanceof $model) {
             return $value;
         }
 
-        $model = new $this->on;
+        $model = new $model;
         $model->setAttributeValue($model->getKeyName(), $value);
 
         return $model;
@@ -151,6 +98,21 @@ trait ManyToManyRelation
     }
 
     /**
+     * Reverbate the relation into database or other fields.
+     * It should be called by the set method.
+     *
+     * @param  LaramoreModel $model
+     * @param  mixed         $value
+     * @return mixed
+     */
+    public function reverbate(LaramoreModel $model, $value)
+    {
+        $this->relate($model)->sync($value);
+
+        return $value;
+    }
+
+    /**
      * Retrieve values from the relation field.
      *
      * @param  LaramoreModel $model
@@ -164,28 +126,37 @@ trait ManyToManyRelation
     /**
      * Return all pivot attributes.
      *
-     * @return array<BaseAttribute>
+     * @return array<AttributeField>
      */
     public function getPivotAttributes(): array
     {
-        return \array_map(function (BaseAttribute $field) {
-            return $field->attname;
-        }, \array_filter(\array_values($this->getPivotMeta()->getFields()), function (BaseAttribute $field) {
+        $fields = \array_values($this->getPivotMeta()->getFields(AttributeField::class));
+
+        $fields = \array_filter($fields, function (AttributeField $field) {
             return $field->visible;
-        }));
+        });
+
+        return \array_map(function (AttributeField $field) {
+            return $field->getNative();
+        }, $fields);
     }
 
     /**
-     * Return the query with this field as condition.
+     * Return the relation with this field.
      *
-     * @param  Proxied $model
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function relate(Proxied $model)
+    public function relate(LaramoreModel $model)
     {
         return $model->belongsToMany(
-            $this->on, $this->getPivotMeta()->getTableName(), $this->pivotTo->from,
-            $this->pivotFrom->from, $this->to, $this->from, $this->name
+            $this->getTargetModel(), 
+            $this->getPivotMeta()->getTableName(),
+            $this->getPivotTo()->getSourceAttribute()->getNative(),
+            $this->getPivotFrom()->getSourceAttribute()->getNative(),
+            $this->getTargetAttribute()->getNative(),
+            $this->getSourceAttribute()->getNative(), 
+            $this->getName()
         )->withPivot($this->getPivotAttributes())->using($this->getPivotMeta()->getModelClass())->as($this->pivotName);
     }
 
@@ -238,7 +209,7 @@ trait ManyToManyRelation
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        $attname = $this->on::getMeta()->getPrimary()->attname;
+        $attname = $this->getSource()::getMeta()->getPrimary()->getAttname();
 
         return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
@@ -271,52 +242,13 @@ trait ManyToManyRelation
     public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
                           string $boolean='and', int $count=null): LaramoreBuilder
     {
-        $attname = $this->on::getMeta()->getPrimary()->attname;
+        $attname = $this->getSource()::getMeta()->getPrimary()->getAttname();
 
         return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? count($value)),
             function ($query) use ($attname, $value) {
                 return $query->whereIn($attname, $value);
             }
         );
-    }
-
-    /**
-     * Use the relation to set the other field values.
-     *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
-     * @return mixed
-     */
-    public function consume(LaramoreModel $model, $value)
-    {
-        $relationName = $this->getReversed()->name;
-        $collections = collect();
-
-        foreach ($value as $element) {
-            if ($element instanceof $this->on) {
-                $collections->push($element);
-            } else {
-                $collections->push($element = $this->transformToModel($element));
-            }
-
-            $element->setRelation($relationName, $model);
-        }
-
-        return $collections;
-    }
-
-    /**
-     * Reverbate the relation into database.
-     *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
-     * @return boolean
-     */
-    public function reverbate(LaramoreModel $model, $value): bool
-    {
-        $this->sync($model, $value);
-
-        return true;
     }
 
     /**
@@ -328,7 +260,7 @@ trait ManyToManyRelation
      */
     public function attach(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->attach($value);
+        $this->relate($model)->attach($value);
 
         return $model;
     }
@@ -342,7 +274,7 @@ trait ManyToManyRelation
      */
     public function detach(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->detach($value);
+        $this->relate($model)->detach($value);
 
         return $model;
     }
@@ -356,7 +288,7 @@ trait ManyToManyRelation
      */
     public function sync(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->sync($value);
+        $this->set($model, $value);
 
         return $model;
     }
@@ -370,7 +302,7 @@ trait ManyToManyRelation
      */
     public function toggle(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->toggle($value);
+        $this->relate($model)->toggle($value);
 
         return $model;
     }
@@ -384,7 +316,7 @@ trait ManyToManyRelation
      */
     public function syncWithoutDetaching(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->syncWithoutDetaching($value);
+        $this->relate($model)->syncWithoutDetaching($value);
 
         return $model;
     }
@@ -398,7 +330,7 @@ trait ManyToManyRelation
      */
     public function updateExistingPivot(LaramoreModel $model, $value)
     {
-        \call_user_func([$model, $this->name])->updateExistingPivot($value);
+        $this->relate($model)->updateExistingPivot($value);
 
         return $model;
     }
