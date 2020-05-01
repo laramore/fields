@@ -134,11 +134,11 @@ interface Field extends Locked, Owned
     public function serialize($value);
 
     /**
-     * Return the default value of this field.
+     * Indicate if the field has a default value.
      *
      * @return mixed
      */
-    public function getDefault();
+    public function hasDefault();
 
     /**
      * Get the value definied by the field.

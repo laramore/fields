@@ -244,13 +244,13 @@ abstract class BaseField implements Field, Configured
     }
 
     /**
-     * Return default value.
+     * Indicate if the field has a default value.
      *
      * @return mixed
      */
-    public function getDefault()
+    public function hasDefault()
     {
-        return $this->default;
+        return !\is_null($this->default);
     }
 
     /**
