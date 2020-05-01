@@ -45,8 +45,12 @@ trait ModelExtra
      */
     public function reset(LaramoreModel $model)
     {
-        $model->setExtraValue($this->getNative(), $value = $this->getDefault());
+        if ($this->hasDefault()) {
+            $model->setExtraValue($this->getNative(), $value = $this->getDefault());
 
-        return $value;
+            return $value;
+        }
+
+        $model->unsetExtra($this->getNative());
     }
 }

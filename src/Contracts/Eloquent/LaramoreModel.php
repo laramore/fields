@@ -49,6 +49,21 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function getKey();
 
     /**
+     * Unset a specific field.
+     *
+     * @param  mixed $key
+     * @return self
+     */
+    public function unsetAttribute($key);
+
+    /**
+     * Unset all attributes.
+     *
+     * @return self
+     */
+    public function unsetAttributes();
+
+    /**
      * Reset a specific field.
      *
      * @param  mixed $key
@@ -136,6 +151,21 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function setAttributeValue($key, $value);
 
     /**
+     * Unset a specific field.
+     *
+     * @param  mixed $key
+     * @return self
+     */
+    public function unsetRelation($key);
+
+    /**
+     * Unset all relations.
+     *
+     * @return self
+     */
+    public function unsetRelations();
+
+    /**
      * Reset a specific field.
      *
      * @param mixed $key
@@ -221,6 +251,21 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      * @return $this
      */
     public function setRelationValue($key, $value);
+
+    /**
+     * Unset a specific field.
+     *
+     * @param  mixed $key
+     * @return self
+     */
+    public function unsetExtra($key);
+
+    /**
+     * Unset all extras.
+     *
+     * @return self
+     */
+    public function unsetExtras();
 
     /**
      * Reset a specific field.

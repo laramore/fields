@@ -45,8 +45,12 @@ trait ModelRelation
      */
     public function reset(LaramoreModel $model)
     {
-        $model->setRelationValue($this->getNative(), $value = $this->getDefault());
+        if ($this->hasDefault()) {
+            $model->setRelationValue($this->getNative(), $value = $this->getDefault());
 
-        return $value;
+            return $value;
+        }
+
+        $model->unsetRelation($this->getNative());
     }
 }
