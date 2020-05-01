@@ -46,7 +46,6 @@ trait NumberInteraction
      *
      * @param boolean $unsigned
      * @param boolean $positive
-     *
      * @return self
      */
     public function unsigned(bool $unsigned=true, bool $positive=true)

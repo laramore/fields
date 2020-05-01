@@ -11,6 +11,7 @@
 namespace Laramore\Fields;
 
 use Carbon\Carbon;
+use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
     Option, Type
 };
@@ -18,6 +19,22 @@ use Laramore\Facades\{
 class DateTime extends BaseAttribute
 {
     protected $format;
+
+    const TIMESTAMP_FORMAT = 'timestamp';
+
+    /**
+     * Return the type of the field.
+     *
+     * @return TypeElement
+     */
+    public function getType(): TypeElement
+    {
+        if ($this->getFormat(static::TIMESTAMP_FORMAT)) {
+            return Type::timestamp();
+        }
+
+        return $this->resolveType();
+    }
 
     /**
      * Return the format for serialization.
@@ -27,6 +44,18 @@ class DateTime extends BaseAttribute
     public function getFormat(): string
     {
         return $this->format ?: $this->getConfig('format');
+    }
+
+    /**
+     * Define this field as a timestamp.
+     *
+     * @return self
+     */
+    public function timestamp()
+    {
+        $this->format(static::TIMESTAMP_FORMAT);
+
+        return $this;
     }
 
     /**

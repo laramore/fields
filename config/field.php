@@ -61,7 +61,7 @@ return [
             ],
         ],
         'date_time' => [
-            'type' => 'datetime',
+            'type' => 'date_time',
             'format' => 'Y-m-d H:i:s',
             'proxies' => [],
         ],
