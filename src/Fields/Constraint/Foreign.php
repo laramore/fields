@@ -12,10 +12,10 @@ namespace Laramore\Fields\Constraint;
 
 use Laramore\Exceptions\LockException;
 use Laramore\Contracts\Field\{
-    AttributeField, Constraint\Constraint
+    AttributeField, Constraint\RelationConstraint
 };
 
-class Foreign extends BaseConstraint implements Constraint
+class Foreign extends BaseConstraint implements RelationConstraint
 {
     /**
      * Define the name of the constraint.

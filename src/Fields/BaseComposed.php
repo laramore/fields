@@ -28,7 +28,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * AttributeField fields managed by this composed fields.
      *
-     * @var array<BaseAttribute>
+     * @var array<AttributeField>
      */
     protected $fields = [];
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Define a targetable constraint contract.
+ * Define a classic constraint contract.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
