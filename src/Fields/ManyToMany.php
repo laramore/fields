@@ -46,23 +46,23 @@ class ManyToMany extends BaseComposed implements RelationField
     /**
      * Pivot meta name.
      *
-     * @var string
+     * @var \Larmore\Contracts\Eloquent\LaramoreMeta
      */
     protected $pivotMeta;
 
     /**
-     * Pivot to name.
+     * Pivot source field.
      *
-     * @var string
+     * @var RelationField
      */
-    protected $pivotTo;
+    protected $pivotSource;
 
     /**
-     * Pivot from name.
+     * Pivot target field.
      *
-     * @var string
+     * @var RelationField
      */
-    protected $pivotFrom;
+    protected $pivotTarget;
 
     /**
      * Pivot name.
@@ -280,10 +280,10 @@ class ManyToMany extends BaseComposed implements RelationField
             $this->pivotMeta->setPivot($onField, $offField);
         }
 
-        [$to, $from] = $this->pivotMeta->getPivots();
+        [$source, $target] = $this->pivotMeta->getPivots();
 
-        $this->setProperty('pivotTo', $to);
-        $this->setProperty('pivotFrom', $from);
+        $this->setProperty('pivotSource', $source);
+        $this->setProperty('pivotTarget', $target);
 
         if ($this->uniqueRelation) {
             $this->unique($this->uniqueRelation === true ? null : $this->uniqueRelation);
@@ -322,7 +322,7 @@ class ManyToMany extends BaseComposed implements RelationField
             $this->uniqueRelation = $name ?: true;
         } else {
             $this->uniqueRelation = true;
-            $this->pivotMeta->unique([$this->pivotTo, $this->pivotFrom], $name);
+            $this->pivotMeta->unique([$this->pivotSource, $this->pivotTarget], $name);
         }
 
         return $this;

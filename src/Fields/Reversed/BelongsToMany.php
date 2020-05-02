@@ -10,106 +10,55 @@
 
 namespace Laramore\Fields\Reversed;
 
-use Laramore\Traits\Field\ManyToManyRelation;
-use Laramore\Fields\BaseField;
-use Laramore\Contracts\Field\{
-    RelationField, Constraint\SourceConstraint, Constraint\TargetConstraint
+use Laramore\Contracts\{
+    Field\RelationField, Eloquent\LaramoreMeta
 };
+use Laramore\Traits\Field\{
+    ReversedRelation, ManyToManyRelation
+};
+use Laramore\Fields\BaseField;
 
-class BelongsToMany extends BaseField
+class BelongsToMany extends BaseField implements RelationField
 {
-    use ManyToManyRelation;
+    use ReversedRelation, ManyToManyRelation;
 
     /**
-     * Return the reversed field.
+     * Return the pivot meta.
+     *
+     * @return LaramoreMeta
+     */
+    public function getPivotMeta(): LaramoreMeta
+    {
+        return $this->getReversed()->getPivotMeta();
+    }
+
+    /**
+     * Return the pivot source.
      *
      * @return RelationField
      */
-    public function getReversed(): RelationField
+    public function getPivotSource(): RelationField
     {
-        return $this->getOwner();
+        return $this->getReversed()->getPivotSource();
     }
 
     /**
-     * Indicate if the relation is head on or not.
-     * Usefull to know which to use between source and target.
+     * Return the pivot target.
      *
-     * @return boolean
+     * @return RelationField
      */
-    public function isRelationHeadOn(): bool
+    public function getPivotTarget(): RelationField
     {
-        return false;
+        return $this->getReversed()->getPivotTarget();
     }
 
     /**
-     * Model where the relation is set from.
-     *
-     * @return string
-     */
-    public function getSourceModel(): string
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSourceModel();
-    }
-
-    /**
-     * Return all attributes where to start the relation from.
-     *
-     * @return array<AttributeField>
-     */
-    public function getSourceAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSourceAttributes();
-    }
-
-    /**
-     * Model where the relation is set to.
+     * Return the pivot name.
      *
      * @return string
      */
-    public function getTargetModel(): string
+    public function getPivotName(): string
     {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTargetModel();
-    }
-
-    /**
-     * Return all attributes where to start the relation to.
-     *
-     * @return array<AttributeField>
-     */
-    public function getTargetAttributes(): array
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTargetAttributes();
-    }
-
-    /**
-     * Return the source of the relation.
-     *
-     * @return SourceConstraint
-     */
-    public function getSource(): SourceConstraint
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSource();
-    }
-
-    /**
-     * Return the target of the relation.
-     *
-     * @return TargetConstraint
-     */
-    public function getTarget(): TargetConstraint
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTarget();
+        return $this->getReversed()->getReversedPivotName();
     }
 }

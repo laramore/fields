@@ -150,14 +150,16 @@ trait ManyToManyRelation
     public function relate(LaramoreModel $model)
     {
         return $model->belongsToMany(
-            $this->getTargetModel(), 
+            $this->getTargetModel(),
             $this->getPivotMeta()->getTableName(),
-            $this->getPivotTo()->getSourceAttribute()->getNative(),
-            $this->getPivotFrom()->getSourceAttribute()->getNative(),
+            $this->getPivotSource()->getSourceAttribute()->getNative(),
+            $this->getPivotTarget()->getSourceAttribute()->getNative(),
+            $this->getSourceAttribute()->getNative(),
             $this->getTargetAttribute()->getNative(),
-            $this->getSourceAttribute()->getNative(), 
             $this->getName()
-        )->withPivot($this->getPivotAttributes())->using($this->getPivotMeta()->getModelClass())->as($this->pivotName);
+        )->withPivot($this->getPivotAttributes())
+            ->using($this->getPivotMeta()->getModelClass())
+            ->as($this->getPivotName());
     }
 
     /**
@@ -262,6 +264,8 @@ trait ManyToManyRelation
     {
         $this->relate($model)->attach($value);
 
+        $model->unsetRelation($this->getNative());
+
         return $model;
     }
 
@@ -275,6 +279,8 @@ trait ManyToManyRelation
     public function detach(LaramoreModel $model, $value)
     {
         $this->relate($model)->detach($value);
+
+        $model->unsetRelation($this->getNative());
 
         return $model;
     }
@@ -290,6 +296,8 @@ trait ManyToManyRelation
     {
         $this->set($model, $value);
 
+        $model->unsetRelation($this->getNative());
+
         return $model;
     }
 
@@ -303,6 +311,8 @@ trait ManyToManyRelation
     public function toggle(LaramoreModel $model, $value)
     {
         $this->relate($model)->toggle($value);
+
+        $model->unsetRelation($this->getNative());
 
         return $model;
     }
@@ -318,6 +328,8 @@ trait ManyToManyRelation
     {
         $this->relate($model)->syncWithoutDetaching($value);
 
+        $model->unsetRelation($this->getNative());
+
         return $model;
     }
 
@@ -331,6 +343,8 @@ trait ManyToManyRelation
     public function updateExistingPivot(LaramoreModel $model, $value)
     {
         $this->relate($model)->updateExistingPivot($value);
+
+        $model->unsetRelation($this->getNative());
 
         return $model;
     }
