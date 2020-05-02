@@ -49,6 +49,13 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function getKey();
 
     /**
+     * Preset attributes.
+     *
+     * @return self
+     */
+    public function presetAttributes();
+
+    /**
      * Unset a specific field.
      *
      * @param  mixed $key
