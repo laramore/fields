@@ -14,106 +14,10 @@ use Laramore\Facades\Operator;
 use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
 };
-use Laramore\Contracts\Field\{
-    AttributeField, RelationField, Constraint\Constraint
-};
 
 trait HasOneRelation
 {
-    use ModelRelation, Constraints;
-
-    /**
-     * Return the reversed field.
-     *
-     * @return RelationField
-     */
-    public function getReversed(): RelationField
-    {
-        return $this->getOwner();
-    }
-
-    /**
-     * Indicate if the relation is head on or not.
-     * Usefull to know which to use between source and target.
-     *
-     * @return boolean
-     */
-    public function isRelationHeadOn(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Model where the relation is set from.
-     *
-     * @return string
-     */
-    public function getSourceModel(): string
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTargetModel();
-    }
-
-    /**
-     * Return the main attribute where to start the relation from.
-     *
-     * @return AttributeField
-     */
-    public function getSourceAttribute(): AttributeField
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTargetAttribute();
-    }
-
-    /**
-     * Model where the relation is set to.
-     *
-     * @return string
-     */
-    public function getTargetModel(): string
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSourceModel();
-    }
-
-    /**
-     * Return the main attribute where to start the relation to.
-     *
-     * @return AttributeField
-     */
-    public function getTargetAttribute(): AttributeField
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSourceAttribute();
-    }
-
-    /**
-     * Return the source of the relation.
-     *
-     * @return Constraint
-     */
-    public function getSource(): Constraint
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getTarget();
-    }
-
-    /**
-     * Return the target of the relation.
-     *
-     * @return Constraint
-     */
-    public function getTarget(): Constraint
-    {
-        $this->needsToBeOwned();
-
-        return $this->getReversed()->getSource();
-    }
+    use ModelRelation, ReversedRelation, Constraints;
 
     /**
      * Dry the value in a simple format.
