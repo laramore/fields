@@ -277,7 +277,7 @@ class ManyToMany extends BaseComposed implements RelationField
                 $onField
             );
 
-            $this->pivotMeta->setPivot($onField, $offField);
+            $this->pivotMeta->pivots($onField, $offField);
         }
 
         [$source, $target] = $this->pivotMeta->getPivots();
