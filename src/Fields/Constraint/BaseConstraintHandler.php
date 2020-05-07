@@ -51,7 +51,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      */
     public function getConfigPath(string $path=null)
     {
-        return 'field.constraints'.(\is_null($path) ? '' : '.'.$path);
+        return 'field.constraint'.(\is_null($path) ? '' : '.'.$path);
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      * Return the list of constraints.
      *
      * @param  string $type
-     * @return array<BaseObserver>
+     * @return array<string,array<BaseObserver>>|array<BaseObserver>
      */
     public function all(string $type=null): array
     {
@@ -79,6 +79,16 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
         } else {
             return $this->observers[$type];
         }
+    }
+
+    /**
+     * Return the list of all constraints.
+     *
+     * @return array<BaseObserver>
+     */
+    public function getConstraints(): array
+    {
+        return \array_merge(...\array_values($this->all()));
     }
 
     /**

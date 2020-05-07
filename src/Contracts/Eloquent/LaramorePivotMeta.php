@@ -29,7 +29,7 @@ interface LaramorePivotMeta extends FieldsOwner
      * @return array
      */
     public function getPivots(): array;
-    
+
     /**
      * Define pivots for this meta pivot.
      *

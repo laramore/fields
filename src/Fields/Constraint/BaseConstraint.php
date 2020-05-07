@@ -10,22 +10,19 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\{
+    Str, Facades\Event
+};
+use Illuminate\Container\Container;
+use Laramore\Contracts\Configured;
 use Laramore\Exceptions\LockException;
 use Laramore\Contracts\Field\{
     AttributeField, Constraint\ConstraintedField, Constraint\Constraint
 };
 use Laramore\Observers\BaseObserver;
 
-abstract class BaseConstraint extends BaseObserver implements Constraint
+abstract class BaseConstraint extends BaseObserver implements Constraint, Configured
 {
-    /**
-     * Define the name of the constraint.
-     *
-     * @var string
-     */
-    protected $constraintType;
-
     /**
      * All possible constraint types.
      */
@@ -80,13 +77,38 @@ abstract class BaseConstraint extends BaseObserver implements Constraint
     }
 
     /**
+     * Return the configuration path for this field.
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfigPath(string $path=null)
+    {
+        $name = Str::snake((new \ReflectionClass($this))->getShortName());
+
+        return 'field.constraint.configurations.'.$name.(\is_null($path) ? '' : '.'.$path);
+    }
+
+    /**
+     * Return the configuration for this field.
+     *
+     * @param string $path
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getConfig(string $path=null, $default=null)
+    {
+        return Container::getInstance()->config->get($this->getConfigPath($path), $default);
+    }
+
+    /**
      * Return the constraint name.
      *
      * @return string
      */
     public function getConstraintType(): string
     {
-        return $this->constraintType;
+        return $this->getConfig('type');
     }
 
     /**
