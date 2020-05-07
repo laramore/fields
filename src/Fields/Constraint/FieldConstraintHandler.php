@@ -14,7 +14,7 @@ use Laramore\Contracts\{
     Owned, Configured
 };
 use Laramore\Contracts\Field\Constraint\{
-    ConstraintedField, SourceConstraint, TargetConstraint
+    ConstraintedField, Constraint
 };
 use Laramore\Exceptions\LockException;
 use Laramore\Observers\BaseObserver;
@@ -199,16 +199,16 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getSource(array $attributes=[]): SourceConstraint
     {
-        foreach ($this->getSources() as $sourcable) {
+        foreach ($this->all() as $sourceable) {
             $intersec = \array_diff(
                 \array_map(function ($constrainted) {
                     return $constrainted->getNative();
-                }, $sourcable->getSourceAttributes()),
+                }, $sourceable->getSourceAttributes()),
                 \array_merge($attributes, [$this->getConstrainted()->getNative()])
             );
 
             if (\count($intersec) === 0) {
-                return $sourcable;
+                return $sourceable;
             }
         }
 
@@ -219,11 +219,11 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      * Return the targeted constraint.
      *
      * @param array $attributes
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(array $attributes=[]): TargetConstraint
+    public function getTarget(array $attributes=[]): Constraint
     {
-        foreach ($this->getTargets() as $targetable) {
+        foreach ($this->all() as $targetable) {
             $intersec = \array_diff(
                 $targetable->getNatives(),
                 \array_merge($attributes, [$this->getConstrainted()->getNative()])

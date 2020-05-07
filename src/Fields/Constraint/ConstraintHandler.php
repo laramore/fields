@@ -11,9 +11,7 @@
 namespace Laramore\Fields\Constraint;
 
 use Laramore\Contracts\Eloquent\LaramoreModel;
-use Laramore\Contracts\Field\Constraint\{
-    SourceConstraint, TargetConstraint
-};
+use Laramore\Contracts\Field\Constraint\Constraint;
 
 class ConstraintHandler extends BaseConstraintHandler
 {
@@ -82,9 +80,9 @@ class ConstraintHandler extends BaseConstraintHandler
      * Return the sourced constraint.
      *
      * @param array $attributes
-     * @return SourceConstraint
+     * @return Constraint
      */
-    public function getSource(array $attributes): SourceConstraint
+    public function getSource(array $attributes): Constraint
     {
         if (\count($attributes) === 0) {
             throw new \LogicException('Cannot retrieve a source with no attributes');
@@ -97,9 +95,9 @@ class ConstraintHandler extends BaseConstraintHandler
      * Return the targeted constraint.
      *
      * @param array $attributes
-     * @return TargetConstraint
+     * @return Constraint
      */
-    public function getTarget(array $attributes): TargetConstraint
+    public function getTarget(array $attributes): Constraint
     {
         if (\count($attributes) === 0) {
             throw new \LogicException('Cannot retrieve a target with no attributes');
