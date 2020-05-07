@@ -29,7 +29,7 @@ return [
 
     'configurations' => [
         'belongs_to_many' => [
-            'type' => 'link',
+            'type' => 'reversed_relation',
             'proxies' => [
                 'attach' => [],
                 'detach' => [],
@@ -122,18 +122,7 @@ return [
             ],
         ],
         'has_many' => [
-            'type' => 'link',
-            'proxies' => [
-                'attach' => [],
-                'detach' => [],
-                'sync' => [],
-                'toggle' => [],
-                'sync_without_detaching' => [],
-                'update_existing_pivot' => [],
-            ],
-        ],
-        'has_many_through' => [
-            'type' => 'link',
+            'type' => 'reversed_relation',
             'proxies' => [
                 'attach' => [],
                 'detach' => [],
@@ -144,7 +133,7 @@ return [
             ],
         ],
         'has_one' => [
-            'type' => 'link',
+            'type' => 'reversed_relation',
             'proxies' => [],
         ],
         'increment' => [
@@ -169,7 +158,7 @@ return [
             'proxies' => [],
         ],
         'many_to_many' => [
-            'type' => 'composed',
+            'type' => 'relation',
             'pivot_namespace' => 'App\\Pivots',
             'fields' => [
                 'reversed' => Laramore\Fields\Reversed\BelongsToMany::class,
@@ -186,7 +175,7 @@ return [
             ],
         ],
         'many_to_one' => [
-            'type' => 'composed',
+            'type' => 'relation',
             'fields' => [
                 'id' => Laramore\Fields\Integer::class,
                 'reversed' => Laramore\Fields\Reversed\HasMany::class,
@@ -199,7 +188,7 @@ return [
             'proxies' => [],
         ],
         'one_to_one' => [
-            'type' => 'composed',
+            'type' => 'relation',
             'fields' => [
                 'id' => Laramore\Fields\UniqueId::class,
                 'reversed' => Laramore\Fields\Reversed\HasOne::class,
@@ -267,29 +256,6 @@ return [
                 'separator' => '',
                 'flags' => null,
             ]
-        ],
-
-        'body' => [
-            'type' => 'body',
-            'proxies' => [],
-        ],
-        'name' => [
-            'type' => 'composed',
-            'fields' => [
-                'firstname' => [
-                    Laramore\Fields\Body::class,
-                    ['visible', 'fillable', 'required', 'title'],
-                ],
-                'lastname' => [
-                    Laramore\Fields\Body::class,
-                    ['visible', 'fillable', 'required', 'uppercase'],
-                ],
-            ],
-            'templates' => [
-                'firstname' => 'firstname',
-                'lastname' => 'lastname',
-            ],
-            'proxies' => [],
         ],
     ],
 
