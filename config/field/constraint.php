@@ -14,11 +14,24 @@ return [
     'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
 
     'classes' => [
-        'primary' => Laramore\Fields\Constraint\Primary::class,
         'index' => Laramore\Fields\Constraint\Index::class,
         'unique' => Laramore\Fields\Constraint\Unique::class,
         'foreign' => Laramore\Fields\Constraint\Foreign::class,
+        'primary' => Laramore\Fields\Constraint\Primary::class,
     ],
 
-    'configurations' => [],
+    'configurations' => [
+        'index' => [
+            'type' => Laramore\Fields\Constraint\BaseConstraint::INDEX,
+        ],
+        'unique' => [
+            'type' => Laramore\Fields\Constraint\BaseConstraint::UNIQUE,
+        ],
+        'foreign' => [
+            'type' => Laramore\Fields\Constraint\BaseConstraint::FOREIGN,
+        ],
+        'primary' => [
+            'type' => Laramore\Fields\Constraint\BaseConstraint::PRIMARY,
+        ],
+    ],
 ];

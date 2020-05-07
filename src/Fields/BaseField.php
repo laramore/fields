@@ -12,8 +12,7 @@ namespace Laramore\Fields;
 
 use Illuminate\Container\Container;
 use Illuminate\Support\{
-    Arr,
-    Str, Facades\Event
+    Arr, Str, Facades\Event
 };
 use Laramore\Elements\TypeElement;
 use Laramore\Facades\{
@@ -446,8 +445,8 @@ abstract class BaseField implements Field, Configured
         $config = Container::getInstance()->config;
         $proxyHandler = $this->getMeta()->getProxyHandler();
 
-        $class = $config->get('field.proxies.class');
-        $proxies = \array_merge($config->get('field.proxies.configurations'), $this->getConfig('proxies', []));
+        $class = $config->get('field.proxy.class');
+        $proxies = \array_merge($config->get('field.proxy.configurations'), $this->getConfig('proxy', []));
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {

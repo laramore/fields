@@ -29,7 +29,7 @@ class FieldProvider extends ServiceProvider
         );
 
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/field/proxies.php', 'field.proxies',
+            __DIR__.'/../../config/field/proxy.php', 'field.proxy',
         );
     }
 
@@ -44,7 +44,7 @@ class FieldProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../../config/field.php' => $pathDir.'/field.php',
-            __DIR__.'/../../config/field/proxies.php' => $pathDir.'/field/proxies.php',
+            __DIR__.'/../../config/field/proxy.php' => $pathDir.'/field/proxy.php',
         ]);
     }
 }

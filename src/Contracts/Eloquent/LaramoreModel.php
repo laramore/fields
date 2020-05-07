@@ -144,7 +144,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setAttribute($key, $value);
 
@@ -153,7 +153,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setAttributeValue($key, $value);
 
@@ -246,7 +246,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param  mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setRelation($key, $value);
 
@@ -255,7 +255,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param  mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setRelationValue($key, $value);
 
@@ -348,7 +348,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param  mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setExtra($key, $value);
 
@@ -357,7 +357,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param  mixed $key
      * @param  mixed $value
-     * @return $this
+     * @return self
      */
     public function setExtraValue($key, $value);
 
@@ -366,7 +366,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      *
      * @param  array $attributes
      * @param  mixed $sync
-     * @return $this
+     * @return self
      */
     public function setRawAttributes(array $attributes, $sync=false);
 
@@ -374,7 +374,7 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
      * Reload the current model instance with fresh attributes from the database.
      *
      * @param  array $attributes
-     * @return $this
+     * @return self
      */
     public function refresh(array $attributes=['*']);
 

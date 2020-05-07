@@ -27,7 +27,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/field/constraints.php', 'field.constraints',
+            __DIR__.'/../../config/field/constraint.php', 'field.constraint',
         );
 
         $this->app->singleton('field_constraint', function() {
@@ -45,7 +45,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/field/constraints.php' => $this->app->make('path.config').'/field/constraints.php',
+            __DIR__.'/../../config/field/constraint.php' => $this->app->make('path.config').'/field/constraint.php',
         ]);
     }
 
@@ -56,7 +56,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
      */
     public static function getDefaults(): array
     {
-        return Container::getInstance()->config->get('field.constraints.configurations');
+        return Container::getInstance()->config->get('field.constraint.configurations');
     }
 
     /**
@@ -66,7 +66,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
      */
     public static function generateManager(): LaramoreManager
     {
-        $class = Container::getInstance()->config->get('field.constraints.manager');
+        $class = Container::getInstance()->config->get('field.constraint.manager');
 
         return new $class(static::getDefaults());
     }
