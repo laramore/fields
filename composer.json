@@ -13,8 +13,8 @@
         "illuminate/database": ">=5.5",
         "nesbot/carbon": ">=1.0",
         "symfony/http-kernel": ">=3.4",
-        "laramore/types": "^0.6.0",
-        "laramore/proxies": "^0.3.2"
+        "laramore/types": "^0.6.1",
+        "laramore/proxies": "^0.4.0"
     },
     "authors": [
         {
@@ -53,12 +53,10 @@
         "laravel": {
             "providers": [
                 "Laramore\\Providers\\FieldProvider",
-                "Laramore\\Providers\\FieldConstraintProvider",
-                "Laramore\\Providers\\FieldProxyProvider"
+                "Laramore\\Providers\\FieldConstraintProvider"
             ],
             "aliases": {
-                "FieldConstraint": "Laramore\\Facades\\FieldConstraint",
-                "FieldProxy": "Laramore\\Facades\\FieldProxy"
+                "FieldConstraint": "Laramore\\Facades\\FieldConstraint"
             }
         }
     }

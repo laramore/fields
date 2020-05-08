@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e05b1e22bd2355a6061b41de942b1846",
+    "content-hash": "d409d49cfc203df3117f78c8fc0e5e42",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -388,16 +388,16 @@
         },
         {
             "name": "laramore/base",
-            "version": "v0.6.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/base.git",
-                "reference": "97a4e76189f7f20987068d3c9254ebdfa75bf2b4"
+                "reference": "e576148aa0ca25c0c25eaf34d65d27030fae6766"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/base/zipball/97a4e76189f7f20987068d3c9254ebdfa75bf2b4",
-                "reference": "97a4e76189f7f20987068d3c9254ebdfa75bf2b4",
+                "url": "https://api.github.com/repos/laramore/base/zipball/e576148aa0ca25c0c25eaf34d65d27030fae6766",
+                "reference": "e576148aa0ca25c0c25eaf34d65d27030fae6766",
                 "shasum": ""
             },
             "require": {
@@ -450,24 +450,24 @@
                 "owned",
                 "unlock"
             ],
-            "time": "2020-03-03T21:42:23+00:00"
+            "time": "2020-05-08T10:50:24+00:00"
         },
         {
             "name": "laramore/proxies",
-            "version": "v0.3.2",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/proxies.git",
-                "reference": "cde5b703b2fe6f951876c58b859c844280f3c612"
+                "reference": "f48d67add1e8adee2e7fca0cad46585e2d27d587"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/proxies/zipball/cde5b703b2fe6f951876c58b859c844280f3c612",
-                "reference": "cde5b703b2fe6f951876c58b859c844280f3c612",
+                "url": "https://api.github.com/repos/laramore/proxies/zipball/f48d67add1e8adee2e7fca0cad46585e2d27d587",
+                "reference": "f48d67add1e8adee2e7fca0cad46585e2d27d587",
                 "shasum": ""
             },
             "require": {
-                "laramore/base": "^0.6.0",
+                "laramore/base": "^0.7.0",
                 "php": ">=7.0.8"
             },
             "require-dev": {
@@ -517,24 +517,24 @@
                 "table",
                 "validations"
             ],
-            "time": "2020-04-20T15:14:11+00:00"
+            "time": "2020-05-08T11:46:21+00:00"
         },
         {
             "name": "laramore/types",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "a2a4d14b56812663444b74de7f888bc052c065e3"
+                "reference": "c8df418e691c1876897e8b218027ac2f51b617e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/a2a4d14b56812663444b74de7f888bc052c065e3",
-                "reference": "a2a4d14b56812663444b74de7f888bc052c065e3",
+                "url": "https://api.github.com/repos/laramore/types/zipball/c8df418e691c1876897e8b218027ac2f51b617e9",
+                "reference": "c8df418e691c1876897e8b218027ac2f51b617e9",
                 "shasum": ""
             },
             "require": {
-                "laramore/base": "^0.6.0",
+                "laramore/base": "^0.7.0",
                 "php": ">=7.0.8"
             },
             "require-dev": {
@@ -588,7 +588,7 @@
                 "model",
                 "types"
             ],
-            "time": "2020-05-07T08:33:27+00:00"
+            "time": "2020-05-08T11:44:39+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1777,6 +1777,12 @@
             "keywords": [
                 "Xdebug",
                 "performance"
+            ],
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                }
             ],
             "time": "2020-03-01T12:26:26+00:00"
         },

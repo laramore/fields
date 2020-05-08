@@ -257,6 +257,29 @@ return [
                 'flags' => null,
             ]
         ],
+
+        'body' => [
+            'type' => 'text',
+            'proxies' => [],
+        ],
+        'name' => [
+            'type' => 'composed',
+            'fields' => [
+                'firstname' => [
+                    Laramore\Fields\Body::class,
+                    ['visible', 'fillable', 'required', 'title'],
+                ],
+                'lastname' => [
+                    Laramore\Fields\Body::class,
+                    ['visible', 'fillable', 'required', 'uppercase'],
+                ],
+            ],
+            'templates' => [
+                'firstname' => 'firstname',
+                'lastname' => 'lastname',
+            ],
+            'proxies' => [],
+        ],
     ],
 
 ];

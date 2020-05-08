@@ -31,46 +31,43 @@ return [
         ],
         'get' => [
             'templates' => [
-                'name' => '-{methodname}^{identifier}Attribute',
+                'name' => '-{methodname}-^{identifier}Attribute',
                 'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'set' => [
             'templates' => [
-                'name' => '-{methodname}^{identifier}Attribute',
+                'name' => '-{methodname}-^{identifier}Attribute',
                 'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'reset' => [
             'templates' => [
-                'name' => '-{methodname}^{identifier}Attribute',
+                'name' => '-{methodname}-^{identifier}Attribute',
                 'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'relate' => [
             'templates' => [
-                'name' => '${identifier}',
+                'name' => '-{identifier}',
             ],
         ],
         'where' => [
-            'requirements' => ['instance'],
             'templates' => [
-                'name' => 'scope^{methodname}^{identifier}',
+                'name' => 'scope-^{methodname}-^{identifier}',
                 'multi_name' => 'scope^{methodname}',
             ],
         ],
         'doesnt_have' => [
-            'requirements' => ['instance'],
             'templates' => [
-                'name' => 'scope^{methodname}^{identifier}',
-                'multi_name' => 'scope^{methodname}',
+                'name' => 'scope-^{methodname}-^{identifier}',
+                'multi_name' => 'scope-^{methodname}',
             ],
         ],
         'has' => [
-            'requirements' => ['instance'],
             'templates' => [
-                'name' => 'scope^{methodname}^{identifier}',
-                'multi_name' => 'scope^{methodname}',
+                'name' => 'scope-^{methodname}-^{identifier}',
+                'multi_name' => 'scope-^{methodname}',
             ],
         ],
     ],
