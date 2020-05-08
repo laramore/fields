@@ -138,7 +138,7 @@ class Uri extends Char implements PatternField, FixableField
     }
 
     /**
-     * Transform the value to be used as a correct format.
+     * Transform the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed

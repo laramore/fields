@@ -20,7 +20,7 @@ class Text extends BaseAttribute
      */
     public function dry($value)
     {
-        return $this->transform($value);
+        return is_null($value) ? $value : (string) $value;
     }
 
     /**
@@ -31,18 +31,18 @@ class Text extends BaseAttribute
      */
     public function cast($value)
     {
-        return $this->transform($value);
+        return is_null($value) ? $value : (string) $value;
     }
 
     /**
-     * Transform the value to be used as a correct format.
+     * Transform the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed
      */
     public function transform($value)
     {
-        return is_null($value) ? $value : (string) $value;
+        return $value;
     }
 
     /**

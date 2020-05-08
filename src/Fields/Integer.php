@@ -35,7 +35,7 @@ class Integer extends BaseAttribute
      */
     public function cast($value)
     {
-        return $this->transform($this->dry($value));
+        return is_null($value) ? $value : (int) $value;
     }
 
     /**

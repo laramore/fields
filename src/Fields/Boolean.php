@@ -20,7 +20,7 @@ class Boolean extends BaseAttribute
      */
     public function dry($value)
     {
-        return $this->transform($value);
+        return \is_null($value) ? $value : (bool) $value;
     }
 
     /**
@@ -31,22 +31,18 @@ class Boolean extends BaseAttribute
      */
     public function cast($value)
     {
-        return $this->transform($value);
+        return \is_null($value) ? $value : (bool) $value;
     }
 
     /**
-     * Transform the value to be used as a correct format.
+     * Transform the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed
      */
     public function transform($value)
     {
-        if (is_null($value)) {
-            return $value;
-        }
-
-        return (boolean) $value;
+        return $value;
     }
 
     /**
@@ -57,7 +53,7 @@ class Boolean extends BaseAttribute
      */
     public function serialize($value)
     {
-        return $value;
+        return \is_null($value) ? $value : (bool) $value;
     }
 
     /**

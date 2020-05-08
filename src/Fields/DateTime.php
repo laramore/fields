@@ -101,18 +101,18 @@ class DateTime extends BaseAttribute
      */
     public function cast($value)
     {
-        return $this->transform($value);
+        return \is_null($value) ? $value : new Carbon($value);
     }
 
     /**
-     * Transform the value to be used as a correct format.
+     * Transform the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed
      */
     public function transform($value)
     {
-        return \is_null($value) ? null : new Carbon($value);
+        return $value;
     }
 
     /**

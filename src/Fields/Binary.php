@@ -20,7 +20,7 @@ class Binary extends BaseAttribute
      */
     public function dry($value)
     {
-        return $this->transform($value);
+        return is_null($value) ? $value : (binary) $value;
     }
 
     /**
@@ -30,17 +30,6 @@ class Binary extends BaseAttribute
      * @return mixed
      */
     public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
-    /**
-     * Transform the value to be used as a correct format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
     {
         return is_null($value) ? $value : (binary) $value;
     }
@@ -53,6 +42,6 @@ class Binary extends BaseAttribute
      */
     public function serialize($value)
     {
-        return $this->transform($value);
+        return is_null($value) ? $value : (string) $value;
     }
 }

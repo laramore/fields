@@ -59,7 +59,7 @@ class Decimal extends BaseAttribute
      */
     public function cast($value)
     {
-        return $this->transform($this->dry($value));
+        return is_null($value) ? $value : (float) $value;
     }
 
     /**
