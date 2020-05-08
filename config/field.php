@@ -30,40 +30,44 @@ return [
     'configurations' => [
         'belongs_to_many' => [
             'type' => 'reversed_relation',
-            'proxies' => [
-                'attach' => [],
-                'detach' => [],
-                'sync' => [],
-                'toggle' => [],
-                'sync_without_detaching' => [],
-                'update_existing_pivot' => [],
+            'proxy' => [
+                'configurations' => [
+                    'attach' => [],
+                    'detach' => [],
+                    'sync' => [],
+                    'toggle' => [],
+                    'sync_without_detaching' => [],
+                    'update_existing_pivot' => [],
+                ],
             ],
         ],
         'binary' => [
             'type' => 'boolean',
-            'proxies' => [],
         ],
         'boolean' => [
             'type' => 'boolean',
-            'proxies' => [
-                'is' => [
-                    'needs_value' => true,
-                ],
-                'is_not' => [
-                    'needs_value' => true,
+            'proxy' => [
+                'configurations' => [
+                    'is' => [
+                        'needs_value' => true,
+                    ],
+                    'is_not' => [
+                        'needs_value' => true,
+                    ],
                 ],
             ],
         ],
         'char' => [
             'type' => 'char',
-            'proxies' => [
-                'resize' => [],
+            'proxy' => [
+                'configurations' => [
+                    'resize' => [],
+                ],
             ],
         ],
         'date_time' => [
             'type' => 'date_time',
             'format' => 'Y-m-d H:i:s',
-            'proxies' => [],
         ],
         'decimal' => [
             'type' => 'decimal',
@@ -74,12 +78,13 @@ return [
                 'big_unsigned' => 'big_unsigned_decimal',
                 'small_unsigned' => 'small_unsigned_decimal',
             ],
-            'proxies' => [],
         ],
         'email' => [
             'type' => 'email',
-            'proxies' => [
-                'fix' => [],
+            'proxy' => [
+                'configurations' => [
+                    'fix' => [],
+                ],
             ],
             'patterns' => [
                 'username' => '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*/iD',
@@ -92,54 +97,61 @@ return [
         'enum' => [
             'type' => 'enum',
             'elements' => [
-                'proxy_class' => Laramore\Proxies\EnumProxy::class,
-                'proxies' => [
-                    'is' => [
-                        'templates' => [
-                            'name' => '-{methodname}^{elementname}',
-                        ],
-                        'needs_value' => true,
-                    ]
+                'proxy' => [
+                    'class' => Laramore\Proxies\EnumProxy::class,
+                    'configurations' => [
+                        'is' => [
+                            'templates' => [
+                                'name' => '-{methodname}-^{elementname}',
+                            ],
+                            'needs_value' => true,
+                        ]
+                    ],
                 ],
             ],
-            'proxies' => [
-                'get_elements' => [
-                    'templates' => [
-                        'name' => 'get^{identifier}Elements',
+            'proxy' => [
+                'configurations' => [
+                    'get_elements' => [
+                        'templates' => [
+                            'name' => 'get-^{identifier}Elements',
+                        ],
                     ],
-                ],
-                'get_elements_value' => [
-                    'templates' => [
-                        'name' => 'get*{identifier}',
+                    'get_elements_value' => [
+                        'templates' => [
+                            'name' => 'get+^{identifier}',
+                        ],
                     ],
-                ],
-                'is' => [
-                    'needs_value' => true,
-                ],
-                'is_not' => [
-                    'needs_value' => true,
+                    'is' => [
+                        'needs_value' => true,
+                    ],
+                    'is_not' => [
+                        'needs_value' => true,
+                    ],
                 ],
             ],
         ],
         'has_many' => [
             'type' => 'reversed_relation',
-            'proxies' => [
-                'attach' => [],
-                'detach' => [],
-                'sync' => [],
-                'toggle' => [],
-                'sync_without_detaching' => [],
-                'update_existing_pivot' => [],
+            'proxy' => [
+                'configurations' => [
+                    'attach' => [],
+                    'detach' => [],
+                    'sync' => [],
+                    'toggle' => [],
+                    'sync_without_detaching' => [],
+                    'update_existing_pivot' => [],
+                ],
             ],
         ],
         'has_one' => [
             'type' => 'reversed_relation',
-            'proxies' => [],
         ],
         'increment' => [
             'type' => 'increment',
-            'proxies' => [
-                'increment' => [],
+            'proxy' => [
+                'configurations' => [
+                    'increment' => [],
+                ],
             ],
         ],
         'integer' => [
@@ -151,11 +163,9 @@ return [
                 'big_unsigned' => 'big_unsigned_integer',
                 'small_unsigned' => 'small_unsigned_integer',
             ],
-            'proxies' => [],
         ],
         'json' => [
             'type' => 'json',
-            'proxies' => [],
         ],
         'many_to_many' => [
             'type' => 'relation',
@@ -170,8 +180,10 @@ return [
                 'self_reversed' => 'reversed_+{name}',
                 'self_pivot_reversed' => 'reversed_+{modelname}',
             ],
-            'proxies' => [
-                'attach' => [],
+            'proxy' => [
+                'configurations' => [
+                    'attach' => [],
+                ],
             ],
         ],
         'many_to_one' => [
@@ -185,7 +197,6 @@ return [
                 'reversed' => '+{modelname}',
                 'self_reversed' => 'reversed_+{name}',
             ],
-            'proxies' => [],
         ],
         'one_to_one' => [
             'type' => 'relation',
@@ -198,18 +209,19 @@ return [
                 'reversed' => '${modelname}',
                 'self_reversed' => 'reversed_+{name}',
             ],
-            'proxies' => [],
         ],
         'password' => [
             'type' => 'password',
-            'proxies' => [
-                'resize' => [],
-                'hash' => [],
-                'is_correct' => [
-                    'templates' => [
-                        'name' => 'is^{identifier}Correct',
+            'proxy' => [
+                'configurations' => [
+                    'resize' => [],
+                    'hash' => [],
+                    'is_correct' => [
+                        'templates' => [
+                            'name' => 'is$^{identifier}Correct',
+                        ],
+                        'needs_value' => true,
                     ],
-                    'needs_value' => true,
                 ],
             ],
             'patterns' => [
@@ -222,7 +234,6 @@ return [
         ],
         'primary_id' => [
             'type' => 'primary_id',
-            'proxies' => [],
         ],
         'unique_id' => [
             'type' => 'integer',
@@ -233,21 +244,20 @@ return [
                 'big_unsigned' => 'big_unsigned_integer',
                 'small_unsigned' => 'small_unsigned_integer',
             ],
-            'proxies' => [],
         ],
         'text' => [
             'type' => 'text',
-            'proxies' => [],
         ],
         'timestamp' => [
             'type' => 'timestamp',
             'format' => 'timestamp',
-            'proxies' => [],
         ],
         'uri' => [
             'type' => 'uri',
-            'proxies' => [
-                'fix' => [],
+            'proxy' => [
+                'configurations' => [
+                    'fix' => [],
+                ],
             ],
             'patterns' => [
                 'identifier' => '/^\S+$/',
@@ -260,7 +270,6 @@ return [
 
         'body' => [
             'type' => 'text',
-            'proxies' => [],
         ],
         'name' => [
             'type' => 'composed',
@@ -278,7 +287,6 @@ return [
                 'firstname' => 'firstname',
                 'lastname' => 'lastname',
             ],
-            'proxies' => [],
         ],
     ],
 

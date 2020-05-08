@@ -15,7 +15,7 @@ use Illuminate\Container\Container;
 use Laramore\Contracts\Field\Field;
 use Closure;
 
-class FieldProxy extends Proxy
+class FieldProxy extends IdentifiedProxy
 {
     /**
      * The field to use for the call.
@@ -163,6 +163,10 @@ class FieldProxy extends Proxy
     public function __invoke(...$args)
     {
         $this->checkArguments($args);
+
+        if ($this->isStatic()) {
+            \array_shift($args);
+        }
 
         if ($this->needsToResolveValue()) {
             $args[0] = $this->getField()->get($args[0]);

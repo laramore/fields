@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d409d49cfc203df3117f78c8fc0e5e42",
+    "content-hash": "dc2c5bce3c8f292dd38243dbd54140a3",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -388,16 +388,16 @@
         },
         {
             "name": "laramore/base",
-            "version": "v0.7.0",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/base.git",
-                "reference": "e576148aa0ca25c0c25eaf34d65d27030fae6766"
+                "reference": "cdd16e265ef50209ea7366d1754851410ea9c578"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/base/zipball/e576148aa0ca25c0c25eaf34d65d27030fae6766",
-                "reference": "e576148aa0ca25c0c25eaf34d65d27030fae6766",
+                "url": "https://api.github.com/repos/laramore/base/zipball/cdd16e265ef50209ea7366d1754851410ea9c578",
+                "reference": "cdd16e265ef50209ea7366d1754851410ea9c578",
                 "shasum": ""
             },
             "require": {
@@ -450,24 +450,24 @@
                 "owned",
                 "unlock"
             ],
-            "time": "2020-05-08T10:50:24+00:00"
+            "time": "2020-05-08T17:39:39+00:00"
         },
         {
             "name": "laramore/proxies",
-            "version": "v0.4.0",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/proxies.git",
-                "reference": "f48d67add1e8adee2e7fca0cad46585e2d27d587"
+                "reference": "fab626966f84a8be817ba04cda5411109d49903a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/proxies/zipball/f48d67add1e8adee2e7fca0cad46585e2d27d587",
-                "reference": "f48d67add1e8adee2e7fca0cad46585e2d27d587",
+                "url": "https://api.github.com/repos/laramore/proxies/zipball/fab626966f84a8be817ba04cda5411109d49903a",
+                "reference": "fab626966f84a8be817ba04cda5411109d49903a",
                 "shasum": ""
             },
             "require": {
-                "laramore/base": "^0.7.0",
+                "laramore/base": "^0.7.1",
                 "php": ">=7.0.8"
             },
             "require-dev": {
@@ -517,7 +517,7 @@
                 "table",
                 "validations"
             ],
-            "time": "2020-05-08T11:46:21+00:00"
+            "time": "2020-05-08T18:10:40+00:00"
         },
         {
             "name": "laramore/types",

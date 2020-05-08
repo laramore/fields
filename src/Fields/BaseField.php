@@ -445,8 +445,8 @@ abstract class BaseField implements Field, Configured
         $config = Container::getInstance()->config;
         $proxyHandler = $this->getMeta()->getProxyHandler();
 
-        $class = $config->get('field.proxy.class');
-        $proxies = \array_merge($config->get('field.proxy.configurations'), $this->getConfig('proxy', []));
+        $class = $this->getConfig('proxy.class', $config->get('field.proxy.class'));
+        $proxies = \array_merge($config->get('field.proxy.configurations'), $this->getConfig('proxy.configurations', []));
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {
