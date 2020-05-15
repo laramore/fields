@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
+
 return [
 
     /*
@@ -59,6 +61,7 @@ return [
         ],
         'char' => [
             'type' => 'char',
+            'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
                     'resize' => [],
@@ -81,6 +84,7 @@ return [
         ],
         'email' => [
             'type' => 'email',
+            'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
                     'fix' => [],
@@ -212,6 +216,8 @@ return [
         ],
         'password' => [
             'type' => 'password',
+            'max_length' => 60, // Length required for hashs.
+            'min_length' => 8, // Min length of any password.
             'proxy' => [
                 'configurations' => [
                     'resize' => [],
@@ -254,6 +260,7 @@ return [
         ],
         'uri' => [
             'type' => 'uri',
+            'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
                     'fix' => [],
@@ -263,30 +270,8 @@ return [
                 'identifier' => '/^\S+$/',
                 'protocol' => '/^\S+:\/{0,2}$/',
                 'uri' => '/^\S+:\/{0,2}\S+$/',
-                'separator' => '',
                 'flags' => null,
             ]
-        ],
-
-        'body' => [
-            'type' => 'text',
-        ],
-        'name' => [
-            'type' => 'composed',
-            'fields' => [
-                'firstname' => [
-                    Laramore\Fields\Body::class,
-                    ['visible', 'fillable', 'required', 'title'],
-                ],
-                'lastname' => [
-                    Laramore\Fields\Body::class,
-                    ['visible', 'fillable', 'required', 'uppercase'],
-                ],
-            ],
-            'templates' => [
-                'firstname' => 'firstname',
-                'lastname' => 'lastname',
-            ],
         ],
     ],
 
