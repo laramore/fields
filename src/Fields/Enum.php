@@ -87,7 +87,7 @@ class Enum extends BaseAttribute
      *
      * @return array<EnumElement>
      */
-    public function getElementsValue(): array
+    public function getValues(): array
     {
         return \array_keys($this->elements->all());
     }

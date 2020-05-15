@@ -10,8 +10,6 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\Facades\Schema;
-
 class Char extends Text
 {
     protected $maxLength;
@@ -29,7 +27,7 @@ class Char extends Text
     {
         parent::__construct($options);
 
-        $this->maxLength = Schema::getFacadeRoot()::$defaultStringLength;
+        $this->maxLength = $this->getConfig('max_length');
     }
 
     /**

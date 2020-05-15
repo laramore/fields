@@ -177,6 +177,6 @@ class Uri extends Char implements PatternField, FixableField
             return $value;
         }
 
-        return $this->getMainProtocol().$this->getConfig('patterns.separator').$value;
+        return $this->getMainProtocol().$value;
     }
 }
