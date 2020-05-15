@@ -55,7 +55,7 @@ return [
         'where' => [
             'templates' => [
                 'name' => 'scope-^{methodname}-^{identifier}',
-                'multi_name' => 'scope^{methodname}',
+                'multi_name' => 'scope-^{methodname}',
             ],
         ],
         'doesnt_have' => [
