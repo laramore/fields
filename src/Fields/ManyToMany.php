@@ -100,26 +100,6 @@ class ManyToMany extends BaseComposed implements RelationField
     protected $uniqueRelation = false;
 
     /**
-     * Define the pivot and reversed pivot names.
-     *
-     * @param string $pivotName
-     * @param string $reversedPivotName
-     * @return self
-     */
-    public function pivotName(string $pivotName, string $reversedPivotName=null)
-    {
-        $this->needsToBeUnlocked();
-
-        $this->defineProperty('pivotName', $pivotName);
-
-        if (!\is_null($reversedPivotName)) {
-            $this->setProperty('reversedPivotName', $reversedPivotName);
-        }
-
-        return $this;
-    }
-
-    /**
      * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
      * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
@@ -141,6 +121,26 @@ class ManyToMany extends BaseComposed implements RelationField
         if (\is_null($this->reversedPivotName)) {
             throw new ConfigException($this->getConfigPath('templates.reversed_pivot'), ['any string name'], null);
         }
+    }
+
+    /**
+     * Define the pivot and reversed pivot names.
+     *
+     * @param string $pivotName
+     * @param string $reversedPivotName
+     * @return self
+     */
+    public function pivotName(string $pivotName, string $reversedPivotName=null)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->defineProperty('pivotName', $pivotName);
+
+        if (!\is_null($reversedPivotName)) {
+            $this->setProperty('reversedPivotName', $reversedPivotName);
+        }
+
+        return $this;
     }
 
     /**
