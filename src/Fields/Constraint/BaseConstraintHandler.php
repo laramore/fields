@@ -18,6 +18,7 @@ use Laramore\Fields\Constraint\{
     Primary, BaseConstraint
 };
 use Laramore\Contracts\Configured;
+use Laramore\Exceptions\LockException;
 
 abstract class BaseConstraintHandler extends BaseHandler implements Configured
 {
@@ -108,6 +109,20 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
         }
 
         return $this;
+    }
+
+    /**
+     * Actions during locking.
+     *
+     * @return void
+     */
+    protected function locking()
+    {
+        parent::locking();
+
+        if ($this->count(BaseConstraint::PRIMARY) > 1) {
+            throw new LockException('A field cannot have multiple primary constraints', 'primary');
+        }
     }
 
     /**

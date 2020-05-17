@@ -236,18 +236,4 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
 
         throw new \Exception('No target found. A field used as a target must have a primary, unique or index constraint');
     }
-
-    /**
-     * Actions during locking.
-     *
-     * @return void
-     */
-    public function locking()
-    {
-        parent::locking();
-
-        if ($this->count(BaseConstraint::PRIMARY) > 1) {
-            throw new LockException('A field cannot have multiple primary constraints', 'primary');
-        }
-    }
 }
