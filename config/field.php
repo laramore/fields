@@ -37,6 +37,8 @@ return [
                     'attach' => [],
                     'detach' => [],
                     'sync' => [],
+                    'update' => [],
+                    'delete' => [],
                     'toggle' => [],
                     'sync_without_detaching' => [],
                     'update_existing_pivot' => [],
@@ -141,6 +143,8 @@ return [
                     'attach' => [],
                     'detach' => [],
                     'sync' => [],
+                    'update' => [],
+                    'delete' => [],
                     'toggle' => [],
                     'sync_without_detaching' => [],
                     'update_existing_pivot' => [],
@@ -187,6 +191,8 @@ return [
             'proxy' => [
                 'configurations' => [
                     'attach' => [],
+                    'update' => [],
+                    'delete' => [],
                 ],
             ],
         ],

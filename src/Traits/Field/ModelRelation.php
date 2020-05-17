@@ -53,4 +53,27 @@ trait ModelRelation
 
         $model->unsetRelation($this->getNative());
     }
+
+    /**
+     * Update a relation.
+     *
+     * @param LaramoreModel $model
+     * @param array         $value
+     * @return boolean
+     */
+    public function update(LaramoreModel $model, array $value): bool
+    {
+        return $this->relate($model)->update($value);
+    }
+
+    /**
+     * Delete a relation.
+     *
+     * @param LaramoreModel $model
+     * @return integer
+     */
+    public function delete(LaramoreModel $model): int
+    {
+        return $this->relate($model)->delete();
+    }
 }

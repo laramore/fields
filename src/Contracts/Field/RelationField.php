@@ -84,4 +84,21 @@ interface RelationField extends ExtraField
      * @return Constraint
      */
     public function getTarget(): Constraint;
+
+    /**
+     * Update a relation.
+     *
+     * @param LaramoreModel $model
+     * @param array         $value
+     * @return boolean
+     */
+    public function update(LaramoreModel $model, array $value): bool;
+
+    /**
+     * Delete relation.
+     *
+     * @param LaramoreModel $model
+     * @return integer
+     */
+    public function delete(LaramoreModel $model): int;
 }
