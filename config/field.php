@@ -46,7 +46,7 @@ return [
             ],
         ],
         'binary' => [
-            'type' => 'boolean',
+            'type' => 'binary',
         ],
         'boolean' => [
             'type' => 'boolean',

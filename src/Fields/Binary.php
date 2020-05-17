@@ -35,6 +35,17 @@ class Binary extends BaseAttribute
     }
 
     /**
+     * Transform the value to correspond to the field desire.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function transform($value)
+    {
+        return $value;
+    }
+
+    /**
      * Serialize the value for outputs.
      *
      * @param  mixed $value
