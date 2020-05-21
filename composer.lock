@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c26b03080a088c792bca7ddc51fb64d",
+    "content-hash": "96559c83055a41d1593c5388a7d77a6a",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -454,20 +454,20 @@
         },
         {
             "name": "laramore/proxies",
-            "version": "v0.5.0",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/proxies.git",
-                "reference": "fab626966f84a8be817ba04cda5411109d49903a"
+                "reference": "efe354b5892ab2c68bd932d7371c11fd7fa2d0d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/proxies/zipball/fab626966f84a8be817ba04cda5411109d49903a",
-                "reference": "fab626966f84a8be817ba04cda5411109d49903a",
+                "url": "https://api.github.com/repos/laramore/proxies/zipball/efe354b5892ab2c68bd932d7371c11fd7fa2d0d0",
+                "reference": "efe354b5892ab2c68bd932d7371c11fd7fa2d0d0",
                 "shasum": ""
             },
             "require": {
-                "laramore/base": "^0.7.1",
+                "laramore/base": "~0.7",
                 "php": ">=7.0.8"
             },
             "require-dev": {
@@ -517,24 +517,24 @@
                 "table",
                 "validations"
             ],
-            "time": "2020-05-08T18:10:40+00:00"
+            "time": "2020-05-21T18:24:56+00:00"
         },
         {
             "name": "laramore/types",
-            "version": "v0.6.2",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laramore/types.git",
-                "reference": "3cc3fc4dc349174b26a9211d2697ee64cc1d1b93"
+                "reference": "34a182f767e7f40450ea3a1421da25ede6bc6538"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laramore/types/zipball/3cc3fc4dc349174b26a9211d2697ee64cc1d1b93",
-                "reference": "3cc3fc4dc349174b26a9211d2697ee64cc1d1b93",
+                "url": "https://api.github.com/repos/laramore/types/zipball/34a182f767e7f40450ea3a1421da25ede6bc6538",
+                "reference": "34a182f767e7f40450ea3a1421da25ede6bc6538",
                 "shasum": ""
             },
             "require": {
-                "laramore/base": "^0.7.0",
+                "laramore/base": "~0.7",
                 "php": ">=7.0.8"
             },
             "require-dev": {
@@ -588,7 +588,7 @@
                 "model",
                 "types"
             ],
-            "time": "2020-05-15T18:44:36+00:00"
+            "time": "2020-05-21T18:21:05+00:00"
         },
         {
             "name": "nesbot/carbon",
