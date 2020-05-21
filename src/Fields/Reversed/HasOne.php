@@ -98,6 +98,10 @@ class HasOne extends BaseField implements RelationField
                 \is_null($value) ? null : $this->getTargetAttribute()->get($value)
             );
         }
+        
+        if (!$model->exists) {
+            return $value;
+        }
 
         $modelClass = $this->getSourceModel();
         $primary = $modelClass::getMeta()->getPrimary()->getAttribute();

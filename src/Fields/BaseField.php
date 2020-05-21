@@ -344,7 +344,7 @@ abstract class BaseField implements Field, Configured
         $owner = $this->owner;
 
         if (\is_string($owner) && $owner === $this->model) {
-            $owner = $this->getMeta();
+            return $owner::getMeta();
         }
 
         return $owner;

@@ -13,12 +13,12 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
-    AttributeField, Field, RelationField, Constraint\Constraint
+    AttributeField, Field, ManyRelationField, Constraint\Constraint
 };
 use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
 
-class ManyToMany extends BaseComposed implements RelationField
+class ManyToMany extends BaseComposed implements ManyRelationField
 {
     use ManyToManyRelation;
 
