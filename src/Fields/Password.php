@@ -19,22 +19,6 @@ class Password extends Char implements PatternField
     protected $minLength;
 
     /**
-     * Create a new field with basic options.
-     * The constructor is protected so the field is created writing left to right.
-     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
-     *
-     * Secure option is defined with config file.
-     *
-     * @param array|null $options
-     */
-    protected function __construct(array $options=null)
-    {
-        parent::__construct($options);
-
-        $this->minLength = $this->getConfig('min_length');
-    }
-
-    /**
      * Return the pattern to match.
      *
      * @return string

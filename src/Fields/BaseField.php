@@ -64,6 +64,14 @@ abstract class BaseField implements Field, Configured
     protected function __construct(array $options=null)
     {
         $this->addOptions($options ?: $this->getType()->getDefaultOptions());
+
+        foreach ($this->getConfig() as $key => $value) {
+            $key = Str::camel($key);
+
+            if (\property_exists($this, $key) && !$this->hasProperty($key)) {
+                $this->setProperty($key, $value);
+            }
+        }
     }
 
     /**

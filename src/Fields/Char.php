@@ -15,22 +15,6 @@ class Char extends Text
     protected $maxLength;
 
     /**
-     * Create a new field with basic options.
-     * The constructor is protected so the field is created writing left to right.
-     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
-     *
-     * Max length is defined by the default value.
-     *
-     * @param array|null $options
-     */
-    protected function __construct(array $options=null)
-    {
-        parent::__construct($options);
-
-        $this->maxLength = $this->getConfig('max_length');
-    }
-
-    /**
      * Define the max length for this field.
      *
      * @param integer $maxLength
