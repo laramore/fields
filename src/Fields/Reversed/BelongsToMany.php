@@ -11,14 +11,14 @@
 namespace Laramore\Fields\Reversed;
 
 use Laramore\Contracts\{
-    Field\RelationField, Eloquent\LaramoreMeta
+    Field\ManyRelationField, Eloquent\LaramoreMeta
 };
 use Laramore\Traits\Field\{
     ReversedRelation, ManyToManyRelation
 };
 use Laramore\Fields\BaseField;
 
-class BelongsToMany extends BaseField implements RelationField
+class BelongsToMany extends BaseField implements ManyRelationField
 {
     use ReversedRelation, ManyToManyRelation;
 

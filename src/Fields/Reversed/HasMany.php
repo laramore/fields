@@ -12,7 +12,7 @@ namespace Laramore\Fields\Reversed;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
-use Laramore\Contracts\Field\RelationField;
+use Laramore\Contracts\Field\ManyRelationField;
 use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
@@ -20,10 +20,10 @@ use Laramore\Contracts\{
 use Laramore\Facades\Operator;
 use Laramore\Traits\Field\HasOneRelation;
 
-class HasMany extends BaseField implements RelationField
+class HasMany extends BaseField implements ManyRelationField
 {
     use HasOneRelation {
-        HasOneRelation::transform as protected transformToModel;
+        HasOneRelation::transform as public transformModel;
     }
 
     /**
@@ -42,7 +42,7 @@ class HasMany extends BaseField implements RelationField
             return collect($value);
         }
 
-        return collect($this->transformToModel($value));
+        return collect($this->transformModel($value));
     }
 
     /**
@@ -124,6 +124,10 @@ class HasMany extends BaseField implements RelationField
      */
     public function reverbate(LaramoreModel $model, $value)
     {
+        if (!$model->exists) {
+            return $value;
+        }
+
         $modelClass = $this->getTargetModel();
         $foreignAttname = $this->getTargetAttribute()->getNative();
 

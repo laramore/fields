@@ -53,7 +53,7 @@ trait ManyToManyRelation
      * @param  mixed $value
      * @return LaramoreModel
      */
-    public function transformToModel($value)
+    public function transformModel($value)
     {
         $model = $this->getTargetModel();
 
@@ -83,7 +83,7 @@ trait ManyToManyRelation
             return collect($value);
         }
 
-        return collect($this->transformToModel($value));
+        return collect($this->transformModel($value));
     }
 
     /**
@@ -107,7 +107,9 @@ trait ManyToManyRelation
      */
     public function reverbate(LaramoreModel $model, $value)
     {
-        $this->relate($model)->sync($value);
+        if ($model->exists) {
+            $this->relate($model)->sync($value);
+        }
 
         return $value;
     }
