@@ -113,15 +113,4 @@ trait HasOneRelation
     {
         return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
-
-    /**
-     * Retrieve values from the relation field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieve(LaramoreModel $model)
-    {
-        return $this->relate($model)->getResults();
-    }
 }

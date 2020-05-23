@@ -299,17 +299,6 @@ trait ToOneRelation
     }
 
     /**
-     * Retrieve values from the relation field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieve(LaramoreModel $model)
-    {
-        return $this->relate($model)->getResults();
-    }
-
-    /**
      * Reverbate the relation into database or other fields.
      * It should be called by the set method.
      *
@@ -432,7 +421,7 @@ trait ToOneRelation
      */
     public function setFieldValue(Field $field, LaramoreModel $model, $value)
     {
-        if ($model->hasAttributeValue($field->getNative()) && $this->getFieldValue($field, $model) !== $value) {
+        if ($model->hasAttributeValue($field->getName()) && $this->getFieldValue($field, $model) !== $value) {
             $this->reset($model);
         }
 

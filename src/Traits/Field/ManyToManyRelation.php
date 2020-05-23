@@ -115,17 +115,6 @@ trait ManyToManyRelation
     }
 
     /**
-     * Retrieve values from the relation field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieve(LaramoreModel $model)
-    {
-        return $this->relate($model)->getResults();
-    }
-
-    /**
      * Return all pivot attributes.
      *
      * @return array<AttributeField>
