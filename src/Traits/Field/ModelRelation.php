@@ -44,7 +44,7 @@ trait ModelRelation
      */
     public function get(LaramoreModel $model)
     {
-        return $model->getRelationValue($this->getNative());
+        return $model->getRelationValue($this->getName());
     }
 
     /**
@@ -56,7 +56,7 @@ trait ModelRelation
      */
     public function set(LaramoreModel $model, $value)
     {
-        return $model->setRelationValue($this->getNative(), $value);
+        return $model->setRelationValue($this->getName(), $value);
     }
 
     /**
@@ -68,11 +68,12 @@ trait ModelRelation
     public function reset(LaramoreModel $model)
     {
         if ($this->hasDefault()) {
-            $model->setRelationValue($this->getNative(), $value = $this->getDefault());
+            $model->setRelationValue($this->getName(), $value = $this->getDefault());
 
             return $value;
         }
 
+        $model->unsetRelation($this->getName());
     }
 
     /**

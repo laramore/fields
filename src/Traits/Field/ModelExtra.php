@@ -22,7 +22,7 @@ trait ModelExtra
      */
     public function get(LaramoreModel $model)
     {
-        return $model->getExtraValue($this->getNative());
+        return $model->getExtraValue($this->getName());
     }
 
     /**
@@ -34,7 +34,7 @@ trait ModelExtra
      */
     public function set(LaramoreModel $model, $value)
     {
-        return $model->setExtraValue($this->getNative(), $value);
+        return $model->setExtraValue($this->getName(), $value);
     }
 
     /**
@@ -46,11 +46,11 @@ trait ModelExtra
     public function reset(LaramoreModel $model)
     {
         if ($this->hasDefault()) {
-            $model->setExtraValue($this->getNative(), $value = $this->getDefault());
+            $model->setExtraValue($this->getName(), $value = $this->getDefault());
 
             return $value;
         }
 
-        $model->unsetExtra($this->getNative());
+        $model->unsetExtra($this->getName());
     }
 }

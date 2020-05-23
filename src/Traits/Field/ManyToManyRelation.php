@@ -261,7 +261,7 @@ trait ManyToManyRelation
     {
         $this->relate($model)->attach($value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }
@@ -277,7 +277,7 @@ trait ManyToManyRelation
     {
         $this->relate($model)->detach($value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }
@@ -293,7 +293,7 @@ trait ManyToManyRelation
     {
         $this->set($model, $value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }
@@ -309,7 +309,7 @@ trait ManyToManyRelation
     {
         $this->relate($model)->toggle($value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }
@@ -325,7 +325,7 @@ trait ManyToManyRelation
     {
         $this->relate($model)->syncWithoutDetaching($value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }
@@ -341,7 +341,7 @@ trait ManyToManyRelation
     {
         $this->relate($model)->updateExistingPivot($value);
 
-        $model->unsetRelation($this->getNative());
+        $model->unsetRelation($this->getName());
 
         return $model;
     }

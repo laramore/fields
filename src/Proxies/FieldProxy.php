@@ -44,7 +44,7 @@ class FieldProxy extends IdentifiedProxy
     public function __construct(Field $field, string $methodName, bool $static=false, bool $needsValue=false,
                                 string $nameTemplate=null, string $multiNameTemplate=null)
     {
-        parent::__construct($field->getNative(), $methodName, $static, $nameTemplate, $multiNameTemplate);
+        parent::__construct($field->getName(), $methodName, $static, $nameTemplate, $multiNameTemplate);
 
         $this->setField($field);
         $this->setNeedToResolveValue($needsValue);
@@ -62,7 +62,7 @@ class FieldProxy extends IdentifiedProxy
         $this->needsToBeUnlocked();
 
         $this->field = $field;
-        $this->setIdentifier($field->getNative());
+        $this->setIdentifier($field->getName());
 
         return $this;
     }
