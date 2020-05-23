@@ -26,6 +26,14 @@ interface RelationField extends ExtraField
     public function relate(LaramoreModel $model);
 
     /**
+     * Add a condition to the relation.
+     *
+     * @param  callable|\Closure $callable
+     * @return self
+     */
+    public function when($callable);
+
+    /**
      * Reverbate the relation into database or other fields.
      * It should be called by the set method.
      *

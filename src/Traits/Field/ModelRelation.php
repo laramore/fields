@@ -15,6 +15,28 @@ use Laramore\Contracts\Eloquent\LaramoreModel;
 trait ModelRelation
 {
     /**
+     * Define condition on relation.
+     *
+     * @var callable|\Closure
+     */
+    protected $when;
+
+    /**
+     * Add a condition to the relation.
+     *
+     * @param  callable|\Closure $callable
+     * @return self
+     */
+    public function when($callable)
+    {
+        $this->needsToBeUnLocked();
+
+        $this->when = $callable;
+
+        return $this;
+    }
+
+    /**
      * Get the value definied by the field.
      *
      * @param  LaramoreModel $model

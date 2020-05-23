@@ -151,7 +151,7 @@ trait ManyToManyRelation
      */
     public function relate(LaramoreModel $model)
     {
-        return $model->belongsToMany(
+        $relation = $model->belongsToMany(
             $this->getTargetModel(),
             $this->getPivotMeta()->getTableName(),
             $this->getPivotSource()->getSourceAttribute()->getNative(),
@@ -162,6 +162,12 @@ trait ManyToManyRelation
         )->withPivot($this->getPivotAttributes())
             ->using($this->getPivotMeta()->getModelClass())
             ->as($this->getPivotName());
+
+        if ($this->hasProperty('when')) {
+            return (\call_user_func($this->when, $relation, $model) ?? $relation);
+        }
+
+        return $relation;
     }
 
     /**

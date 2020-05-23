@@ -76,11 +76,17 @@ class HasOne extends BaseField implements RelationField
      */
     public function relate(LaramoreModel $model)
     {
-        return $model->hasOne(
+        $relation = $model->hasOne(
             $this->getTargetModel(),
             $this->getTargetAttribute()->getNative(),
             $this->getSourceAttribute()->getNative()
         );
+
+        if ($this->hasProperty('when')) {
+            return (\call_user_func($this->when, $relation, $model) ?? $relation);
+        }
+
+        return $relation;
     }
 
     /**

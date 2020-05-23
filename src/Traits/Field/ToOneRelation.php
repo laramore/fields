@@ -335,11 +335,17 @@ trait ToOneRelation
      */
     public function relate(LaramoreModel $model)
     {
-        return $model->belongsTo(
+        $relation = $model->belongsTo(
             $this->getTargetModel(),
             $this->getSourceAttribute()->getNative(),
             $this->getTargetAttribute()->getNative()
         );
+
+        if ($this->hasProperty('when')) {
+            return (\call_user_func($this->when, $relation, $model) ?? $relation);
+        }
+
+        return $relation;
     }
 
     /**

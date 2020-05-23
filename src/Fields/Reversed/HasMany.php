@@ -107,11 +107,17 @@ class HasMany extends BaseField implements ManyRelationField
      */
     public function relate(LaramoreModel $model)
     {
-        return $model->hasMany(
+        $relation = $model->hasMany(
             $this->getTargetModel(),
             $this->getTargetAttribute()->getNative(),
             $this->getSourceAttribute()->getNative()
         );
+
+        if ($this->hasProperty('when')) {
+            return (\call_user_func($this->when, $relation, $model) ?? $relation);
+        }
+
+        return $relation;
     }
 
     /**
