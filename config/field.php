@@ -156,9 +156,11 @@ return [
         ],
         'increment' => [
             'type' => 'increment',
+            'step' => 1,
             'proxy' => [
                 'configurations' => [
                     'increment' => [],
+                    'decrement' => [],
                 ],
             ],
         ],

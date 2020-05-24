@@ -10,13 +10,14 @@
 
 namespace Laramore\Fields;
 
-use Laramore\Contracts\{
-    Eloquent\LaramoreModel, Field\IncrementField
-};
+use Laramore\Contracts\Field\IncrementField;
 use Laramore\Elements\TypeElement;
+use Laramore\Traits\Field\Increments;
 
 class Increment extends Integer implements IncrementField
 {
+    use Increments;
+
     /**
      * Return the type object of the field.
      *
@@ -25,31 +26,5 @@ class Increment extends Integer implements IncrementField
     public function getType(): TypeElement
     {
         return $this->resolveType();
-    }
-
-    /**
-     * IncrementField the attribute value by the desired number (1 by default).
-     *
-     * @param LaramoreModel $model
-     * @param integer|float $value
-     * @param integer|float $increment
-     * @return mixed
-     */
-    public function increment(LaramoreModel $model, $value, $increment=1)
-    {
-        return $model->setAttribute($this->attname, ($value + $increment));
-    }
-
-    /**
-     * Decrement the attribute value by the desired number (1 by default).
-     *
-     * @param LaramoreModel $model
-     * @param integer|float $value
-     * @param integer|float $decrement
-     * @return mixed
-     */
-    public function decrement(LaramoreModel $model, $value, $decrement=1)
-    {
-        return $this->increment($model, $value, - $decrement);
     }
 }
