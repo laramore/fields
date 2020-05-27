@@ -37,6 +37,6 @@ trait Increments
      */
     public function decrement(LaramoreModel $model, $value, $decrement=null)
     {
-        return $this->increment($model, $value, -$decrement ?? $this->getConfig('step'));
+        return $this->increment($model, $value, (-$decrement ?? $this->getConfig('step')));
     }
 }

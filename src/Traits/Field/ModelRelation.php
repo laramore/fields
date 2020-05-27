@@ -37,6 +37,17 @@ trait ModelRelation
     }
 
     /**
+     * Indicate if the field has a value.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function has(LaramoreModel $model)
+    {
+        return $model->hasRelationValue($this->getName());
+    }
+
+    /**
      * Get the value definied by the field.
      *
      * @param  LaramoreModel $model

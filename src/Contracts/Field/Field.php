@@ -134,11 +134,12 @@ interface Field extends Locked, Owned
     public function serialize($value);
 
     /**
-     * Indicate if the field has a default value.
+     * Indicate if the field has a value.
      *
+     * @param  LaramoreModel $model
      * @return mixed
      */
-    public function hasDefault();
+    public function has(LaramoreModel $model);
 
     /**
      * Get the value definied by the field.

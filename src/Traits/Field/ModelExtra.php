@@ -15,6 +15,17 @@ use Laramore\Contracts\Eloquent\LaramoreModel;
 trait ModelExtra
 {
     /**
+     * Indicate if the field has a value.
+     *
+     * @param  LaramoreModel $model
+     * @return mixed
+     */
+    public function has(LaramoreModel $model)
+    {
+        return $model->hasExtraValue($this->getName());
+    }
+
+    /**
      * Get the value definied by the field.
      *
      * @param  LaramoreModel $model

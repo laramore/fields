@@ -49,7 +49,7 @@ interface LaramoreBuilder extends Proxied
      * @param  array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function get($columns = ['*']);
+    public function get($columns=['*']);
 
     /**
      * Dry values.

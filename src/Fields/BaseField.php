@@ -251,16 +251,6 @@ abstract class BaseField implements Field, Configured
     }
 
     /**
-     * Indicate if the field has a default value.
-     *
-     * @return mixed
-     */
-    public function hasDefault()
-    {
-        return !\is_null($this->default);
-    }
-
-    /**
      * Define the field as not visible.
      *
      * @param  boolean $hidden

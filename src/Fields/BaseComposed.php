@@ -306,6 +306,18 @@ abstract class BaseComposed extends BaseField implements ComposedField
     }
 
     /**
+     * Return the has value for a specific field.
+     *
+     * @param Field         $field
+     * @param LaramoreModel $model
+     * @return mixed
+     */
+    public function hasFieldValue(Field $field, LaramoreModel $model)
+    {
+        return $this->getOwner()->hasFieldValue($field, $model);
+    }
+
+    /**
      * Return the get value for a specific field.
      *
      * @param Field         $field

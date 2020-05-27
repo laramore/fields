@@ -61,6 +61,15 @@ interface FieldsOwner
     public function getFields(string $class=null): array;
 
     /**
+     * Return the has value for a specific field.
+     *
+     * @param Field         $field
+     * @param LaramoreModel $model
+     * @return mixed
+     */
+    public function hasFieldValue(Field $field, LaramoreModel $model);
+
+    /**
      * Return the get value for a specific field.
      *
      * @param Field         $field
