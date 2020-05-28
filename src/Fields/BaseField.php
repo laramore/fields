@@ -274,12 +274,32 @@ abstract class BaseField implements Field, Configured
         $this->removeOption(Option::required());
 
         if (\is_null($value)) {
-            $this->nullable();
+            $this->addOption(Option::nullable());
         }
 
-        $this->defineProperty('default', $value);
+        $this->defineProperty('default', $this->cast($value));
 
         return $this;
+    }
+
+    /**
+     * Get a default value for this field.
+     *
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        $value = $this->default;
+
+        if (\is_object($value)) {
+            return clone $value;
+        }
+
+        if (\is_callable($value)) {
+            return $value($this);
+        }
+
+        return $value;
     }
 
     /**

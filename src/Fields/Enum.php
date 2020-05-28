@@ -141,13 +141,30 @@ class Enum extends BaseAttribute
     }
 
     /**
+     * Get a default value for this field.
+     *
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        $value = $this->default;
+
+        if ($value instanceof EnumElement) {
+            return $value;
+        }
+
+        return parent::getDefault();
+    }
+
+
+    /**
      * Return the default value.
      *
      * @return mixed
      */
     public function getDefaultValue()
     {
-        return $this->default->name;
+        return $this->getDefault()->name;
     }
 
     /**

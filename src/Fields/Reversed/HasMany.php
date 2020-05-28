@@ -144,7 +144,7 @@ class HasMany extends BaseField implements ManyRelationField
         $valueIds = $value->map(function ($subModel) use ($primaryAttname) {
             return $subModel->getAttribute($primaryAttname);
         });
-        $default = \is_null($this->getDefault()) ? null : $this->default->getAttribute($foreignAttname);
+        $default = \is_null($this->getDefault()) ? null : $this->getDefault()->getAttribute($foreignAttname);
 
         $primaryField->addBuilderOperation(
             $modelClass::where($foreignAttname, Operator::equal(), $foreignId),
