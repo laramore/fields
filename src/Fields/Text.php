@@ -20,7 +20,7 @@ class Text extends BaseAttribute
      */
     public function dry($value)
     {
-        return is_null($value) ? $value : (string) $value;
+        return \is_null($value) ? $value : (string) $value;
     }
 
     /**
@@ -31,7 +31,7 @@ class Text extends BaseAttribute
      */
     public function cast($value)
     {
-        return is_null($value) ? $value : (string) $value;
+        return \is_null($value) ? $value : (string) $value;
     }
 
     /**

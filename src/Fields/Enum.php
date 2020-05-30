@@ -199,6 +199,10 @@ class Enum extends BaseAttribute
      */
     public function dry($value)
     {
+        if (\is_null($value)) {
+            return $value;
+        }
+
         return $this->transform($value)->native;
     }
 

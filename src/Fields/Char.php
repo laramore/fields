@@ -12,6 +12,11 @@ namespace Laramore\Fields;
 
 class Char extends Text
 {
+    /**
+     * Max length.
+     *
+     * @var integer
+     */
     protected $maxLength;
 
     /**
