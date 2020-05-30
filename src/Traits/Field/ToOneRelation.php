@@ -12,7 +12,9 @@ namespace Laramore\Traits\Field;
 
 use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
-use Laramore\Facades\Operator;
+use Laramore\Facades\{
+    Operator, Option
+};
 use Laramore\Fields\Constraint\FieldConstraintHandler;
 use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
@@ -71,7 +73,9 @@ trait ToOneRelation
     {
         $this->defineProperty('targetModel', $model);
 
-        if ($model !== 'self') {
+        if ($model === 'self') {
+            $this->addOption(Option::nullable());
+        } else {
             $this->getField('reversed')->setMeta($model::getMeta());
         }
 

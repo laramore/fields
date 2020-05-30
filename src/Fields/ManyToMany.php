@@ -11,6 +11,7 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Str;
+use Laramore\Facades\Option;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
     AttributeField, Field, ManyRelationField, Constraint\Constraint
@@ -166,7 +167,9 @@ class ManyToMany extends BaseComposed implements ManyRelationField
 
         $this->defineProperty('targetModel', $model);
 
-        if ($model !== 'self') {
+        if ($model === 'self') {
+            $this->addOption(Option::nullable());
+        } else {
             $this->getField('reversed')->setMeta($model::getMeta());
         }
 
