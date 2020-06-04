@@ -15,7 +15,7 @@ use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
 };
 
-trait HasOneRelation
+trait HasOneSingleRelation
 {
     use ModelRelation, ReversedRelation, Constraints;
 

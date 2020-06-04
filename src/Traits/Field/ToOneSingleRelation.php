@@ -23,7 +23,7 @@ use Laramore\Contracts\Field\{
     Field, AttributeField, RelationField, Constraint\Constraint
 };
 
-trait ToOneRelation
+trait ToOneSingleRelation
 {
     use ModelRelation, Constraints;
 
@@ -111,7 +111,7 @@ trait ToOneRelation
      */
     public function isOnSelf()
     {
-        return \in_array($this->targetModel, [$this->getMeta()->getModelClass(), 'self']);
+        return \in_array($this->getTargetModel(), [$this->getMeta()->getModelClass(), 'self']);
     }
 
     /**
@@ -153,13 +153,16 @@ trait ToOneRelation
     }
 
     /**
-     * Return the main attribute where to start the relation from.
+     * Return the source of the relation.
      *
-     * @return AttributeField
+     * @return Constraint
      */
-    public function getSourceAttribute(): AttributeField
+    public function getSource(): Constraint
     {
-        return $this->getField('id');
+        $this->needsToBeOwned();
+
+        return $this->getSourceModel()::getMeta()
+            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
     }
 
     /**
@@ -175,31 +178,6 @@ trait ToOneRelation
     }
 
     /**
-     * Return the main attribute where to start the relation to.
-     *
-     * @return AttributeField
-     */
-    public function getTargetAttribute(): AttributeField
-    {
-        $this->needsToBeOwned();
-
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute();
-    }
-
-    /**
-     * Return the source of the relation.
-     *
-     * @return Constraint
-     */
-    public function getSource(): Constraint
-    {
-        $this->needsToBeOwned();
-
-        return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
-    }
-
-    /**
      * Return the target of the relation.
      *
      * @return Constraint
@@ -208,8 +186,7 @@ trait ToOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getTargetModel()::getMeta()
-            ->getConstraintHandler()->getTarget([$this->getTargetAttribute()]);
+        return $this->getTargetModel()::getMeta()->getPrimary();
     }
 
     /**
@@ -236,7 +213,7 @@ trait ToOneRelation
      */
     protected function checkOptions()
     {
-        if (!$this->targetModel) {
+        if (!$this->getTargetModel()) {
             throw new \Exception('Related model settings needed. Set it by calling `on` method');
         }
 
