@@ -11,9 +11,6 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\Eloquent\LaramoreModel;
-use Laramore\Contracts\Field\{
-    AttributeField, Constraint\Constraint
-};
 
 interface RelationField extends ExtraField
 {
@@ -59,39 +56,11 @@ interface RelationField extends ExtraField
     public function getSourceModel(): string;
 
     /**
-     * Return the main attribute where to start the relation from.
-     *
-     * @return AttributeField
-     */
-    public function getSourceAttribute(): AttributeField;
-
-    /**
      * Model where the relation is set to.
      *
      * @return string
      */
     public function getTargetModel(): string;
-
-    /**
-     * Return the main attribute where to start the relation to.
-     *
-     * @return AttributeField
-     */
-    public function getTargetAttribute(): AttributeField;
-
-    /**
-     * Return the source of the relation.
-     *
-     * @return Constraint
-     */
-    public function getSource(): Constraint;
-
-    /**
-     * Return the target of the relation.
-     *
-     * @return Constraint
-     */
-    public function getTarget(): Constraint;
 
     /**
      * Update a relation.
