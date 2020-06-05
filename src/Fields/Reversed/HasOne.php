@@ -17,11 +17,11 @@ use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Contracts\Field\RelationField;
-use Laramore\Traits\Field\HasOneSingleRelation;
+use Laramore\Traits\Field\HasSingleOneRelation;
 
 class HasOne extends BaseField implements RelationField
 {
-    use HasOneSingleRelation;
+    use HasSingleOneRelation;
 
     /**
      * Add a where in condition from this field.

@@ -13,12 +13,12 @@ namespace Laramore\Fields;
 use Laramore\Contracts\{
     Field\RelationField, Eloquent\LaramoreModel
 };
-use Laramore\Traits\Field\ToOneSingleRelation;
+use Laramore\Traits\Field\ToSingleOneRelation;
 
 class ManyToOne extends BaseComposed implements RelationField
 {
-    use ToOneSingleRelation {
-        ToOneSingleRelation::reset as protected resetRelation;
+    use ToSingleOneRelation {
+        ToSingleOneRelation::reset as protected resetRelation;
     }
 
     /**

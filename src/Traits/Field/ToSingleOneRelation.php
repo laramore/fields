@@ -23,7 +23,7 @@ use Laramore\Contracts\Field\{
     Field, RelationField, Constraint\Constraint
 };
 
-trait ToOneSingleRelation
+trait ToSingleOneRelation
 {
     use ModelRelation, Constraints;
 

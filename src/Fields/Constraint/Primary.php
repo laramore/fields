@@ -10,9 +10,7 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Contracts\Field\{
-    AttributeField, Constraint\Constraint
-};
+use Laramore\Contracts\Field\Constraint\Constraint;
 
 class Primary extends BaseConstraint implements Constraint
 {

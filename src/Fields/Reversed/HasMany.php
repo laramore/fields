@@ -18,12 +18,12 @@ use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Facades\Operator;
-use Laramore\Traits\Field\HasOneSingleRelation;
+use Laramore\Traits\Field\HasSingleOneRelation;
 
 class HasMany extends BaseField implements ManyRelationField
 {
-    use HasOneSingleRelation {
-        HasOneSingleRelation::transform as public transformModel;
+    use HasSingleOneRelation {
+        HasSingleOneRelation::transform as public transformModel;
     }
 
     /**
