@@ -14,9 +14,8 @@ use Laramore\Contracts\{
     Owned, Configured
 };
 use Laramore\Contracts\Field\Constraint\{
-    ConstraintedField, Constraint
+    ConstraintedField, Constraint, RelationConstraint
 };
-use Laramore\Exceptions\LockException;
 use Laramore\Observers\BaseObserver;
 use Laramore\Traits\IsOwned;
 
@@ -195,11 +194,17 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      * Return the sourced constraint.
      *
      * @param array $attributes
-     * @return SourceConstraint
+     * @return RelationConstraint
      */
-    public function getSource(array $attributes=[]): SourceConstraint
+    public function getSource(array $attributes=[]): RelationConstraint
     {
-        foreach ($this->all() as $sourceable) {
+        $sources = \array_merge(...\array_values($this->all()));
+
+        foreach ($sources as $sourceable) {
+            if (!($sourceable instanceof RelationConstraint)) {
+                continue;
+            }
+
             $intersec = \array_diff(
                 \array_map(function ($constrainted) {
                     return $constrainted->getNative();
@@ -223,7 +228,13 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getTarget(array $attributes=[]): Constraint
     {
-        foreach ($this->all() as $targetable) {
+        $targets = \array_merge(...\array_values($this->all()));
+
+        foreach ($targets as $targetable) {
+            if ($targetable instanceof RelationConstraint) {
+                continue;
+            }
+
             $intersec = \array_diff(
                 $targetable->getNatives(),
                 \array_merge($attributes, [$this->getConstrainted()->getNative()])

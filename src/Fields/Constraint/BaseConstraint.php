@@ -192,28 +192,6 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
     }
 
     /**
-     * Return the main attribute names.
-     *
-     * @return string
-     */
-    public function getMainNative(): string
-    {
-        return $this->getAttributes()[0]->getNative();
-    }
-
-    /**
-     * Return all concerned attribute names.
-     *
-     * @return array<string>
-     */
-    public function getNatives(): array
-    {
-        return \array_map(function ($attribute) {
-            return $attribute->getNative();
-        }, $this->all());
-    }
-
-    /**
      * Indicate if this constraint is composed of multiple fields.
      *
      * @return boolean

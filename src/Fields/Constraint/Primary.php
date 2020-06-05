@@ -22,40 +22,4 @@ class Primary extends BaseConstraint implements Constraint
      * @var string
      */
     protected $constraintType = self::PRIMARY;
-
-    /**
-     * Return the first field of this constraint.
-     *
-     * @return AttributeField
-     */
-    public function getAttribute(): AttributeField
-    {
-        if ($this->isComposed()) {
-            throw new \LogicException("The `{$this->constraintType}` constraint `{$this->getName()}` is composed");
-        }
-
-        return $this->all()[0];
-    }
-
-    /**
-     * Return the first attribute name.
-     *
-     * @return string
-     */
-    public function getAttname(): string
-    {
-        return $this->getAttribute()->attname;
-    }
-
-    /**
-     * Return all attribute names.
-     *
-     * @return array<AttributeField>
-     */
-    public function getAttnames(): array
-    {
-        return \array_map(function ($field) {
-            return $field->attname;
-        }, $this->all());
-    }
 }
