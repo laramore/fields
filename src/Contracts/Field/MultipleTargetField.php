@@ -10,14 +10,14 @@
 
 namespace Laramore\Contracts\Field;
 
-use Laramore\Contracts\Field\Constraint\RelationConstraint;
+use Laramore\Contracts\Field\Constraint\Constraint;
 
 interface MultipleTargetField extends RelationField
 {
     /**
      * Return the targets of the relation.
      *
-     * @return array<RelationConstraint>
+     * @return array<Constraint>
      */
     public function getTargets(): array;
 }

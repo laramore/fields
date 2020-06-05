@@ -10,14 +10,14 @@
 
 namespace Laramore\Contracts\Field;
 
-use Laramore\Contracts\Field\Constraint\RelationConstraint;
+use Laramore\Contracts\Field\Constraint\Constraint;
 
 interface SingleTargetField extends RelationField
 {
     /**
      * Return the target of the relation.
      *
-     * @return RelationConstraint
+     * @return Constraint
      */
-    public function getTarget(): RelationConstraint;
+    public function getTarget(): Constraint;
 }

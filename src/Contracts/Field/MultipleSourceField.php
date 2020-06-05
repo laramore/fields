@@ -10,14 +10,14 @@
 
 namespace Laramore\Contracts\Field;
 
-use Laramore\Contracts\Field\Constraint\RelationConstraint;
+use Laramore\Contracts\Field\Constraint\Constraint;
 
 interface MultipleSourceField extends RelationField
 {
     /**
      * Return the sources of the relation.
      *
-     * @return RelationConstraint
+     * @return Constraint
      */
-    public function getSources(): RelationConstraint;
+    public function getSources(): Constraint;
 }

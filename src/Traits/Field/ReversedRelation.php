@@ -11,7 +11,7 @@
 namespace Laramore\Traits\Field;
 
 use Laramore\Contracts\Field\{
-    AttributeField, RelationField, Constraint\Constraint
+    RelationField, Constraint\Constraint
 };
 
 trait ReversedRelation

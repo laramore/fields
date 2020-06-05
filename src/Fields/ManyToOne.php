@@ -11,11 +11,11 @@
 namespace Laramore\Fields;
 
 use Laramore\Contracts\{
-    Field\RelationField, Eloquent\LaramoreModel
+    Eloquent\LaramoreModel, Field\SingleTargetField, Field\SingleSourceField
 };
 use Laramore\Traits\Field\ToSingleOneRelation;
 
-class ManyToOne extends BaseComposed implements RelationField
+class ManyToOne extends BaseComposed implements SingleSourceField, SingleTargetField
 {
     use ToSingleOneRelation {
         ToSingleOneRelation::reset as protected resetRelation;
