@@ -11,9 +11,7 @@
 namespace Laramore\Traits\Field;
 
 use Laramore\Facades\Operator;
-use Laramore\Contracts\Eloquent\{
-    LaramoreModel, LaramoreBuilder
-};
+use Laramore\Contracts\Eloquent\LaramoreBuilder;
 
 trait HasOneSingleRelation
 {
@@ -28,7 +26,7 @@ trait HasOneSingleRelation
     public function dry($value)
     {
         $value = $this->transform($value);
-        $name = $this->getTargetAttribute()->getNative();
+        $name = $this->getTarget()->getMainAttribute()->getName();
 
         return $this->transform($value)->map(function ($value) use ($name) {
             return isset($value[$name]) ? $value[$name] : $value;

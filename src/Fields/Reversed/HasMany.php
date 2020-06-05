@@ -18,12 +18,12 @@ use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Facades\Operator;
-use Laramore\Traits\Field\HasOneRelation;
+use Laramore\Traits\Field\HasOneSingleRelation;
 
 class HasMany extends BaseField implements ManyRelationField
 {
-    use HasOneRelation {
-        HasOneRelation::transform as public transformModel;
+    use HasOneSingleRelation {
+        HasOneSingleRelation::transform as public transformModel;
     }
 
     /**
@@ -90,7 +90,7 @@ class HasMany extends BaseField implements ManyRelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
                           string $boolean='and', int $count=null): LaramoreBuilder
     {
-        $attname = $this->on::getMeta()->getPrimary()->attname;
+        $attname = $this->on::getMeta()->getPrimary()->getNative();
 
         return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)),
             function ($query) use ($attname, $value) {

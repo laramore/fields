@@ -17,11 +17,11 @@ use Laramore\Contracts\{
     Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Contracts\Field\RelationField;
-use Laramore\Traits\Field\HasOneRelation;
+use Laramore\Traits\Field\HasOneSingleRelation;
 
 class HasOne extends BaseField implements RelationField
 {
-    use HasOneRelation;
+    use HasOneSingleRelation;
 
     /**
      * Add a where in condition from this field.
@@ -35,7 +35,7 @@ class HasOne extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute()
+        return $this->getTarget()->getMainAttribute()
             ->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
@@ -64,7 +64,7 @@ class HasOne extends BaseField implements RelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute()
+        return $this->getTarget()->getMainAttribute()
             ->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
@@ -78,8 +78,8 @@ class HasOne extends BaseField implements RelationField
     {
         $relation = $model->hasOne(
             $this->getTargetModel(),
-            $this->getTargetAttribute()->getNative(),
-            $this->getSourceAttribute()->getNative()
+            $this->getTarget()->getMainAttribute()->getNative(),
+            $this->getSource()->getMainAttribute()->getNative()
         );
 
         if ($this->hasProperty('when')) {
@@ -101,7 +101,7 @@ class HasOne extends BaseField implements RelationField
         if (!\is_null($value)) {
             $this->getField('id')->set(
                 $model,
-                \is_null($value) ? null : $this->getTargetAttribute()->get($value)
+                \is_null($value) ? null : $this->getTarget()->getMainAttribute()->get($value)
             );
         }
 
@@ -110,9 +110,9 @@ class HasOne extends BaseField implements RelationField
         }
 
         $modelClass = $this->getSourceModel();
-        $primary = $modelClass::getMeta()->getPrimary()->getAttribute();
+        $primary = $this->getSource()->getMainAttribute();
         $id = $model->getKey();
-        $valueId = $value[$primary->getNative()];
+        $valueId = $value[$primary->getName()];
 
         $primary->addBuilderOperation(
             $modelClass::where($this->to, $id),

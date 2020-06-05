@@ -50,16 +50,6 @@ trait ReversedRelation
     }
 
     /**
-     * Return the main attribute where to start the relation from.
-     *
-     * @return AttributeField
-     */
-    public function getSourceAttribute(): AttributeField
-    {
-        return $this->getReversed()->getTargetAttribute();
-    }
-
-    /**
      * Model where the relation is set to.
      *
      * @return string
@@ -67,16 +57,6 @@ trait ReversedRelation
     public function getTargetModel(): string
     {
         return $this->getReversed()->getSourceModel();
-    }
-
-    /**
-     * Return the main attribute where to start the relation to.
-     *
-     * @return AttributeField
-     */
-    public function getTargetAttribute(): AttributeField
-    {
-        return $this->getReversed()->getSourceAttribute();
     }
 
     /**

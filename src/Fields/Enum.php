@@ -156,7 +156,6 @@ class Enum extends BaseAttribute
         return parent::getDefault();
     }
 
-
     /**
      * Return the default value.
      *

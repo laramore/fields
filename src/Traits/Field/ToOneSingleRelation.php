@@ -20,7 +20,7 @@ use Laramore\Contracts\Eloquent\{
     LaramoreModel, LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
-    Field, AttributeField, RelationField, Constraint\Constraint
+    Field, RelationField, Constraint\Constraint
 };
 
 trait ToOneSingleRelation
@@ -111,7 +111,9 @@ trait ToOneSingleRelation
      */
     public function isOnSelf()
     {
-        return \in_array($this->getTargetModel(), [$this->getMeta()->getModelClass(), 'self']);
+        $model = $this->getTargetModel();
+
+        return $model === $this->getMeta()->getModelClass() || $model === 'self';
     }
 
     /**
@@ -162,7 +164,7 @@ trait ToOneSingleRelation
         $this->needsToBeOwned();
 
         return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
+            ->getConstraintHandler()->getSource([$this->getField('id')]);
     }
 
     /**
@@ -202,8 +204,7 @@ trait ToOneSingleRelation
 
         parent::owned();
 
-        $relationName = $this->hasProperty('relationName') ? $this->getProperty('relationName') : null;
-        $this->foreign($relationName, $this->getTargetAttribute());
+        $this->foreign($this->getProperty('relationName'), $this->getTarget()->getMainAttribute());
     }
 
     /**
@@ -231,7 +232,7 @@ trait ToOneSingleRelation
     public function dry($value)
     {
         $value = $this->transform($value);
-        $name = $this->getTargetAttribute()->getNative();
+        $name = $this->getTarget()->getMainAttribute()->getName();
 
         return isset($value[$name]) ? $value[$name] : $value;
     }
@@ -256,7 +257,7 @@ trait ToOneSingleRelation
     public function transform($value)
     {
         $model = $this->getTargetModel();
-        $name = $this->getTargetAttribute()->getNative();
+        $name = $this->getTarget()->getMainAttribute()->getName();
 
         if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof Collection) {
             return $value;
@@ -291,7 +292,7 @@ trait ToOneSingleRelation
     {
         $this->getField('id')->set(
             $model,
-            \is_null($value) ? null : $this->getTargetAttribute()->get($value)
+            \is_null($value) ? null : $this->getTarget()->getMainAttribute()->get($value)
         );
 
         return $value;
@@ -307,8 +308,8 @@ trait ToOneSingleRelation
     {
         $relation = $model->belongsTo(
             $this->getTargetModel(),
-            $this->getSourceAttribute()->getNative(),
-            $this->getTargetAttribute()->getNative()
+            $this->getSource()->getMainAttribute()->getNative(),
+            $this->getTarget()->getMainAttribute()->getNative()
         );
 
         if ($this->hasProperty('when')) {
