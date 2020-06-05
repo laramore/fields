@@ -23,18 +23,6 @@ use Laramore\Exceptions\LockException;
 abstract class BaseConstraintHandler extends BaseHandler implements Configured
 {
     /**
-     * List of all observers to apply on the observable class.
-     *
-     * @var array
-     */
-    protected $observers = [
-        BaseConstraint::PRIMARY => [],
-        BaseConstraint::INDEX => [],
-        BaseConstraint::UNIQUE => [],
-        BaseConstraint::FOREIGN => [],
-    ];
-
-    /**
      * The observer class to use to generate.
      *
      * @var string
@@ -75,7 +63,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
         if (\is_null($type)) {
             return $this->observers;
         } else {
-            return $this->observers[$type];
+            return ($this->observers[$type] ?? []);
         }
     }
 
@@ -101,7 +89,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
         $type = $constraint->getConstraintType();
 
         if (!isset($constraints[$type])) {
-            throw new \Exception("The constraint type `$type` does not exist");
+            $constraints[$type] = [];
         }
 
         if (!\in_array($constraint, $constraints[$type])) {

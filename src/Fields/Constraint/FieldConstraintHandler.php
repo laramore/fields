@@ -198,9 +198,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getSource(array $attributes=[]): RelationConstraint
     {
-        $sources = \array_merge(...\array_values($this->all()));
-
-        foreach ($sources as $sourceable) {
+        foreach ($this->getConstraints() as $sourceable) {
             if (!($sourceable instanceof RelationConstraint)) {
                 continue;
             }
@@ -228,9 +226,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getTarget(array $attributes=[]): Constraint
     {
-        $targets = \array_merge(...\array_values($this->all()));
-
-        foreach ($targets as $targetable) {
+        foreach ($this->getConstraints() as $targetable) {
             if ($targetable instanceof RelationConstraint) {
                 continue;
             }
