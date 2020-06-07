@@ -35,9 +35,9 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Name of each field.
      *
-     * @var array<string>
+     * @var array<string,string>
      */
-    protected $fieldsName = [];
+    protected $templates;
 
     /**
      * Create a new field with basic options.
@@ -250,8 +250,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     protected function ownFields()
     {
         foreach ($this->fields as $key => $field) {
-            $template = ($this->fieldsName[$key] ?? $this->getConfig("templates.$key"));
-            $name = $this->replaceInFieldTemplate($template, $key);
+            $name = $this->replaceInFieldTemplate($this->templates[$key], $key);
 
             $this->fields[$key] = $field->own($this, $name);
 
