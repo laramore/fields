@@ -11,7 +11,7 @@
 namespace Laramore\Fields\Reversed;
 
 use Laramore\Contracts\{
-    Field\ManyRelationField, Eloquent\LaramoreMeta
+    Field\ManyRelationField, Eloquent\LaramoreMeta, Field\RelationField
 };
 use Laramore\Traits\Field\{
     ReversedRelation, ManyToManyRelation
@@ -50,15 +50,5 @@ class BelongsToMany extends BaseField implements ManyRelationField
     public function getPivotTarget(): RelationField
     {
         return $this->getReversed()->getPivotTarget();
-    }
-
-    /**
-     * Return the pivot name.
-     *
-     * @return string
-     */
-    public function getPivotName(): string
-    {
-        return $this->getReversed()->getReversedPivotName();
     }
 }

@@ -14,9 +14,8 @@ use Illuminate\Support\Str;
 use Laramore\Facades\Option;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
-    AttributeField, Field, ManyRelationField, SingleTargetField, SingleSourceField, Constraint\Constraint
+    Field, RelationField, ManyRelationField, SingleTargetField, SingleSourceField, Constraint\Constraint
 };
-use Laramore\Exceptions\ConfigException;
 use Laramore\Traits\Field\ManyToManyRelation;
 
 class ManyToMany extends BaseComposed implements SingleSourceField, SingleTargetField, ManyRelationField
@@ -29,20 +28,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
      * @var LaramoreModel
      */
     protected $targetModel;
-
-    /**
-     * Reversed name of this relation.
-     *
-     * @var string
-     */
-    protected $reversedName;
-
-    /**
-     * Name for this relation.
-     *
-     * @var string
-     */
-    protected $relationName;
 
     /**
      * Pivot meta name.
@@ -66,13 +51,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     protected $pivotTarget;
 
     /**
-     * Pivot name.
-     *
-     * @var string
-     */
-    protected $pivotName;
-
-    /**
      * Indicate if this use a specific pivot.
      *
      * @var boolean
@@ -87,42 +65,11 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     protected $pivotClass;
 
     /**
-     * Defined reversed pivot name.
-     *
-     * @var string
-     */
-    protected $reversedPivotName;
-
-    /**
      * Unique relation.
      *
      * @var bool
      */
     protected $uniqueRelation = false;
-
-    /**
-     * Create a new field with basic options.
-     * The constructor is protected so the field is created writing left to right.
-     * ex: Text::field()->maxLength(255) insteadof (new Text)->maxLength(255).
-     *
-     * Define by default pivot and reversed pivot names.
-     *
-     * @param array|null $options
-     */
-    protected function __construct(array $options=null)
-    {
-        parent::__construct($options);
-
-        $this->pivotName($this->getConfig('templates.pivot'), $this->getConfig('templates.reversed_pivot'));
-
-        if (\is_null($this->pivotName)) {
-            throw new ConfigException($this->getConfigPath('templates.pivot'), ['any string name'], null);
-        }
-
-        if (\is_null($this->reversedPivotName)) {
-            throw new ConfigException($this->getConfigPath('templates.reversed_pivot'), ['any string name'], null);
-        }
-    }
 
     /**
      * Define the pivot and reversed pivot names.
@@ -135,11 +82,26 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     {
         $this->needsToBeUnlocked();
 
-        $this->defineProperty('pivotName', $pivotName);
+        $this->templates['pivot'] = $pivotName;
 
         if (!\is_null($reversedPivotName)) {
-            $this->setProperty('reversedPivotName', $reversedPivotName);
+            $this->reversedPivotName($reversedPivotName);
         }
+
+        return $this;
+    }
+
+    /**
+     * Define the reversed pivot name.
+     *
+     * @param string $reversedPivotName
+     * @return self
+     */
+    public function reversedPivotName(string $reversedPivotName=null)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->templates['reversed_pivot'] = $reversedPivotName;
 
         return $this;
     }
@@ -175,8 +137,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
 
         if ($reversedName) {
             $this->reversedName($reversedName);
-        } else if ($model === 'self') {
-            $this->reversedName($this->getConfig('templates.self_reversed'));
         }
 
         return $this;
@@ -199,7 +159,9 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
      */
     public function isOnSelf()
     {
-        return \in_array($this->targetModel, [$this->getMeta()->getModelClass(), 'self']);
+        $model = $this->getTargetModel();
+
+        return $model === $this->getMeta()->getModelClass() || $model === 'self';
     }
 
     /**
@@ -212,7 +174,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     {
         $this->needsToBeUnlocked();
 
-        $this->fieldsName['reversed'] = $reversedName;
+        $this->templates['reversed'] = $reversedName;
 
         return $this;
     }
@@ -247,9 +209,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
         $pivotClassName = ucfirst($offName).ucfirst($onName);
         $pivotClass = "$namespaceName\\$pivotClassName";
 
-        $this->pivotName = $this->replaceInFieldTemplate($this->pivotName, $offName);
-        $this->reversedPivotName = $this->replaceInFieldTemplate($this->reversedPivotName, $onName);
-
         if ($this->usePivot) {
             if ($this->pivotClass) {
                 $pivotClass = $this->pivotClass;
@@ -257,6 +216,9 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
 
             $this->setProperty('pivotMeta', $pivotClass::getMeta());
         } else {
+            $this->pivotName = $this->replaceInFieldTemplate($this->templates['pivot'], $offName);
+            $this->reversedPivotName = $this->replaceInFieldTemplate($this->templates['reversed_pivot'], $onName);
+
             // Create dynamically the pivot class (only and first time I use eval, really).
             if (!\class_exists($pivotClass)) {
                 eval("namespace $namespaceName; class $pivotClassName extends \Laramore\Eloquent\FakePivot {}");
@@ -272,13 +234,15 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
             $onField = ManyToOne::field()->on($this->getTargetModel());
 
             if ($this->isOnSelf()) {
-                $onField->reversedName($this->getConfig('templates.self_pivot_reversed'));
+                $onField->reversedName($this->templates['self_reversed_pivot']);
             }
 
             $this->pivotMeta->setField(
                 $onName,
                 $onField
             );
+
+            $this->reversedPivotName = $onField->getReversed()->getName();
 
             $this->pivotMeta->pivots($onField, $offField);
         }
@@ -308,7 +272,13 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
             $this->loadPivotMeta();
         }
 
+        $this->pivotName = $this->replaceInFieldTemplate($this->templates['pivot'], $this->getName());
+
         parent::owned();
+
+        $this->getReversed()->pivotName(
+            $this->replaceInFieldTemplate($this->templates['reversed_pivot'], $this->getReversed()->getName())
+        );
     }
 
     /**
@@ -355,18 +325,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     }
 
     /**
-     * Return the attribute where to start the relation from.
-     *
-     * @return AttributeField
-     */
-    public function getSourceAttribute(): AttributeField
-    {
-        $this->needsToBeOwned();
-
-        return $this->getMeta()->getConstraintHandler()->getPrimary()->getAttribute();
-    }
-
-    /**
      * Model where the relation is set to.
      *
      * @return string
@@ -379,18 +337,6 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     }
 
     /**
-     * Return the attribute where to start the relation to.
-     *
-     * @return AttributeField
-     */
-    public function getTargetAttribute(): AttributeField
-    {
-        $this->needsToBeOwned();
-
-        return $this->getTargetModel()::getMeta()->getPrimary()->getAttribute();
-    }
-
-    /**
      * Return the source of the relation.
      *
      * @return Constraint
@@ -400,7 +346,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
         $this->needsToBeOwned();
 
         return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource([$this->getSourceAttribute()]);
+            ->getConstraintHandler()->getPrimary();
     }
 
     /**
@@ -413,7 +359,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
         $this->needsToBeOwned();
 
         return $this->getTargetModel()::getMeta()
-            ->getConstraintHandler()->getTarget([$this->getTargetAttribute()]);
+            ->getConstraintHandler()->getPrimary();
     }
 
     /**

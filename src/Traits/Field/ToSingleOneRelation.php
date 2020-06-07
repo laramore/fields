@@ -35,13 +35,6 @@ trait ToSingleOneRelation
     protected $targetModel;
 
     /**
-     * Name for this relation.
-     *
-     * @var string
-     */
-    protected $relationName;
-
-    /**
      * Return the reversed field.
      *
      * @return RelationField
@@ -79,13 +72,11 @@ trait ToSingleOneRelation
             $this->getField('reversed')->setMeta($model::getMeta());
         }
 
-        if ($reversedName) {
-            $this->setProperty('reversedName', $reversedName);
-        } else if ($model === 'self') {
-            $this->reversedName($this->getConfig('templates.self_reversed'));
+        if (!\is_null($reversedName)) {
+            $this->reversedName($reversedName);
         }
 
-        if ($relationName) {
+        if (!\is_null($relationName)) {
             $this->relationName($relationName);
         }
 
@@ -126,7 +117,22 @@ trait ToSingleOneRelation
     {
         $this->needsToBeUnlocked();
 
-        $this->fieldsName['reversed'] = $reversedName;
+        $this->templates['reversed'] = $reversedName;
+
+        return $this;
+    }
+
+    /**
+     * Define the relation name of the relation.
+     *
+     * @param string $relationName
+     * @return self
+     */
+    public function relationName(string $relationName)
+    {
+        $this->needsToBeUnlocked();
+
+        $this->templates['relation'] = $relationName;
 
         return $this;
     }
@@ -204,7 +210,7 @@ trait ToSingleOneRelation
 
         parent::owned();
 
-        $this->foreign($this->getProperty('relationName'), $this->getTarget()->getMainAttribute());
+        $this->foreign($this->templates['relation'] ?? null, $this->getTarget()->getMainAttribute());
     }
 
     /**
@@ -218,7 +224,7 @@ trait ToSingleOneRelation
             throw new \Exception('Related model settings needed. Set it by calling `on` method');
         }
 
-        $this->defineProperty('reversedName', $this->getReversed()->name);
+        $this->templates['reversed'] = $this->getReversed()->name;
 
         parent::checkOptions();
     }

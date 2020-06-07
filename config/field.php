@@ -188,7 +188,7 @@ return [
                 'pivot' => 'pivot',
                 'reversed_pivot' => 'pivot',
                 'self_reversed' => 'reversed_+{name}',
-                'self_pivot_reversed' => 'reversed_+{modelname}',
+                'self_reversed_pivot' => 'reversed_+{modelname}',
             ],
             'proxy' => [
                 'configurations' => [
