@@ -30,7 +30,7 @@ trait ToSingleOneRelation
     /**
      * Model the relation is on.
      *
-     * @var LaramoreModel
+     * @var string
      */
     protected $targetModel;
 

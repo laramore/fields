@@ -17,7 +17,14 @@ interface MultipleSourceField extends RelationField
     /**
      * Return the sources of the relation.
      *
-     * @return Constraint
+     * @return array<Constraint>
      */
-    public function getSources(): Constraint;
+    public function getSources(): array;
+
+    /**
+     * Models where the relation is set from.
+     *
+     * @return array<string>
+     */
+    public function getSourceModels(): array;
 }

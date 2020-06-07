@@ -20,4 +20,11 @@ interface MultipleTargetField extends RelationField
      * @return array<Constraint>
      */
     public function getTargets(): array;
+
+    /**
+     * Models where the relation is set to.
+     *
+     * @return array<string>
+     */
+    public function getTargetModels(): array;
 }

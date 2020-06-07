@@ -25,7 +25,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
     /**
      * Model the relation is on.
      *
-     * @var LaramoreModel
+     * @var string
      */
     protected $targetModel;
 
