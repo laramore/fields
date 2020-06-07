@@ -21,11 +21,19 @@ use Laramore\Contracts\Proxied;
 interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
     /**
+     * Allow the user to define all meta data for the current model.
+     *
+     * @param  LaramoreMeta $meta
+     * @return mixed
+     */
+    public static function meta(LaramoreMeta $meta);
+
+    /**
      * Generate one time the model meta.
      *
      * @return void
      */
-    public static function generateMeta();
+    public static function prepareMeta();
 
     /**
      * Return the meta class to use.

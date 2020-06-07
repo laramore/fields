@@ -10,13 +10,13 @@
 
 namespace Laramore\Contracts\Eloquent;
 
-use Laramore\Contracts\Field\{
-    FieldsOwner, Contraint\ConstraintedField
+use Laramore\Contracts\{
+    Prepared, Field\FieldsOwner, Field\Contraint\ConstraintedField
 };
 use Laramore\Proxies\ProxyHandler;
 use Laramore\Fields\Constraint\ConstraintHandler;
 
-interface LaramoreMeta extends FieldsOwner
+interface LaramoreMeta extends Prepared, FieldsOwner
 {
     /**
      * Return the table name.
