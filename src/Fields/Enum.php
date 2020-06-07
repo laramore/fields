@@ -19,7 +19,19 @@ use Laramore\Exceptions\LockException;
 
 class Enum extends BaseAttribute
 {
+    /**
+     * All listed elements
+     *
+     * @var EnumManager
+     */
     protected $elements;
+
+    /**
+     * Enum manager class.
+     *
+     * @var string
+     */
+    protected $enumManagerClass = EnumManager::class;
 
     /**
      * Define all proxies for this field.
@@ -63,10 +75,12 @@ class Enum extends BaseAttribute
     {
         $this->checkNeedsToBeLocked(false);
 
-        if ($elements instanceof EnumManager) {
+        $managerClass = $this->enumManagerClass;
+
+        if ($elements instanceof $managerClass) {
             $this->defineProperty('elements', $elements);
         } else if (\is_array($elements)) {
-            $this->defineProperty('elements', new EnumManager($elements));
+            $this->defineProperty('elements', new $managerClass($elements));
         }
 
         return $this;
