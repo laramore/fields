@@ -11,7 +11,7 @@
 namespace Laramore\Contracts\Eloquent;
 
 use Laramore\Contracts\{
-    Prepared, Field\FieldsOwner, Field\Contraint\ConstraintedField
+    Prepared, Field\FieldsOwner, Field\Field
 };
 use Laramore\Proxies\ProxyHandler;
 use Laramore\Fields\Constraint\ConstraintHandler;
@@ -64,8 +64,8 @@ interface LaramoreMeta extends Prepared, FieldsOwner
     /**
      * Define a primary constraint.
      *
-     * @param  ConstraintedField|array<ConstraintedField> $constrainted
-     * @param  string                                     $name
+     * @param  Field|array<Field> $constrainted
+     * @param  string             $name
      * @return self
      */
     public function primary($constrainted, string $name=null);
@@ -73,8 +73,8 @@ interface LaramoreMeta extends Prepared, FieldsOwner
     /**
      * Define a index constraint.
      *
-     * @param  ConstraintedField|array<ConstraintedField> $constrainted
-     * @param  string                                     $name
+     * @param  Field|array<Field> $constrainted
+     * @param  string             $name
      * @return self
      */
     public function index($constrainted, string $name=null);
@@ -82,8 +82,8 @@ interface LaramoreMeta extends Prepared, FieldsOwner
     /**
      * Define a unique constraint.
      *
-     * @param  ConstraintedField|array<ConstraintedField> $constrainted
-     * @param  string                                     $name
+     * @param  Field|array<Field> $constrainted
+     * @param  string             $name
      * @return self
      */
     public function unique($constrainted, string $name=null);
