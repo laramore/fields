@@ -17,6 +17,7 @@ use Laramore\Contracts\{
 use Laramore\Elements\{
     TypeElement, OperatorElement
 };
+use Laramore\Fields\Constraint\FieldConstraintHandler;
 
 interface Field extends Locked, Owned
 {
@@ -66,6 +67,13 @@ interface Field extends Locked, Owned
      * @return self
      */
     public function setProperty(string $key, $value);
+
+    /**
+     * Return the relation handler for this meta.
+     *
+     * @return FieldConstraintHandler
+     */
+    public function getConstraintHandler();
 
     /**
      * Handle all calls to define field properies.

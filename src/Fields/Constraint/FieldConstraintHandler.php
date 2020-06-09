@@ -13,8 +13,8 @@ namespace Laramore\Fields\Constraint;
 use Laramore\Contracts\{
     Owned, Configured
 };
-use Laramore\Contracts\Field\Constraint\{
-    ConstraintedField, Constraint, RelationConstraint
+use Laramore\Contracts\Field\{
+    Field, Constraint\Constraint, Constraint\RelationConstraint
 };
 use Laramore\Observers\BaseObserver;
 use Laramore\Traits\IsOwned;
@@ -28,41 +28,41 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      *
      * @var string
      */
-    protected $observableClass = ConstraintedField::class;
+    protected $observableClass = Field::class;
 
     /**
      * The observer class to use to generate.
      *
      * @var string
      */
-    protected $observerClass = BaseConstraint::class;
+    protected $observerClass = Constraint::class;
 
     /**
-     * ConstraintedField field.
+     * Field field.
      *
-     * @var ConstraintedField
+     * @var Field
      */
-    protected $constrainted;
+    protected $field;
 
     /**
      * Create a field handler for a specific field.
      *
-     * @param ConstraintedField $constrainted
+     * @param Field $field
      */
-    public function __construct(ConstraintedField $constrainted)
+    public function __construct(Field $field)
     {
-        $this->observableClass = \get_class($constrainted);
-        $this->constrainted = $constrainted;
+        $this->observableClass = \get_class($field);
+        $this->field = $field;
     }
 
     /**
-     * Return the constrainted field.
+     * Return the field field.
      *
-     * @return ConstraintedField
+     * @return Field
      */
-    public function getConstrainted(): ConstraintedField
+    public function getField(): Field
     {
-        return $this->constrainted;
+        return $this->field;
     }
 
     /**
@@ -79,12 +79,13 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
             $this->getOwner()->add($observer);
         }
 
-        $attributes = $observer->getAttributes();
+        $fields = $observer->getFields();
 
-        if ($this->getConstrainted() === \array_shift($attributes)) {
+        // The first field adds the new constraint to others.
+        if ($this->getField() === \array_shift($fields)) {
             // Add all relations to other fields.
-            foreach ($attributes as $attribute) {
-                $attribute->getConstraintHandler()->add($observer);
+            foreach ($fields as $field) {
+                $field->getConstraintHandler()->add($observer);
             }
         }
 
@@ -99,10 +100,10 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     protected function setName(string $name)
     {
-        $fieldname = $this->getConstrainted()->getName();
+        $fieldname = $this->getField()->getName();
 
         if ($fieldname !== $name) {
-            throw new \LogicException("The constrainted field `{$fieldname}` is not the same as `$name`");
+            throw new \LogicException("The field field `{$fieldname}` is not the same as `$name`");
         }
 
         $this->name = $name;
@@ -123,69 +124,20 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     }
 
     /**
-     * Create a primary constraint and add it.
+     * Create a constraint and add it.
      *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
+     * @param  string|mixed       $type
+     * @param  string             $name
+     * @param  Field|array<Field> $fields
+     * @param  integer            $priority
+     * @param  string             $class
      * @return self
      */
-    public function createPrimary(string $name=null, $fields=[])
+    public function create($type, string $name=null, $fields=[], int $priority=BaseConstraint::MEDIUM_PRIORITY,
+                           string $class=null)
     {
-        if ($this->count(BaseConstraint::PRIMARY)) {
-            throw new \LogicException('Cannot have multiple primary constraints.');
-        }
-
-        $fields = is_array($fields) ? [$this->getConstrainted(), ...$fields] : [$this->getConstrainted(), $fields];
-        $class = $this->getConfig('classes.'.BaseConstraint::PRIMARY);
-
-        return $this->add($class::constraint($fields, $name));
-    }
-
-    /**
-     * Create a index constraint and add it.
-     *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
-     * @return self
-     */
-    public function createIndex(string $name=null, $fields=[])
-    {
-        $fields = is_array($fields) ? [$this->getConstrainted(), ...$fields] : [$this->getConstrainted(), $fields];
-        $class = $this->getConfig('classes.'.BaseConstraint::INDEX);
-
-        return $this->add($class::constraint($fields, $name));
-    }
-
-    /**
-     * Create a unique constraint and add it.
-     *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
-     * @return self
-     */
-    public function createUnique(string $name=null, $fields=[])
-    {
-        $fields = is_array($fields) ? [$this->getConstrainted(), ...$fields] : [$this->getConstrainted(), $fields];
-        $class = $this->getConfig('classes.'.BaseConstraint::UNIQUE);
-
-        return $this->add($class::constraint($fields, $name));
-    }
-
-    /**
-     * Create a foreign constraint and add it.
-     *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
-     * @return self
-     */
-    public function createForeign(string $name=null, $fields=[])
-    {
-        if ($this->count(BaseConstraint::FOREIGN)) {
-            throw new \LogicException('Cannot have multiple primary constraints.');
-        }
-
-        $fields = is_array($fields) ? [$this->getConstrainted(), ...$fields] : [$this->getConstrainted(), $fields];
-        $class = $this->getConfig('classes.'.BaseConstraint::FOREIGN);
+        $fields = \is_array($fields) ? [$this->getField(), ...$fields] : [$this->getField(), $fields];
+        $class = $class ?: $this->getConfig('classes.'.$type);
 
         return $this->add($class::constraint($fields, $name));
     }
@@ -198,16 +150,17 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getSource(array $attributes=[]): RelationConstraint
     {
+        // @var RelationConstraint
         foreach ($this->getConstraints() as $sourceable) {
             if (!($sourceable instanceof RelationConstraint)) {
                 continue;
             }
 
             $intersec = \array_diff(
-                \array_map(function ($constrainted) {
-                    return $constrainted->getNative();
+                \array_map(function ($field) {
+                    return $field->getNative();
                 }, $sourceable->getSourceAttributes()),
-                \array_merge($attributes, [$this->getConstrainted()->getNative()])
+                \array_merge($attributes, [$this->getField()->getNative()])
             );
 
             if (\count($intersec) === 0) {
@@ -226,14 +179,17 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getTarget(array $attributes=[]): Constraint
     {
+        // @var Constraint
         foreach ($this->getConstraints() as $targetable) {
             if ($targetable instanceof RelationConstraint) {
                 continue;
             }
 
             $intersec = \array_diff(
-                $targetable->getNatives(),
-                \array_merge($attributes, [$this->getConstrainted()->getNative()])
+                \array_map(function ($field) {
+                    return $field->getNative();
+                }, $targetable->getAttributes()),
+                \array_merge($attributes, [$this->getField()->getNative()])
             );
 
             if (\count($intersec) === 0) {

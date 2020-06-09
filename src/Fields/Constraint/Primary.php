@@ -14,10 +14,4 @@ use Laramore\Contracts\Field\Constraint\Constraint;
 
 class Primary extends BaseConstraint implements Constraint
 {
-    /**
-     * Define the name of the constraint.
-     *
-     * @var string
-     */
-    protected $constraintType = self::PRIMARY;
 }

@@ -18,13 +18,6 @@ use Laramore\Contracts\Field\{
 class Foreign extends BaseConstraint implements RelationConstraint
 {
     /**
-     * Define the name of the constraint.
-     *
-     * @var string
-     */
-    protected $constraintType = self::FOREIGN;
-
-    /**
      * Actions during locking.
      *
      * @return void
@@ -77,11 +70,7 @@ class Foreign extends BaseConstraint implements RelationConstraint
      */
     public function getSourceAttribute(): AttributeField
     {
-        if ($this->isComposed()) {
-            throw new \LogicException("The `{$this->constraintType}` constraint `{$this->getName()}` is composed");
-        }
-
-        return $this->all()[0];
+        return $this->getAttribute();
     }
 
     /**
@@ -91,10 +80,6 @@ class Foreign extends BaseConstraint implements RelationConstraint
      */
     public function getTargetAttribute(): AttributeField
     {
-        if ($this->isComposed()) {
-            throw new \LogicException("The `{$this->constraintType}` constraint `{$this->getName()}` is composed");
-        }
-
-        return $this->getTargetAttributes()[0];
+        return $this->getAttributes()[1];
     }
 }

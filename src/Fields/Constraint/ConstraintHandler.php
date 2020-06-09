@@ -37,7 +37,7 @@ class ConstraintHandler extends BaseConstraintHandler
      */
     public function addFieldHandler(FieldConstraintHandler $handler)
     {
-        $name = $handler->getConstrainted()->getName();
+        $name = $handler->getField()->getName();
 
         $this->fieldConstraints[$name] = $handler->own($this, $name);
 

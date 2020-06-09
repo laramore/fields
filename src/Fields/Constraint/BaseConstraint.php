@@ -17,7 +17,7 @@ use Illuminate\Container\Container;
 use Laramore\Contracts\Configured;
 use Laramore\Exceptions\LockException;
 use Laramore\Contracts\Field\{
-    AttributeField, Constraint\ConstraintedField, Constraint\Constraint
+    AttributeField, ComposedField, Field, Constraint\Constraint
 };
 use Laramore\Observers\BaseObserver;
 
@@ -34,17 +34,17 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
     /**
      * An observer needs at least a name.
      *
-     * @param ConstraintedField|array<ConstraintedField> $attributes
-     * @param string                                     $name
-     * @param integer                                    $priority
+     * @param Field|array<Field> $fields
+     * @param string             $name
+     * @param integer            $priority
      */
-    protected function __construct($attributes, string $name=null, int $priority=self::MEDIUM_PRIORITY)
+    protected function __construct($fields, string $name=null, int $priority=self::MEDIUM_PRIORITY)
     {
         if (!\is_null($name)) {
             $this->setName($name);
         }
 
-        $this->on($attributes);
+        $this->on($fields);
         $this->setPriority($priority);
 
         if ($this->count() === 0) {
@@ -55,12 +55,12 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
     /**
      * Define a new constraint.
      *
-     * @param ConstraintedField|array<ConstraintedField> $attributes
-     * @param string                                     $name
-     * @param integer                                    $priority
+     * @param Field|array<Field> $fields
+     * @param string             $name
+     * @param integer            $priority
      * @return self|null
      */
-    public static function constraint($attributes, string $name=null,
+    public static function constraint($fields, string $name=null,
                                       int $priority=self::MEDIUM_PRIORITY)
     {
         $creating = Event::until('constraints.creating', static::class, \func_get_args());
@@ -69,11 +69,43 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
             return null;
         }
 
-        $constraint = $creating ?: new static($attributes, $name, $priority);
+        $constraint = $creating ?: new static($fields, $name, $priority);
 
         Event::dispatch('constraints.created', $constraint);
 
         return $constraint;
+    }
+
+    /**
+     * Unpack composed fields to get all composed and attributes fields.
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function unpackFields(array $fields): array
+    {
+        foreach ($fields as $field) {
+            if ($field instanceof ComposedField) {
+                $fields = \array_merge(
+                    $fields,
+                    $this->unpackFields($field->getFields(ComposedField::class)),
+                    $field->getFields(AttributeField::class)
+                );
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Add one or more fields to observe.
+     *
+     * @param  string|array $fields
+     * @return self
+     */
+    public function on($fields)
+    {
+        return parent::on($this->unpackFields(\is_array($fields) ? $fields : [$fields]));
     }
 
     /**
@@ -118,7 +150,7 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     public function getDefaultName(): string
     {
-        $tableName = $this->getMainTableName();
+        $tableName = $this->getTableNames()[0];
 
         return $tableName.'_'.implode('_', \array_map(function (AttributeField $field) {
             return $field->getAttname();
@@ -162,23 +194,13 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
     }
 
     /**
-     * Return the main table.
+     * Return all concerned fields.
      *
-     * @return string
+     * @return array
      */
-    public function getMainTableName(): string
+    public function getFields(): array
     {
-        return $this->getMainAttribute()->getMeta()->getTableName();
-    }
-
-    /**
-     * Return the main attribute
-     *
-     * @return AttributeField
-     */
-    public function getMainAttribute(): AttributeField
-    {
-        return $this->getAttributes()[0];
+        return $this->all();
     }
 
     /**
@@ -188,7 +210,9 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     public function getAttributes(): array
     {
-        return $this->all();
+        return \array_filter($this->getFields(), function ($field) {
+            return $field instanceof AttributeField;
+        });
     }
 
     /**
@@ -198,7 +222,35 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     public function isComposed(): bool
     {
-        return $this->count() > 1;
+        return \count($this->getAttributes()) > 1;
+    }
+
+    /**
+     * Return the only attribute.
+     *
+     * @return AttributeField
+     */
+    public function getAttribute(): AttributeField
+    {
+        if ($this->isComposed()) {
+            throw new \Exception('Cannot get attribute from composed constraint');
+        }
+
+        return $this->getAttributes()[0];
+    }
+
+    /**
+     * Return the only field.
+     *
+     * @return Field
+     */
+    public function getField(): Field
+    {
+        if ($this->isComposed()) {
+            throw new \Exception('Cannot get attribute from composed constraint');
+        }
+
+        return $this->getField()[0];
     }
 
     /**
@@ -228,12 +280,7 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     protected function locking()
     {
-        if ($this->getTableNames() !== [$this->getMainTableName()]) {
-            throw new LockException(
-                "A `$this->constraintType` constraint cannot have fields from different tables.",
-                'observed'
-            );
-        }
+
     }
 
     /**

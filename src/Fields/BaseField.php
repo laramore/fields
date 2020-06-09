@@ -27,6 +27,7 @@ use Laramore\Contracts\Field\{
 use Laramore\Traits\{
     IsOwned, IsLocked, HasProperties, HasOptions, HasLockedMacros
 };
+use Laramore\Fields\Constraint\FieldConstraintHandler;
 use Laramore\Exceptions\ConfigException;
 
 abstract class BaseField implements Field, Configured
@@ -55,6 +56,13 @@ abstract class BaseField implements Field, Configured
     protected $default;
 
     /**
+     * Constraint handler.
+     *
+     * @var FieldConstraintHandler
+     */
+    protected $constraintHandler;
+
+    /**
      * Create a new field with basic options.
      * The constructor is protected so the field is created writing left to right.
      * ex: Char::field()->maxLength(255) insteadof (new Char)->maxLength(255).
@@ -72,6 +80,8 @@ abstract class BaseField implements Field, Configured
                 $this->setProperty($key, $value);
             }
         }
+
+        $this->setConstraintHandler();
     }
 
     /**
@@ -303,6 +313,30 @@ abstract class BaseField implements Field, Configured
     }
 
     /**
+     * Create a Constraint handler for this meta.
+     *
+     * @return void
+     */
+    protected function setConstraintHandler()
+    {
+        $this->constraintHandler = new FieldConstraintHandler($this);
+    }
+
+    /**
+     * Return the relation handler for this meta.
+     *
+     * @return FieldConstraintHandler
+     */
+    public function getConstraintHandler()
+    {
+        if ($this->isOwned()) {
+            return $this->getMeta()->getConstraintHandler()->getFieldHandler($this->getName());
+        }
+
+        return $this->constraintHandler;
+    }
+
+    /**
      * Set the owner.
      *
      * @param mixed $owner
@@ -375,6 +409,9 @@ abstract class BaseField implements Field, Configured
      */
     protected function owned()
     {
+        $this->getMeta()->getConstraintHandler()->addFieldHandler($this->constraintHandler);
+        unset($this->constraintHandler);
+
         $owner = $this->getOwner();
 
         if (!($owner instanceof LaramoreMeta) && !($owner instanceof BaseComposed)) {

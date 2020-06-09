@@ -19,13 +19,13 @@ use Laramore\Contracts\{
     Field\AttributeField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Fields\Constraint\BaseConstraint;
-use Laramore\Traits\Field\HasConstraints;
+use Laramore\Traits\Field\{
+    IndexableConstraints, ForeignConstraints
+};
 
 abstract class BaseAttribute extends BaseField implements AttributeField
 {
-    use HasConstraints {
-        HasConstraints::owned as protected ownConstraintHandler;
-    }
+    use IndexableConstraints, ForeignConstraints;
 
     /**
      * AttributeField name of this field.
@@ -33,20 +33,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
      * @var string
      */
     protected $attname;
-
-    /**
-     * Create a new field with basic options.
-     * The constructor is protected so the field is created writing left to right.
-     * ex: Char::field()->maxLength(255) insteadof (new Char)->maxLength(255).
-     *
-     * @param array|null $options
-     */
-    protected function __construct(array $options=null)
-    {
-        parent::__construct($options);
-
-        $this->setConstraintHandler();
-    }
 
     /**
      * Parse the attribute attname.
@@ -115,18 +101,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
                 }
             }
         }
-    }
-
-    /**
-     * Own the constraint handler.
-     *
-     * @return void
-     */
-    protected function owned()
-    {
-        parent::owned();
-
-        $this->ownConstraintHandler();
     }
 
     /**

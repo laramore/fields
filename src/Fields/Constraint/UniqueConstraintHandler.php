@@ -10,19 +10,19 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Contracts\Field\Constraint\ConstraintedField;
+use Laramore\Contracts\Field\Field;
 
 class UniqueConstraintHandler extends FieldConstraintHandler
 {
     /**
      * Create a field handler for a specific field.
      *
-     * @param ConstraintedField $constrainted
+     * @param Field $field
      */
-    public function __construct(ConstraintedField $constrainted)
+    public function __construct(Field $field)
     {
-        parent::__construct($constrainted);
+        parent::__construct($field);
 
-        $this->createUnique();
+        $this->create(BaseConstraint::UNIQUE);
     }
 }
