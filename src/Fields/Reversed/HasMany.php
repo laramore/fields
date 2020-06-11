@@ -109,8 +109,8 @@ class HasMany extends BaseField implements ManyRelationField
     {
         $relation = $model->hasMany(
             $this->getTargetModel(),
-            $this->getTarget()->getMainAttribute()->getNative(),
-            $this->getSource()->getMainAttribute()->getNative()
+            $this->getTarget()->getAttribute()->getNative(),
+            $this->getSource()->getAttribute()->getNative()
         );
 
         if ($this->hasProperty('when')) {
@@ -135,7 +135,7 @@ class HasMany extends BaseField implements ManyRelationField
         }
 
         $modelClass = $this->getTargetModel();
-        $foreignAttname = $this->getTarget()->getMainAttribute()->getNative();
+        $foreignAttname = $this->getTarget()->getAttribute()->getNative();
 
         $primaryField = $modelClass::getMeta()->getPrimary()->getAttribute();
         $primaryAttname = $primaryField->getNative();

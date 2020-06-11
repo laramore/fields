@@ -15,7 +15,7 @@ use Laramore\Contracts\Eloquent\LaramoreBuilder;
 
 trait HasSingleOneRelation
 {
-    use ModelRelation, ReversedRelation, Constraints;
+    use ModelRelation, ReversedRelation, IndexableConstraints, ForeignConstraints;
 
     /**
      * Dry the value in a simple format.
@@ -26,7 +26,7 @@ trait HasSingleOneRelation
     public function dry($value)
     {
         $value = $this->transform($value);
-        $name = $this->getTarget()->getMainAttribute()->getName();
+        $name = $this->getTarget()->getAttribute()->getName();
 
         return $this->transform($value)->map(function ($value) use ($name) {
             return isset($value[$name]) ? $value[$name] : $value;

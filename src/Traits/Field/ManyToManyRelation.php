@@ -160,10 +160,10 @@ trait ManyToManyRelation
         $relation = $model->belongsToMany(
             $this->getTargetModel(),
             $this->getPivotMeta()->getTableName(),
-            $this->getPivotSource()->getSource()->getMainAttribute()->getNative(),
-            $this->getPivotTarget()->getSource()->getMainAttribute()->getNative(),
-            $this->getSource()->getMainAttribute()->getNative(),
-            $this->getTarget()->getMainAttribute()->getNative(),
+            $this->getPivotSource()->getSource()->getAttribute()->getNative(),
+            $this->getPivotTarget()->getSource()->getAttribute()->getNative(),
+            $this->getSource()->getAttribute()->getNative(),
+            $this->getTarget()->getAttribute()->getNative(),
             $this->getName()
         )->withPivot($this->getPivotAttributes())
             ->using($this->getPivotMeta()->getModelClass())
@@ -225,7 +225,7 @@ trait ManyToManyRelation
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        $attname = $this->getSource()->getMainAttribute()->getNative();
+        $attname = $this->getSource()->getAttribute()->getNative();
 
         return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
             return $query->whereIn($attname, $value);
@@ -258,7 +258,7 @@ trait ManyToManyRelation
     public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
                           string $boolean='and', int $count=null): LaramoreBuilder
     {
-        $attname = $this->getSource()->getMainAttribute()->getNative();
+        $attname = $this->getSource()->getAttribute()->getNative();
 
         return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? count($value)),
             function ($query) use ($attname, $value) {

@@ -35,7 +35,7 @@ class HasOne extends BaseField implements RelationField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->getTarget()->getMainAttribute()
+        return $this->getTarget()->getAttribute()
             ->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
     }
 
@@ -64,7 +64,7 @@ class HasOne extends BaseField implements RelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->getTarget()->getMainAttribute()
+        return $this->getTarget()->getAttribute()
             ->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
     }
 
@@ -78,8 +78,8 @@ class HasOne extends BaseField implements RelationField
     {
         $relation = $model->hasOne(
             $this->getTargetModel(),
-            $this->getTarget()->getMainAttribute()->getNative(),
-            $this->getSource()->getMainAttribute()->getNative()
+            $this->getTarget()->getAttribute()->getNative(),
+            $this->getSource()->getAttribute()->getNative()
         );
 
         if ($this->hasProperty('when')) {
@@ -101,7 +101,7 @@ class HasOne extends BaseField implements RelationField
         if (!\is_null($value)) {
             $this->getField('id')->set(
                 $model,
-                \is_null($value) ? null : $this->getTarget()->getMainAttribute()->get($value)
+                \is_null($value) ? null : $this->getTarget()->getAttribute()->get($value)
             );
         }
 
@@ -110,7 +110,7 @@ class HasOne extends BaseField implements RelationField
         }
 
         $modelClass = $this->getSourceModel();
-        $primary = $this->getSource()->getMainAttribute();
+        $primary = $this->getSource()->getAttribute();
         $id = $model->getKey();
         $valueId = $value[$primary->getName()];
 

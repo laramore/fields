@@ -38,8 +38,8 @@ class UniqueId extends Integer implements UniqueField
     /**
      * Define a unique constraint.
      *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
+     * @param  string             $name
+     * @param  Field|array<Field> $fields
      * @return self
      */
     public function unique(string $name=null, $fields=null)

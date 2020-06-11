@@ -38,8 +38,8 @@ class PrimaryId extends Increment implements PrimaryField
     /**
      * Define a primary constraint.
      *
-     * @param  string                                     $name
-     * @param  ConstraintedField|array<ConstraintedField> $fields
+     * @param  string             $name
+     * @param  Field|array<Field> $fields
      * @return self
      */
     public function primary(string $name=null, $fields=null)

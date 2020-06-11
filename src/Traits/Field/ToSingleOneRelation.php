@@ -22,10 +22,13 @@ use Laramore\Contracts\Eloquent\{
 use Laramore\Contracts\Field\{
     Field, RelationField, Constraint\Constraint
 };
+use Laramore\Traits\Field\{
+    IndexableConstraints, ForeignConstraints
+};
 
 trait ToSingleOneRelation
 {
-    use ModelRelation, Constraints;
+    use ModelRelation, IndexableConstraints, ForeignConstraints;
 
     /**
      * Model the relation is on.
@@ -210,7 +213,7 @@ trait ToSingleOneRelation
 
         parent::owned();
 
-        $this->foreign($this->templates['relation'] ?? null, $this->getTarget()->getMainAttribute());
+        $this->foreign(($this->templates['relation'] ?? null), $this->getTarget()->getAttributes());
     }
 
     /**
@@ -238,7 +241,7 @@ trait ToSingleOneRelation
     public function dry($value)
     {
         $value = $this->transform($value);
-        $name = $this->getTarget()->getMainAttribute()->getName();
+        $name = $this->getTarget()->getAttribute()->getName();
 
         return isset($value[$name]) ? $value[$name] : $value;
     }
@@ -263,7 +266,7 @@ trait ToSingleOneRelation
     public function transform($value)
     {
         $model = $this->getTargetModel();
-        $name = $this->getTarget()->getMainAttribute()->getName();
+        $name = $this->getTarget()->getAttribute()->getName();
 
         if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof Collection) {
             return $value;
@@ -298,7 +301,7 @@ trait ToSingleOneRelation
     {
         $this->getField('id')->set(
             $model,
-            \is_null($value) ? null : $this->getTarget()->getMainAttribute()->get($value)
+            \is_null($value) ? null : $this->getTarget()->getAttribute()->get($value)
         );
 
         return $value;
@@ -314,8 +317,8 @@ trait ToSingleOneRelation
     {
         $relation = $model->belongsTo(
             $this->getTargetModel(),
-            $this->getSource()->getMainAttribute()->getNative(),
-            $this->getTarget()->getMainAttribute()->getNative()
+            $this->getSource()->getAttribute()->getNative(),
+            $this->getTarget()->getAttribute()->getNative()
         );
 
         if ($this->hasProperty('when')) {
