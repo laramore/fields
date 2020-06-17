@@ -29,7 +29,7 @@ class BelongsToMany extends BaseField implements ManyRelationField
      */
     public function getPivotMeta(): LaramoreMeta
     {
-        return $this->getReversed()->getPivotMeta();
+        return $this->getReversedField()->getPivotMeta();
     }
 
     /**
@@ -39,7 +39,7 @@ class BelongsToMany extends BaseField implements ManyRelationField
      */
     public function getPivotSource(): RelationField
     {
-        return $this->getReversed()->getPivotSource();
+        return $this->getReversedField()->getPivotSource();
     }
 
     /**
@@ -49,6 +49,6 @@ class BelongsToMany extends BaseField implements ManyRelationField
      */
     public function getPivotTarget(): RelationField
     {
-        return $this->getReversed()->getPivotTarget();
+        return $this->getReversedField()->getPivotTarget();
     }
 }

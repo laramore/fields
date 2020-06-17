@@ -42,7 +42,7 @@ trait ToSingleOneRelation
      *
      * @return RelationField
      */
-    public function getReversed(): RelationField
+    public function getReversedField(): RelationField
     {
         return $this->getField('reversed');
     }
@@ -207,7 +207,9 @@ trait ToSingleOneRelation
      */
     protected function owned()
     {
-        if ($this->getTargetModel() === 'self') {
+        if (\is_null($this->getTargetModel())) {
+            throw new \Exception('Related model settings needed. Set it by calling `on` method');
+        } else if ($this->getTargetModel() === 'self') {
             $this->on($this->getSourceModel());
         }
 
@@ -217,53 +219,12 @@ trait ToSingleOneRelation
     }
 
     /**
-     * Check all options.
-     *
-     * @return void
-     */
-    protected function checkOptions()
-    {
-        if (!$this->getTargetModel()) {
-            throw new \Exception('Related model settings needed. Set it by calling `on` method');
-        }
-
-        $this->templates['reversed'] = $this->getReversed()->name;
-
-        parent::checkOptions();
-    }
-
-    /**
-     * Dry the value in a simple format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function dry($value)
-    {
-        $value = $this->transform($value);
-        $name = $this->getTarget()->getAttribute()->getName();
-
-        return isset($value[$name]) ? $value[$name] : $value;
-    }
-
-    /**
      * Cast the value in the correct format.
      *
      * @param  mixed $value
      * @return mixed
      */
     public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
-    /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
     {
         $model = $this->getTargetModel();
         $name = $this->getTarget()->getAttribute()->getName();

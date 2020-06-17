@@ -21,7 +21,7 @@ trait ReversedRelation
      *
      * @return RelationField
      */
-    public function getReversed(): RelationField
+    public function getReversedField(): RelationField
     {
         $this->needsToBeOwned();
 
@@ -46,7 +46,7 @@ trait ReversedRelation
      */
     public function getSourceModel(): string
     {
-        return $this->getReversed()->getTargetModel();
+        return $this->getReversedField()->getTargetModel();
     }
 
     /**
@@ -56,7 +56,7 @@ trait ReversedRelation
      */
     public function getTargetModel(): string
     {
-        return $this->getReversed()->getSourceModel();
+        return $this->getReversedField()->getSourceModel();
     }
 
     /**
@@ -66,7 +66,7 @@ trait ReversedRelation
      */
     public function getSource(): Constraint
     {
-        return $this->getReversed()->getTarget();
+        return $this->getReversedField()->getTarget();
     }
 
     /**
@@ -76,6 +76,6 @@ trait ReversedRelation
      */
     public function getTarget(): Constraint
     {
-        return $this->getReversed()->getSource();
+        return $this->getReversedField()->getSource();
     }
 }

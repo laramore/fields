@@ -41,6 +41,13 @@ interface RelationField extends ExtraField
     public function reverbate(LaramoreModel $model, $value);
 
     /**
+     * Return the reversed field.
+     *
+     * @return RelationField
+     */
+    public function getReversedField(): RelationField;
+
+    /**
      * Indicate if the relation is head on or not.
      * Usefull to know which to use between source and target.
      *

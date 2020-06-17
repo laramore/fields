@@ -111,7 +111,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
      *
      * @return RelationField
      */
-    public function getReversed(): RelationField
+    public function getReversedField(): RelationField
     {
         return $this->getField('reversed');
     }
@@ -242,7 +242,7 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
                 $onField
             );
 
-            $this->reversedPivotName = $onField->getReversed()->getName();
+            $this->reversedPivotName = $onField->getReversedField()->getName();
 
             $this->pivotMeta->pivots($onField, $offField);
         }
@@ -276,8 +276,8 @@ class ManyToMany extends BaseComposed implements SingleSourceField, SingleTarget
 
         parent::owned();
 
-        $this->getReversed()->pivotName(
-            $this->replaceInFieldTemplate($this->templates['reversed_pivot'], $this->getReversed()->getName())
+        $this->getReversedField()->pivotName(
+            $this->replaceInFieldTemplate($this->templates['reversed_pivot'], $this->getReversedField()->getName())
         );
     }
 
