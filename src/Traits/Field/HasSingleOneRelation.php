@@ -18,39 +18,12 @@ trait HasSingleOneRelation
     use ModelRelation, ReversedRelation, IndexableConstraints, ForeignConstraints;
 
     /**
-     * Dry the value in a simple format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function dry($value)
-    {
-        $value = $this->transform($value);
-        $name = $this->getTarget()->getAttribute()->getName();
-
-        return $this->transform($value)->map(function ($value) use ($name) {
-            return isset($value[$name]) ? $value[$name] : $value;
-        });
-    }
-
-    /**
      * Cast the value in the correct format.
      *
      * @param  mixed $value
      * @return mixed
      */
     public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
-    /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
     {
         $modelClass = $this->getTargetModel();
 

@@ -96,12 +96,12 @@ trait NumberInteraction
     }
 
     /**
-     * Transform the value to correspond to the field desire.
+     * Cast the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function transform($value)
+    public function cast($value)
     {
         if (is_null($value)) {
             return $value;

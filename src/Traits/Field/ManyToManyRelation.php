@@ -35,22 +35,7 @@ trait ManyToManyRelation
      */
     public function getReversedPivotName()
     {
-        return $this->getReversed()->getPivotName();
-    }
-
-    /**
-     * Dry the value in a simple format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function dry($value)
-    {
-        $attribute = $this->getTargetAttribute();
-
-        return $this->transform($value)->map(function ($model) use ($attribute) {
-            return $attribute->get($model);
-        });
+        return $this->getReversedField()->getPivotName();
     }
 
     /**
@@ -61,16 +46,24 @@ trait ManyToManyRelation
      */
     public function cast($value)
     {
-        return $this->transform($value);
+        if ($value instanceof Collection) {
+            return $value;
+        }
+
+        if (\is_null($value) || \is_array($value)) {
+            return collect($value);
+        }
+
+        return collect($this->castModel($value));
     }
 
     /**
-     * Transform the value to be used as a correct model.
+     * Cast the value to be used as a correct model.
      *
      * @param  mixed $value
      * @return LaramoreModel
      */
-    public function transformModel($value)
+    public function castModel($value)
     {
         $model = $this->getTargetModel();
 
@@ -82,25 +75,6 @@ trait ManyToManyRelation
         $model->setAttributeValue($model->getKeyName(), $value);
 
         return $model;
-    }
-
-    /**
-     * Transform the value to be used as a correct collection.
-     *
-     * @param  mixed $value
-     * @return Collection
-     */
-    public function transform($value)
-    {
-        if ($value instanceof Collection) {
-            return $value;
-        }
-
-        if (\is_null($value) || \is_array($value)) {
-            return collect($value);
-        }
-
-        return collect($this->transformModel($value));
     }
 
     /**
