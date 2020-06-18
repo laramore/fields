@@ -508,10 +508,14 @@ abstract class BaseField implements Field, Configured
                 continue;
             }
 
+            $templates = Arr::get($data, 'templates', []);
+
             $proxyHandler->add(new $class(
                 $this, $methodName,
-                Arr::get($data, 'static', false), Arr::get($data, 'needs_value', false),
-                Arr::get($data, 'templates.name'), Arr::get($data, 'templates.multi_name')
+                Arr::get($data, 'static', false),
+                Arr::get($data, 'allow_multi', true),
+                Arr::get($data, 'needs_value', false),
+                Arr::get($templates, 'name'), Arr::get($templates, 'multi_name')
             ));
         }
     }

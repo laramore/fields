@@ -37,14 +37,15 @@ class FieldProxy extends IdentifiedProxy
      * @param Field   $field
      * @param string  $methodName
      * @param boolean $static
+     * @param boolean $allowMulti
      * @param boolean $needsValue
      * @param string  $nameTemplate
      * @param string  $multiNameTemplate
      */
-    public function __construct(Field $field, string $methodName, bool $static=false, bool $needsValue=false,
+    public function __construct(Field $field, string $methodName, bool $static=false, bool $allowMulti=true, bool $needsValue=false,
                                 string $nameTemplate=null, string $multiNameTemplate=null)
     {
-        parent::__construct($field->getName(), $methodName, $static, $nameTemplate, $multiNameTemplate);
+        parent::__construct($field->getName(), $methodName, $static, $allowMulti, $nameTemplate, $multiNameTemplate);
 
         $this->setField($field);
         $this->setNeedToResolveValue($needsValue);

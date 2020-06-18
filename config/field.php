@@ -34,6 +34,7 @@ return [
             'type' => 'reversed_relation',
             'proxy' => [
                 'configurations' => [
+                    'retrieve' => [],
                     'attach' => [],
                     'detach' => [],
                     'sync' => [],
@@ -47,11 +48,35 @@ return [
         ],
         'binary' => [
             'type' => 'binary',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'boolean' => [
             'type' => 'boolean',
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'is' => [
                         'needs_value' => true,
                     ],
@@ -66,6 +91,14 @@ return [
             'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'resize' => [],
                 ],
             ],
@@ -73,6 +106,18 @@ return [
         'date_time' => [
             'type' => 'date_time',
             'format' => 'Y-m-d H:i:s',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'decimal' => [
             'type' => 'decimal',
@@ -83,12 +128,32 @@ return [
                 'big_unsigned' => 'big_unsigned_decimal',
                 'small_unsigned' => 'small_unsigned_decimal',
             ],
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'email' => [
             'type' => 'email',
             'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'fix' => [],
                 ],
             ],
@@ -98,7 +163,7 @@ return [
                 'email' => '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD',
                 'separator' => '@',
                 'flags' => null,
-            ]
+            ],
         ],
         'enum' => [
             'type' => 'enum',
@@ -117,6 +182,14 @@ return [
             ],
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'get_elements' => [
                         'templates' => [
                             'name' => 'get-^{identifier}Elements',
@@ -140,6 +213,7 @@ return [
             'type' => 'reversed_relation',
             'proxy' => [
                 'configurations' => [
+                    'retrieve' => [],
                     'attach' => [],
                     'detach' => [],
                     'sync' => [],
@@ -153,12 +227,33 @@ return [
         ],
         'has_one' => [
             'type' => 'reversed_relation',
+            'proxy' => [
+                'configurations' => [
+                    'retrieve' => [],
+                    'attach' => [],
+                    'detach' => [],
+                    'sync' => [],
+                    'update' => [],
+                    'delete' => [],
+                    'toggle' => [],
+                    'sync_without_detaching' => [],
+                    'update_existing_pivot' => [],
+                ],
+            ],
         ],
         'increment' => [
             'type' => 'increment',
             'step' => 1,
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'increment' => [],
                     'decrement' => [],
                 ],
@@ -173,9 +268,33 @@ return [
                 'big_unsigned' => 'big_unsigned_integer',
                 'small_unsigned' => 'small_unsigned_integer',
             ],
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'json' => [
             'type' => 'json',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'many_to_many' => [
             'type' => 'relation',
@@ -192,6 +311,7 @@ return [
             ],
             'proxy' => [
                 'configurations' => [
+                    'retrieve' => [],
                     'attach' => [],
                     'update' => [],
                     'delete' => [],
@@ -209,6 +329,19 @@ return [
                 'reversed' => '+{modelname}',
                 'self_reversed' => 'reversed_+{name}',
             ],
+            'proxy' => [
+                'configurations' => [
+                    'retrieve' => [],
+                    'attach' => [],
+                    'detach' => [],
+                    'sync' => [],
+                    'update' => [],
+                    'delete' => [],
+                    'toggle' => [],
+                    'sync_without_detaching' => [],
+                    'update_existing_pivot' => [],
+                ],
+            ],
         ],
         'one_to_one' => [
             'type' => 'relation',
@@ -221,6 +354,19 @@ return [
                 'reversed' => '${modelname}',
                 'self_reversed' => 'reversed_+{name}',
             ],
+            'proxy' => [
+                'configurations' => [
+                    'retrieve' => [],
+                    'attach' => [],
+                    'detach' => [],
+                    'sync' => [],
+                    'update' => [],
+                    'delete' => [],
+                    'toggle' => [],
+                    'sync_without_detaching' => [],
+                    'update_existing_pivot' => [],
+                ],
+            ],
         ],
         'password' => [
             'type' => 'password',
@@ -228,6 +374,14 @@ return [
             'min_length' => 8, // Min length of any password.
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'resize' => [],
                     'hash' => [],
                     'is_correct' => [
@@ -248,6 +402,18 @@ return [
         ],
         'primary_id' => [
             'type' => 'primary_id',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'unique_id' => [
             'type' => 'integer',
@@ -258,19 +424,63 @@ return [
                 'big_unsigned' => 'big_unsigned_integer',
                 'small_unsigned' => 'small_unsigned_integer',
             ],
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'text' => [
             'type' => 'text',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'timestamp' => [
             'type' => 'timestamp',
             'format' => 'timestamp',
+            'proxy' => [
+                'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                ],
+            ],
         ],
         'uri' => [
             'type' => 'uri',
             'max_length' => Schema::getFacadeRoot()::$defaultStringLength,
             'proxy' => [
                 'configurations' => [
+                    'dry' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
+                    'hydrate' => [
+                        'static' => true,
+                        'allow_multi' => false,
+                    ],
                     'fix' => [],
                 ],
             ],

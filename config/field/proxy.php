@@ -14,13 +14,7 @@ return [
     'class' => \Laramore\Proxies\FieldProxy::class,
 
     'configurations' => [
-        'dry' => [
-            'static' => true,
-        ],
         'cast' => [
-            'static' => true,
-        ],
-        'transform' => [
             'static' => true,
         ],
         'serialize' => [
@@ -30,15 +24,15 @@ return [
             'static' => true,
         ],
         'get' => [
+            'allow_multi' => false,
             'templates' => [
                 'name' => '-{methodname}-^{identifier}Attribute',
-                'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'set' => [
+            'allow_multi' => false,
             'templates' => [
                 'name' => '-{methodname}-^{identifier}Attribute',
-                'multi_name' => '-{methodname}Attribute',
             ],
         ],
         'reset' => [
@@ -53,9 +47,9 @@ return [
             ],
         ],
         'where' => [
+            'allow_multi' => false,
             'templates' => [
                 'name' => 'scope-^{methodname}-^{identifier}',
-                'multi_name' => 'scope-^{methodname}',
             ],
         ],
         'doesnt_have' => [
