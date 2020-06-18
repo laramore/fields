@@ -216,7 +216,22 @@ class Enum extends BaseAttribute
             return $value;
         }
 
-        return $this->transform($value)->native;
+        return $value->native;
+    }
+
+    /**
+     * Hydrate the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function hydrate($value)
+    {
+        if (\is_null($value)) {
+            return $value;
+        }
+
+        return $this->findElement($value);
     }
 
     /**
@@ -226,17 +241,6 @@ class Enum extends BaseAttribute
      * @return mixed
      */
     public function cast($value)
-    {
-        return $this->transform($value);
-    }
-
-    /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
     {
         if (is_null($value) || ($value instanceof EnumElement)) {
             return $value;
@@ -266,7 +270,7 @@ class Enum extends BaseAttribute
      */
     public function is(EnumElement $value, $element, bool $expected=true): bool
     {
-        return ($value === $this->transform($element)) === $expected;
+        return ($value === $this->cast($element)) === $expected;
     }
 
     /**

@@ -293,7 +293,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     }
 
     /**
-     * Lock each sub attributes.
+     * Lock each sub fields.
      *
      * @return void
      */
@@ -393,104 +393,93 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return generally a Builder after adding to it a condition.
      *
-     * @param Field                $attribute
+     * @param Field                $field
      * @param Proxied              $builder
      * @param Operator|string|null $operator
      * @param mixed                $value
      * @param mixed                ...$args
      * @return mixed
      */
-    public function whereFieldValue(Field $attribute, Proxied $builder, $operator, $value=null, ...$args)
+    public function whereFieldValue(Field $field, Proxied $builder, $operator, $value=null, ...$args)
     {
         if (func_num_args() === 3) {
-            return $this->getOwner()->whereFieldValue($attribute, $builder, $operator);
+            return $this->getOwner()->whereFieldValue($field, $builder, $operator);
         }
 
-        return $this->getOwner()->whereFieldValue($attribute, $builder, $operator, $value, ...$args);
-    }
-
-    /**
-     * Transform a value for a specific field.
-     *
-     * @param Field $attribute
-     * @param mixed $value
-     * @return mixed
-     */
-    public function transformFieldValue(Field $attribute, $value)
-    {
-        return $this->getOwner()->transformFieldValue($attribute, $value);
+        return $this->getOwner()->whereFieldValue($field, $builder, $operator, $value, ...$args);
     }
 
     /**
      * Serialize a value for a specific field.
      *
-     * @param Field $attribute
+     * @param Field $field
      * @param mixed $value
      * @return mixed
      */
-    public function serializeFieldValue(Field $attribute, $value)
+    public function serializeFieldValue(Field $field, $value)
     {
-        return $this->getOwner()->serializeFieldValue($attribute, $value);
+        return $this->getOwner()->serializeFieldValue($field, $value);
     }
 
     /**
      * Check if the value is correct for a specific field.
      *
-     * @param Field $attribute
+     * @param Field $field
      * @param mixed $value
      * @return mixed
      */
-    public function checkFieldValue(Field $attribute, $value)
+    public function checkFieldValue(Field $field, $value)
     {
-        return $this->getOwner()->checkFieldValue($attribute, $value);
+        return $this->getOwner()->checkFieldValue($field, $value);
     }
 
     /**
      * Dry a value for a specific field.
      *
-     * @param Field $attribute
+     * @param Field $field
      * @param mixed $value
      * @return mixed
      */
-    public function dryFieldValue(Field $attribute, $value)
+    public function dryFieldValue(Field $field, $value)
     {
-        return $this->getOwner()->dryFieldValue($attribute, $value);
+        return $this->getOwner()->dryFieldValue($field, $value);
+    }
+
+    /**
+     * Hydrate a value for a specific field.
+     *
+     * @param Field $field
+     * @param mixed $value
+     * @return mixed
+     */
+    public function hydrateFieldValue(Field $field, $value)
+    {
+        return $this->getOwner()->hydrateFieldValue($field, $value);
     }
 
     /**
      * Cast a value for a specific field.
      *
-     * @param Field $attribute
+     * @param Field $field
      * @param mixed $value
      * @return mixed
      */
-    public function castFieldValue(Field $attribute, $value)
+    public function castFieldValue(Field $field, $value)
     {
-        return $this->getOwner()->castFieldValue($attribute, $value);
+        return $this->getOwner()->castFieldValue($field, $value);
     }
 
     /**
-     * Return the default value for a specific field.
+     * Call a field field method that is not basic.
      *
-     * @param Field $attribute
-     * @return mixed
-     */
-    public function defaultFieldValue(Field $attribute)
-    {
-        return $this->getOwner()->defaultFieldValue($attribute);
-    }
-
-    /**
-     * Call a field attribute method that is not basic.
-     *
-     * @param  Field  $attribute
+     * @param  Field  $field
      * @param  string $methodName
      * @param  array  $args
      * @return mixed
      */
-    public function callFieldValueMethod(Field $attribute, string $methodName, array $args)
+    public function callFieldValueMethod(Field $field, string $methodName, array $args)
     {
-        return $this->getOwner()->callFieldValueMethod($attribute, $methodName, $args);
+        return $this->getOwner()->callFieldValueMethod($field, $methodName, $args);
     }
 
     /**

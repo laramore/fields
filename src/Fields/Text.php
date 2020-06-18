@@ -24,6 +24,17 @@ class Text extends BaseAttribute
     }
 
     /**
+     * Hydrate the value in the correct format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function hydrate($value)
+    {
+        return \is_null($value) ? $value : (string) $value;
+    }
+
+    /**
      * Cast the value in the correct format.
      *
      * @param  mixed $value
@@ -32,17 +43,6 @@ class Text extends BaseAttribute
     public function cast($value)
     {
         return \is_null($value) ? $value : (string) $value;
-    }
-
-    /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
-    {
-        return $value;
     }
 
     /**

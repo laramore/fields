@@ -40,6 +40,23 @@ class Char extends Text
     }
 
     /**
+     * Cast the value to correspond to the field desire.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function cast($value)
+    {
+        $value = parent::cast($value);
+
+        if ($this->hasProperty('maxLength') && \strlen($value) > $this->maxLength) {
+            return \substr($value, 0, $this->maxLength);
+        }
+
+        return $value;
+    }
+
+    /**
      * Serialize the value for outputs.
      *
      * @param  mixed $value

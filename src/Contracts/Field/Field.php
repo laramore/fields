@@ -110,15 +110,7 @@ interface Field extends Locked, Owned
     public function __isset(string $key): bool;
 
     /**
-     * Dry the value in a simple format.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function dry($value);
-
-    /**
-     * Cast the value in the correct format.
+     * Cast user value into field format.
      *
      * @param  mixed $value
      * @return mixed
@@ -126,15 +118,7 @@ interface Field extends Locked, Owned
     public function cast($value);
 
     /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value);
-
-    /**
-     * Serialize the value for outputs.
+     * Serialize the value for output.
      *
      * @param  mixed $value
      * @return mixed

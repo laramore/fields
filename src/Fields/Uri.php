@@ -138,14 +138,14 @@ class Uri extends Char implements PatternField, FixableField
     }
 
     /**
-     * Transform the value to correspond to the field desire.
+     * Cast the value to correspond to the field desire.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function transform($value)
+    public function cast($value)
     {
-        $value = parent::transform($value);
+        $value = parent::cast($value);
 
         if ($this->isFixable($value)) {
             return $this->fix($value);

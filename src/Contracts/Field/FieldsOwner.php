@@ -11,7 +11,7 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Field\Field, Field\RelationField, Field\ExtraField
+    Proxied, Eloquent\LaramoreModel, Field\Field, Field\AttributeField, Field\RelationField, Field\ExtraField
 };
 
 interface FieldsOwner
@@ -138,15 +138,6 @@ interface FieldsOwner
     public function whereFieldValue(Field $field, Proxied $builder, $operator, $value=null, ...$args);
 
     /**
-     * Transform a value for a specific field.
-     *
-     * @param Field $field
-     * @param mixed $value
-     * @return mixed
-     */
-    public function transformFieldValue(Field $field, $value);
-
-    /**
      * Serialize a value for a specific field.
      *
      * @param Field $field
@@ -158,11 +149,20 @@ interface FieldsOwner
     /**
      * Dry a value for a specific field.
      *
-     * @param Field $field
-     * @param mixed $value
+     * @param AttributeField $field
+     * @param mixed          $value
      * @return mixed
      */
-    public function dryFieldValue(Field $field, $value);
+    public function dryFieldValue(AttributeField $field, $value);
+
+    /**
+     * Hydrate a value for a specific field.
+     *
+     * @param AttributeField $field
+     * @param mixed          $value
+     * @return mixed
+     */
+    public function hydrateFieldValue(AttributeField $field, $value);
 
     /**
      * Cast a value for a specific field.
@@ -172,14 +172,6 @@ interface FieldsOwner
      * @return mixed
      */
     public function castFieldValue(Field $field, $value);
-
-    /**
-     * Return the default value for a specific field.
-     *
-     * @param Field $field
-     * @return mixed
-     */
-    public function defaultFieldValue(Field $field);
 
     /**
      * Call a field attribute method that is not basic.

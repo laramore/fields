@@ -28,12 +28,12 @@ class Integer extends BaseAttribute
     }
 
     /**
-     * Cast the value in the correct format.
+     * Hydrate the value in the correct format.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function cast($value)
+    public function hydrate($value)
     {
         return is_null($value) ? $value : (int) $value;
     }

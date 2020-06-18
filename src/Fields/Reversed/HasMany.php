@@ -23,16 +23,16 @@ use Laramore\Traits\Field\HasSingleOneRelation;
 class HasMany extends BaseField implements ManyRelationField
 {
     use HasSingleOneRelation {
-        HasSingleOneRelation::transform as public transformModel;
+        HasSingleOneRelation::cast as public castModel;
     }
 
     /**
-     * Transform the value to a correct collection.
+     * Cast the value to a correct collection.
      *
      * @param mixed $value
      * @return Collection
      */
-    public function transform($value)
+    public function cast($value)
     {
         if ($value instanceof Collection) {
             return $value;
@@ -42,7 +42,7 @@ class HasMany extends BaseField implements ManyRelationField
             return collect($value);
         }
 
-        return collect($this->transformModel($value));
+        return collect($this->castModel($value));
     }
 
     /**

@@ -20,7 +20,18 @@ class Binary extends BaseAttribute
      */
     public function dry($value)
     {
-        return is_null($value) ? $value : (binary) $value;
+        return \is_null($value) ? $value : (string) $value;
+    }
+
+    /**
+     * Hydrate the value in a simple format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function hydrate($value)
+    {
+        return \is_null($value) ? $value : (binary) $value;
     }
 
     /**
@@ -31,18 +42,7 @@ class Binary extends BaseAttribute
      */
     public function cast($value)
     {
-        return is_null($value) ? $value : (binary) $value;
-    }
-
-    /**
-     * Transform the value to correspond to the field desire.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function transform($value)
-    {
-        return $value;
+        return \is_null($value) ? $value : (binary) $value;
     }
 
     /**

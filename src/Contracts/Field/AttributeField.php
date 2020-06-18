@@ -32,6 +32,22 @@ interface AttributeField extends Field, IndexableField, ForeignField
     public function getAttname(): string;
 
     /**
+     * Dry field value for database format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function dry($value);
+
+    /**
+     * Hydrate database value for field format.
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function hydrate($value);
+
+    /**
      * Add an operation to a query builder.
      *
      * @param LaramoreBuilder $builder

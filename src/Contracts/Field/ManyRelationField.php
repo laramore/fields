@@ -15,10 +15,10 @@ use Laramore\Contracts\Eloquent\LaramoreModel;
 interface ManyRelationField extends RelationField
 {
     /**
-     * Transform the value to be used as a correct model.
+     * Cast the value to be used as a correct model.
      *
      * @param  mixed $value
      * @return LaramoreModel
      */
-    public function transformModel($value);
+    public function castModel($value);
 }

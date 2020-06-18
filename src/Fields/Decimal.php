@@ -52,12 +52,12 @@ class Decimal extends BaseAttribute
     }
 
     /**
-     * Cast the value in the correct format.
+     * Hydrate the value in a simple format.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function cast($value)
+    public function hydrate($value)
     {
         return is_null($value) ? $value : (float) $value;
     }

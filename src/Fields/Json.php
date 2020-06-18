@@ -26,13 +26,17 @@ class Json extends BaseAttribute
     }
 
     /**
-     * Cast the value in the correct format.
+     * Hydrate the value in the correct format.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function cast($value)
+    public function hydrate($value)
     {
+        if (\is_null($value)) {
+            return $value;
+        }
+
         if (\is_string($value)) {
             $value = \json_decode($value, true);
         }
@@ -45,13 +49,25 @@ class Json extends BaseAttribute
     }
 
     /**
-     * Transform the value to correspond to the field desire.
+     * Cast the value in the correct format.
      *
      * @param  mixed $value
      * @return mixed
      */
-    public function transform($value)
+    public function cast($value)
     {
+        if (\is_null($value)) {
+            return $value;
+        }
+
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
+        }
+
+        if (!($value instanceof JsonCollection)) {
+            return new JsonCollection($value);
+        }
+
         return $value;
     }
 
