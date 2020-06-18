@@ -210,9 +210,9 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     public function getAttributes(): array
     {
-        return \array_filter($this->getFields(), function ($field) {
+        return \array_values(\array_filter($this->getFields(), function ($field) {
             return $field instanceof AttributeField;
-        });
+        }));
     }
 
     /**

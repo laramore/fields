@@ -46,7 +46,7 @@ class Foreign extends BaseConstraint implements RelationConstraint
      */
     public function getSourceAttributes(): array
     {
-        $attributes = $this->all();
+        $attributes = $this->getAttributes();
 
         return \array_slice($attributes, 0, (\count($attributes) / 2));
     }
@@ -58,7 +58,7 @@ class Foreign extends BaseConstraint implements RelationConstraint
      */
     public function getTargetAttributes(): array
     {
-        $attributes = $this->all();
+        $attributes = $this->getAttributes();
 
         return \array_slice($attributes, (\count($attributes) / 2));
     }
