@@ -13,9 +13,7 @@ namespace Laramore\Fields\Constraint;
 use Illuminate\Support\{
     Str, Facades\Event
 };
-use Illuminate\Container\Container;
 use Laramore\Contracts\Configured;
-use Laramore\Exceptions\LockException;
 use Laramore\Contracts\Field\{
     AttributeField, ComposedField, Field, Constraint\Constraint
 };
@@ -130,7 +128,7 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     public function getConfig(string $path=null, $default=null)
     {
-        return Container::getInstance()->config->get($this->getConfigPath($path), $default);
+        return config($this->getConfigPath($path), $default);
     }
 
     /**

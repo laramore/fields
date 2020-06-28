@@ -68,24 +68,25 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     /**
      * Add an observer for a specific model event.
      *
-     * @param BaseObserver $observer
+     * @param BaseObserver $constraint
      * @return self
      */
-    public function add(BaseObserver $observer)
+    public function add(BaseObserver $constraint)
     {
-        parent::add($observer);
+        // @var BaseConstraint $constraint
+        parent::add($constraint);
 
         if ($this->isOwned()) {
-            $this->getOwner()->add($observer);
+            $this->getOwner()->add($constraint);
         }
 
-        $fields = $observer->getFields();
+        $fields = $constraint->getFields();
 
         // The first field adds the new constraint to others.
         if ($this->getField() === \array_shift($fields)) {
             // Add all relations to other fields.
             foreach ($fields as $field) {
-                $field->getConstraintHandler()->add($observer);
+                $field->getConstraintHandler()->add($constraint);
             }
         }
 
@@ -156,6 +157,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
                 continue;
             }
 
+            // @var RelationConstraint $sourceable
             $intersec = \array_diff(
                 \array_map(function ($field) {
                     return $field->getNative();
@@ -185,6 +187,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
                 continue;
             }
 
+            // @var Constraint $targetable
             $intersec = \array_diff(
                 \array_map(function ($field) {
                     return $field->getNative();

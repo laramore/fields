@@ -11,7 +11,6 @@
 namespace Laramore\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Container\Container;
 use Laramore\Contracts\{
 	Manager\LaramoreManager, Provider\LaramoreProvider
 };
@@ -45,7 +44,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/field/constraint.php' => $this->app->make('path.config').'/field/constraint.php',
+            __DIR__.'/../../config/field/constraint.php' => config_path('/field/constraint.php'),
         ]);
     }
 
@@ -56,7 +55,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
      */
     public static function getDefaults(): array
     {
-        return Container::getInstance()->config->get('field.constraint.configurations');
+        return config('field.constraint.configurations');
     }
 
     /**
@@ -66,7 +65,7 @@ class FieldConstraintProvider extends ServiceProvider implements LaramoreProvide
      */
     public static function generateManager(): LaramoreManager
     {
-        $class = Container::getInstance()->config->get('field.constraint.manager');
+        $class = config('field.constraint.manager');
 
         return new $class(static::getDefaults());
     }

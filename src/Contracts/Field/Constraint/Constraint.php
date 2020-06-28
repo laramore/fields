@@ -10,6 +10,8 @@
 
 namespace Laramore\Contracts\Field\Constraint;
 
+use Laramore\Contracts\Field\AttributeField;
+use Laramore\Contracts\Field\Field;
 use Laramore\Contracts\Locked;
 
 interface Constraint extends Locked
@@ -29,11 +31,25 @@ interface Constraint extends Locked
     public function getFields(): array;
 
     /**
+     * Return concerned field.
+     *
+     * @return Field
+     */
+    public function getField(): Field;
+
+    /**
      * Return all concerned attribute fields.
      *
      * @return array
      */
     public function getAttributes(): array;
+
+    /**
+     * Return concerned attribute field.
+     *
+     * @return AttributeField
+     */
+    public function getAttribute(): AttributeField;
 
     /**
      * Indicate if this constraint is composed of multiple fields.

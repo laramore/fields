@@ -40,11 +40,9 @@ class FieldProvider extends ServiceProvider
      */
     public function boot()
     {
-        $pathDir = $this->app->make('path.config');
-
         $this->publishes([
-            __DIR__.'/../../config/field.php' => $pathDir.'/field.php',
-            __DIR__.'/../../config/field/proxy.php' => $pathDir.'/field/proxy.php',
+            __DIR__.'/../../config/field.php' => config_path('/field.php'),
+            __DIR__.'/../../config/field/proxy.php' => config_path('/field/proxy.php'),
         ]);
     }
 }

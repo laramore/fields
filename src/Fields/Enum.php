@@ -11,7 +11,6 @@
 namespace Laramore\Fields;
 
 use Illuminate\Support\Arr;
-use Illuminate\Container\Container;
 use Laramore\Elements\{
     EnumElement, EnumManager
 };
@@ -42,9 +41,7 @@ class Enum extends BaseAttribute
     {
         parent::setProxies();
 
-        $config = Container::getInstance()->config;
-
-        $class = $this->getConfig('elements.proxy.class', $this->getConfig('proxy.class', $config->get('field.proxy.class')));
+        $class = $this->getConfig('elements.proxy.class', $this->getConfig('proxy.class', config('field.proxy.class')));
         $proxies = $this->getConfig('elements.proxy.configurations', []);
 
         $proxyHandler = $this->getMeta()->getProxyHandler();

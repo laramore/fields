@@ -10,7 +10,6 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\{
     Arr, Str, Facades\Event
 };
@@ -127,7 +126,7 @@ abstract class BaseField implements Field, Configured
      */
     public function getConfig(string $path=null, $default=null)
     {
-        return Container::getInstance()->config->get($this->getConfigPath($path), $default);
+        return config($this->getConfigPath($path), $default);
     }
 
     /**
@@ -215,7 +214,7 @@ abstract class BaseField implements Field, Configured
      */
     public static function parseName(string $name): string
     {
-        return Str::replaceInTemplate(Container::getInstance()->config->get('field.templates.name'), compact('name'));
+        return Str::replaceInTemplate(config('field.templates.name'), compact('name'));
     }
 
     /**
@@ -497,11 +496,10 @@ abstract class BaseField implements Field, Configured
      */
     protected function setProxies()
     {
-        $config = Container::getInstance()->config;
         $proxyHandler = $this->getMeta()->getProxyHandler();
 
-        $class = $this->getConfig('proxy.class', $config->get('field.proxy.class'));
-        $proxies = \array_merge($config->get('field.proxy.configurations'), $this->getConfig('proxy.configurations', []));
+        $class = $this->getConfig('proxy.class') ?: config('field.proxy.class');
+        $proxies = \array_merge(config('field.proxy.configurations'), $this->getConfig('proxy.configurations', []));
 
         foreach ($proxies as $methodName => $data) {
             if (\is_null($data)) {

@@ -62,7 +62,7 @@ trait HasSingleOneRelation
                               bool $not=false, \Closure $callback=null): LaramoreBuilder
     {
         if ($not) {
-            return $this->whereNotNull($builder, $value, $boolean, null, null, $callback);
+            return $this->whereNotNull($builder, $value, $boolean, null, 0, $callback);
         }
 
         return $builder->doesntHave($this->name, $boolean, $callback);

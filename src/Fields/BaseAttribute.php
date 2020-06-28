@@ -10,7 +10,6 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\{
     Str, Collection
 };
@@ -42,7 +41,7 @@ abstract class BaseAttribute extends BaseField implements AttributeField
      */
     public static function parseAttname(string $attname): string
     {
-        return Str::replaceInTemplate(Container::getInstance()->config->get('field.templates.attname'), compact('attname'));
+        return Str::replaceInTemplate(config('field.templates.attname'), compact('attname'));
     }
 
     /**
@@ -96,6 +95,7 @@ abstract class BaseAttribute extends BaseField implements AttributeField
 
         if ($this->getConstraintHandler()->count(BaseConstraint::FOREIGN) > 0) {
             foreach ($this->getConstraintHandler()->all(BaseConstraint::FOREIGN) as $constraint) {
+                // @var RelationConstraint $constraint
                 if ($constraint->getSourceAttribute() === $this) {
                     $this->addOptions(\array_merge($constraint->getTargetAttribute()->options, $this->options));
                 }

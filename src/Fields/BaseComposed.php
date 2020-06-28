@@ -54,7 +54,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
         $fields = ($fields ?: $this->getConfig('fields'));
 
         if (\is_null($fields) || (\count($fields) && !Arr::isAssoc($fields))) {
-            throw new ConfigException($this->getConfigPath('fields'), 'any associative array of fields', $fields);
+            throw new ConfigException($this->getConfigPath('fields'), ['any associative array of fields'], $fields);
         }
 
         foreach ($fields as $name => $field) {

@@ -11,7 +11,6 @@
 namespace Laramore\Proxies;
 
 use Illuminate\Support\Str;
-use Illuminate\Container\Container;
 use Laramore\Contracts\Field\Field;
 use Closure;
 
@@ -42,8 +41,8 @@ class FieldProxy extends IdentifiedProxy
      * @param string  $nameTemplate
      * @param string  $multiNameTemplate
      */
-    public function __construct(Field $field, string $methodName, bool $static=false, bool $allowMulti=true, bool $needsValue=false,
-                                string $nameTemplate=null, string $multiNameTemplate=null)
+    public function __construct(Field $field, string $methodName, bool $static=false, bool $allowMulti=true,
+                                bool $needsValue=false, string $nameTemplate=null, string $multiNameTemplate=null)
     {
         parent::__construct($field->getName(), $methodName, $static, $allowMulti, $nameTemplate, $multiNameTemplate);
 
@@ -145,8 +144,7 @@ class FieldProxy extends IdentifiedProxy
     {
         $field = $this->getField();
         $owner = $field->getOwner();
-        $config = Container::getInstance()->config;
-        $methodOwnerName = $this->parseMethodOwnerName($config->get('field.templates.method_owner'));
+        $methodOwnerName = $this->parseMethodOwnerName(config('field.templates.method_owner'));
 
         $this->callback = function (...$args) use ($owner, $field, $methodOwnerName) {
             return \call_user_func([$owner, $methodOwnerName], $field, ...$args);

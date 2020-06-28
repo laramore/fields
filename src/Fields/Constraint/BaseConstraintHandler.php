@@ -10,7 +10,6 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Illuminate\Container\Container;
 use Laramore\Observers\{
     BaseObserver, BaseHandler
 };
@@ -49,7 +48,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      */
     public function getConfig(string $path=null, $default=null)
     {
-        return Container::getInstance()->config->get($this->getConfigPath($path), $default);
+        return config($this->getConfigPath($path), $default);
     }
 
     /**
@@ -86,6 +85,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      */
     protected function push(BaseObserver $constraint, array &$constraints)
     {
+        // @var BaseConstraint $constraint
         $type = $constraint->getConstraintType();
 
         if (!isset($constraints[$type])) {

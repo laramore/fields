@@ -22,6 +22,14 @@ interface LaramoreBuilder extends Proxied
     public function getQuery();
 
     /**
+     * Update a record in the database.
+     *
+     * @param  array $values
+     * @return integer
+     */
+    public function update(array $values);
+
+    /**
      * Add a basic where clause to the query.
      *
      * @param  string|array|\Closure $column
@@ -67,4 +75,26 @@ interface LaramoreBuilder extends Proxied
      * @return self
      */
     public function dynamicWhere(string $where, array $parameters);
+
+    /**
+     * Add a relationship count / exists condition to the query.
+     *
+     * @param  string|mixed  $relation
+     * @param  string|mixed  $operator
+     * @param  integer|mixed $count
+     * @param  string|mixed  $boolean
+     * @param  \Closure|null $callback
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function has($relation, $operator='>=', $count=1, $boolean='and', \Closure $callback=null);
+
+    /**
+     * Add a relationship count / exists condition to the query.
+     *
+     * @param  string|mixed  $relation
+     * @param  string|mixed  $boolean
+     * @param  \Closure|null $callback
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function doesntHave($relation, $boolean='and', \Closure $callback=null);
 }
