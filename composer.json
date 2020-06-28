@@ -10,11 +10,9 @@
    },
     "require": {
         "php": ">=7.0.8",
-        "illuminate/database": ">=5.5",
         "nesbot/carbon": ">=1.0",
-        "symfony/http-kernel": ">=3.4",
-        "laramore/types": "~0.7",
-        "laramore/proxies": "~0.6"
+        "laramore/types": ">=0.8",
+        "laramore/proxies": ">=0.7"
     },
     "authors": [
         {
