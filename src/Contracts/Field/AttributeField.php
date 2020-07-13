@@ -11,10 +11,10 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\{
-    Eloquent\LaramoreBuilder, Field\Constraint\IndexableField, Field\Constraint\ForeignField
+    Eloquent\LaramoreBuilder, Field\Constraint\IndexableField, Field\Constraint\RelationalField
 };
 
-interface AttributeField extends Field, IndexableField, ForeignField
+interface AttributeField extends Field, IndexableField, RelationalField
 {
     /**
      * Parse the attribute name.

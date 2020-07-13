@@ -12,8 +12,16 @@ namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\Field\Constraint\Constraint;
 
-interface MultipleTargetField extends RelationField
+interface MorphTargetField extends RelationField
 {
+    /**
+     * Return the target of the relation.
+     *
+     * @param string $className
+     * @return Constraint
+     */
+    public function getTarget(string $className=null): Constraint;
+
     /**
      * Return the targets of the relation.
      *

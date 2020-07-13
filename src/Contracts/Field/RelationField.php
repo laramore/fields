@@ -10,7 +10,9 @@
 
 namespace Laramore\Contracts\Field;
 
-use Laramore\Contracts\Eloquent\LaramoreModel;
+use Laramore\Contracts\{
+    Eloquent\LaramoreModel, Field\Constraint\Constraint
+};
 
 interface RelationField extends ExtraField
 {
@@ -68,6 +70,20 @@ interface RelationField extends ExtraField
      * @return string
      */
     public function getTargetModel(): string;
+
+    /**
+     * Return the source of the relation.
+     *
+     * @return Constraint
+     */
+    public function getSource(): Constraint;
+
+    /**
+     * Return the target of the relation.
+     *
+     * @return Constraint
+     */
+    public function getTarget(): Constraint;
 
     /**
      * Update a relation.

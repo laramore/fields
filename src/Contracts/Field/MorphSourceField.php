@@ -12,8 +12,16 @@ namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\Field\Constraint\Constraint;
 
-interface MultipleSourceField extends RelationField
+interface MorphSourceField extends RelationField
 {
+    /**
+     * Return the source of the relation.
+     *
+     * @param string $className
+     * @return Constraint
+     */
+    public function getSource(string $className=null): Constraint;
+
     /**
      * Return the sources of the relation.
      *
