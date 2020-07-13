@@ -10,8 +10,6 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Contracts\Field\Constraint\Constraint;
-
-class Unique extends BaseConstraint implements Constraint
+class Unique extends BaseIndexableConstraint
 {
 }

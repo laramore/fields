@@ -10,11 +10,10 @@
 
 namespace Laramore\Fields\Reversed;
 
-use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
-    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
+    Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
 };
 use Laramore\Contracts\Field\RelationField;
 use Laramore\Traits\Field\HasSingleOneRelation;
@@ -26,13 +25,13 @@ class HasOne extends BaseField implements RelationField
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
-     * @param  boolean         $notIn
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
+     * @param  boolean            $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         return $this->getTarget()->getAttribute()
@@ -42,12 +41,12 @@ class HasOne extends BaseField implements RelationField
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }

@@ -12,11 +12,9 @@ namespace Laramore\Fields;
 
 use Laramore\Contracts\Field\Constraint\UniqueField;
 use Laramore\Traits\Field\ToSingleOneRelation;
-use Laramore\Contracts\Field\{
-    SingleSourceField, SingleTargetField
-};
+use Laramore\Contracts\Field\RelationField;
 
-class OneToOne extends BaseComposed implements SingleSourceField, SingleTargetField
+class OneToOne extends BaseComposed implements RelationField
 {
     use ToSingleOneRelation;
 

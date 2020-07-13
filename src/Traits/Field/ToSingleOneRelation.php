@@ -10,25 +10,20 @@
 
 namespace Laramore\Traits\Field;
 
-use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Facades\{
     Operator, Option
 };
-use Laramore\Fields\Constraint\FieldConstraintHandler;
 use Laramore\Contracts\Eloquent\{
-    LaramoreModel, LaramoreBuilder
+    LaramoreModel, LaramoreBuilder, LaramoreCollection
 };
 use Laramore\Contracts\Field\{
     Field, RelationField, Constraint\Constraint
 };
-use Laramore\Traits\Field\{
-    IndexableConstraints, ForeignConstraints
-};
 
 trait ToSingleOneRelation
 {
-    use ModelRelation, IndexableConstraints, ForeignConstraints;
+    use ModelRelation, IndexableConstraints, RelationalConstraints;
 
     /**
      * Model the relation is on.
@@ -45,16 +40,6 @@ trait ToSingleOneRelation
     public function getReversedField(): RelationField
     {
         return $this->getField('reversed');
-    }
-
-    /**
-     * Return the relation handler for this meta.
-     *
-     * @return FieldConstraintHandler
-     */
-    public function getConstraintHandler(): FieldConstraintHandler
-    {
-        return $this->getField('id')->getConstraintHandler();
     }
 
     /**
@@ -172,8 +157,7 @@ trait ToSingleOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getSourceModel()::getMeta()
-            ->getConstraintHandler()->getSource([$this->getField('id')]);
+        return $this->getConstraintHandler()->getSource([$this->getField('id')]);
     }
 
     /**
@@ -215,7 +199,9 @@ trait ToSingleOneRelation
 
         parent::owned();
 
-        $this->foreign(($this->templates['relation'] ?? null), $this->getTarget()->getAttributes());
+        $target = $this->getTarget();
+
+        $this->foreign(($this->templates['relation'] ?? null), $target, [$this->getField('id')]);
     }
 
     /**
@@ -229,7 +215,7 @@ trait ToSingleOneRelation
         $model = $this->getTargetModel();
         $name = $this->getTarget()->getAttribute()->getName();
 
-        if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof Collection) {
+        if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof LaramoreCollection) {
             return $value;
         }
 
@@ -319,13 +305,13 @@ trait ToSingleOneRelation
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
-     * @param  boolean         $notIn
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
+     * @param  boolean            $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         return $this->getField('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
@@ -334,12 +320,12 @@ trait ToSingleOneRelation
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle all constraints adding a primary constraints during creation.
+ * Handle all constraints adding a unique constraints during creation.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -12,7 +12,7 @@ namespace Laramore\Fields\Constraint;
 
 use Laramore\Contracts\Field\Field;
 
-class PrimaryConstraintHandler extends FieldConstraintHandler
+class IndexConstraintHandler extends FieldConstraintHandler
 {
     /**
      * Create a field handler for a specific field.
@@ -23,6 +23,6 @@ class PrimaryConstraintHandler extends FieldConstraintHandler
     {
         parent::__construct($field);
 
-        $this->create(BaseIndexableConstraint::PRIMARY);
+        $this->create(BaseIndexableConstraint::INDEX);
     }
 }

@@ -10,21 +10,19 @@
 
 namespace Laramore\Fields;
 
-use Illuminate\Support\{
-    Str, Collection
-};
+use Illuminate\Support\Str;
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Field\AttributeField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
+    Field\AttributeField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
 };
-use Laramore\Fields\Constraint\BaseConstraint;
+use Laramore\Fields\Constraint\BaseRelationalConstraint;
 use Laramore\Traits\Field\{
-    IndexableConstraints, ForeignConstraints
+    IndexableConstraints, RelationalConstraints
 };
 
 abstract class BaseAttribute extends BaseField implements AttributeField
 {
-    use IndexableConstraints, ForeignConstraints;
+    use IndexableConstraints, RelationalConstraints;
 
     /**
      * AttributeField name of this field.
@@ -93,9 +91,9 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     {
         parent::locking();
 
-        if ($this->getConstraintHandler()->count(BaseConstraint::FOREIGN) > 0) {
-            foreach ($this->getConstraintHandler()->all(BaseConstraint::FOREIGN) as $constraint) {
-                // @var RelationConstraint $constraint
+        if ($this->getConstraintHandler()->count(BaseRelationalConstraint::FOREIGN) > 0) {
+            foreach ($this->getConstraintHandler()->all(BaseRelationalConstraint::FOREIGN) as $constraint) {
+                /** @var RelationConstraint $constraint */
                 if ($constraint->getSourceAttribute() === $this) {
                     $this->addOptions(\array_merge($constraint->getTargetAttribute()->options, $this->options));
                 }
@@ -199,13 +197,13 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
-     * @param  boolean         $notIn
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
+     * @param  boolean            $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
+    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
         return $this->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
@@ -214,12 +212,12 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder $builder
-     * @param  Collection      $value
-     * @param  string          $boolean
+     * @param  LaramoreBuilder    $builder
+     * @param  LaramoreCollection $value
+     * @param  string             $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }

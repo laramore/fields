@@ -11,7 +11,7 @@
 namespace Laramore\Traits\Field;
 
 use Laramore\Contracts\Field\Field;
-use Laramore\Fields\Constraint\BaseConstraint;
+use Laramore\Fields\Constraint\BaseIndexableConstraint;
 
 trait IndexableConstraints
 {
@@ -26,7 +26,7 @@ trait IndexableConstraints
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->create(BaseConstraint::PRIMARY, $name, $fields);
+        $this->getConstraintHandler()->create(BaseIndexableConstraint::PRIMARY, $name, $fields);
 
         return $this;
     }
@@ -42,7 +42,7 @@ trait IndexableConstraints
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->create(BaseConstraint::INDEX, $name, $fields);
+        $this->getConstraintHandler()->create(BaseIndexableConstraint::INDEX, $name, $fields);
 
         return $this;
     }
@@ -58,7 +58,7 @@ trait IndexableConstraints
     {
         $this->needsToBeUnlocked();
 
-        $this->getConstraintHandler()->create(BaseConstraint::UNIQUE, $name, $fields);
+        $this->getConstraintHandler()->create(BaseIndexableConstraint::UNIQUE, $name, $fields);
 
         return $this;
     }

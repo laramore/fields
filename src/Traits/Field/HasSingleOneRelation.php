@@ -15,7 +15,7 @@ use Laramore\Contracts\Eloquent\LaramoreBuilder;
 
 trait HasSingleOneRelation
 {
-    use ModelRelation, ReversedRelation, IndexableConstraints, ForeignConstraints;
+    use ModelRelation, ReversedRelation, IndexableConstraints, RelationalConstraints;
 
     /**
      * Cast the value in the correct format.

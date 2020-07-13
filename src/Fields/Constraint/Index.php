@@ -10,8 +10,6 @@
 
 namespace Laramore\Fields\Constraint;
 
-use Laramore\Contracts\Field\Constraint\Constraint;
-
-class Index extends BaseConstraint implements Constraint
+class Index extends BaseIndexableConstraint
 {
 }

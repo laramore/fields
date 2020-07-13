@@ -14,11 +14,11 @@ use Illuminate\Support\Str;
 use Laramore\Facades\Option;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 use Laramore\Contracts\Field\{
-    Field, RelationField, ManyRelationField, SingleTargetField, SingleSourceField, Constraint\Constraint
+    Field, RelationField, ManyRelationField, Constraint\Constraint
 };
 use Laramore\Traits\Field\ManyToManyRelation;
 
-class ManyToMany extends BaseComposed implements SingleSourceField, SingleTargetField, ManyRelationField
+class ManyToMany extends BaseComposed implements ManyRelationField
 {
     use ManyToManyRelation;
 

@@ -23,6 +23,6 @@ class UniqueConstraintHandler extends FieldConstraintHandler
     {
         parent::__construct($field);
 
-        $this->create(BaseConstraint::UNIQUE);
+        $this->create(BaseIndexableConstraint::UNIQUE);
     }
 }
