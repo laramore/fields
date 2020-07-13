@@ -85,13 +85,14 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      */
     protected function push(BaseObserver $constraint, array &$constraints)
     {
-        // @var BaseConstraint $constraint
+        /** @var BaseConstraint $constraint */
         $type = $constraint->getConstraintType();
 
         if (!isset($constraints[$type])) {
             $constraints[$type] = [];
         }
 
+        /** @var array<string,array<BaseConstraint>> $constraints */
         if (!\in_array($constraint, $constraints[$type])) {
             \array_push($constraints[$type], $constraint);
         }
@@ -108,7 +109,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
     {
         parent::locking();
 
-        if ($this->count(BaseConstraint::PRIMARY) > 1) {
+        if ($this->count(BaseIndexableConstraint::PRIMARY) > 1) {
             throw new LockException('A field cannot have multiple primary constraints', 'primary');
         }
     }
@@ -120,7 +121,7 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
      */
     public function getPrimary()
     {
-        $primaries = $this->all(BaseConstraint::PRIMARY);
+        $primaries = $this->all(BaseIndexableConstraint::PRIMARY);
 
         if (\count($primaries)) {
             return $primaries[0];
@@ -132,31 +133,31 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
     /**
      * Return all indexes.
      *
-     * @return array<BaseConstraint>
+     * @return array<BaseIndexableConstraint>
      */
     public function getIndexes(): array
     {
-        return $this->all(BaseConstraint::INDEX);
+        return $this->all(BaseIndexableConstraint::INDEX);
     }
 
     /**
      * Return all unique constraints.
      *
-     * @return array<BaseConstraint>
+     * @return array<BaseIndexableConstraint>
      */
     public function getUniques(): array
     {
-        return $this->all(BaseConstraint::UNIQUE);
+        return $this->all(BaseIndexableConstraint::UNIQUE);
     }
 
     /**
      * Return all foreign constraints.
      *
-     * @return array<BaseConstraint>
+     * @return array<BaseRelationalConstraint>
      */
     public function getForeigns(): array
     {
-        return $this->all(BaseConstraint::FOREIGN);
+        return $this->all(BaseRelationalConstraint::FOREIGN);
     }
 
     /**

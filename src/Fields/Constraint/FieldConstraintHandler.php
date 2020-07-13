@@ -14,7 +14,7 @@ use Laramore\Contracts\{
     Owned, Configured
 };
 use Laramore\Contracts\Field\{
-    Field, Constraint\Constraint, Constraint\RelationConstraint
+    Field, Constraint\Constraint, Constraint\RelationalConstraint
 };
 use Laramore\Observers\BaseObserver;
 use Laramore\Traits\IsOwned;
@@ -73,7 +73,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function add(BaseObserver $constraint)
     {
-        // @var BaseConstraint $constraint
+        /** @var BaseConstraint $constraint */
         parent::add($constraint);
 
         if ($this->isOwned()) {
@@ -132,7 +132,7 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      * @param  Field|array<Field> $fields
      * @param  integer            $priority
      * @param  string             $class
-     * @return self
+     * @return BaseConstraint
      */
     public function create($type, string $name=null, $fields=[], int $priority=BaseConstraint::MEDIUM_PRIORITY,
                            string $class=null)
@@ -140,29 +140,32 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
         $fields = \is_array($fields) ? [$this->getField(), ...$fields] : [$this->getField(), $fields];
         $class = $class ?: $this->getConfig('classes.'.$type);
 
-        return $this->add($class::constraint($fields, $name));
+        $this->add($constraint = $class::constraint($fields, $name, $priority));
+
+        return $constraint;
     }
 
     /**
      * Return the sourced constraint.
      *
      * @param array $attributes
-     * @return RelationConstraint
+     * @return RelationalConstraint
      */
-    public function getSource(array $attributes=[]): RelationConstraint
+    public function getSource(array $attributes=[]): RelationalConstraint
     {
-        // @var RelationConstraint
+        $sourceFields = [$this->getField(), ...$attributes];
+
+        /** @var RelationalConstraint */
         foreach ($this->getConstraints() as $sourceable) {
-            if (!($sourceable instanceof RelationConstraint)) {
+            dump($sourceable);
+            if (!($sourceable instanceof RelationalConstraint)) {
                 continue;
             }
 
-            // @var RelationConstraint $sourceable
+            /** @var RelationalConstraint $sourceable */
             $intersec = \array_diff(
-                \array_map(function ($field) {
-                    return $field->getNative();
-                }, $sourceable->getSourceAttributes()),
-                \array_merge($attributes, [$this->getField()->getNative()])
+                $sourceable->getAttributes(),
+                $sourceFields
             );
 
             if (\count($intersec) === 0) {
@@ -181,18 +184,18 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
      */
     public function getTarget(array $attributes=[]): Constraint
     {
-        // @var Constraint
+        $targetFields = [$this->getField(), ...$attributes];
+
+        /** @var Constraint */
         foreach ($this->getConstraints() as $targetable) {
-            if ($targetable instanceof RelationConstraint) {
+            if ($targetable instanceof RelationalConstraint) {
                 continue;
             }
 
-            // @var Constraint $targetable
+            /** @var Constraint $targetable */
             $intersec = \array_diff(
-                \array_map(function ($field) {
-                    return $field->getNative();
-                }, $targetable->getAttributes()),
-                \array_merge($attributes, [$this->getField()->getNative()])
+                $targetable->getAttributes(),
+                $targetFields
             );
 
             if (\count($intersec) === 0) {

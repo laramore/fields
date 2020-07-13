@@ -22,14 +22,6 @@ use Laramore\Observers\BaseObserver;
 abstract class BaseConstraint extends BaseObserver implements Constraint, Configured
 {
     /**
-     * All possible constraint types.
-     */
-    const FOREIGN = 'foreign';
-    const INDEX = 'index';
-    const PRIMARY = 'primary';
-    const UNIQUE = 'unique';
-
-    /**
      * An observer needs at least a name.
      *
      * @param Field|array<Field> $fields
@@ -82,17 +74,21 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
      */
     protected function unpackFields(array $fields): array
     {
+        $unpackedFields = [];
+
         foreach ($fields as $field) {
+            $unpackedFields[] = $field;
+
             if ($field instanceof ComposedField) {
-                $fields = \array_merge(
-                    $fields,
+                $unpackedFields = \array_merge(
+                    $unpackedFields,
                     $this->unpackFields($field->getFields(ComposedField::class)),
                     $field->getFields(AttributeField::class)
                 );
             }
         }
 
-        return $fields;
+        return $unpackedFields;
     }
 
     /**
@@ -224,20 +220,6 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
     }
 
     /**
-     * Return the only attribute.
-     *
-     * @return AttributeField
-     */
-    public function getAttribute(): AttributeField
-    {
-        if ($this->isComposed()) {
-            throw new \Exception('Cannot get attribute from composed constraint');
-        }
-
-        return $this->getAttributes()[0];
-    }
-
-    /**
      * Return the only field.
      *
      * @return Field
@@ -249,6 +231,20 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
         }
 
         return $this->getField()[0];
+    }
+
+    /**
+     * Return the only attribute.
+     *
+     * @return AttributeField
+     */
+    public function getAttribute(): AttributeField
+    {
+        if ($this->isComposed()) {
+            throw new \Exception('Cannot get attribute from composed constraint');
+        }
+
+        return $this->getAttributes()[0];
     }
 
     /**
@@ -269,25 +265,5 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
         Event::dispatch('constraints.locked', $this);
 
         return $this;
-    }
-
-    /**
-     * Actions during locking.
-     *
-     * @return void
-     */
-    protected function locking()
-    {
-
-    }
-
-    /**
-     * Call the observer.
-     *
-     * @param  mixed ...$args
-     * @return mixed
-     */
-    public function __invoke(...$args)
-    {
     }
 }

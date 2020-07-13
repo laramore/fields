@@ -1,5 +1,7 @@
 <?php
 
+namespace Laramore\Fields\Constraint;
+
 return [
 
     /*
@@ -11,27 +13,31 @@ return [
     |
     */
 
-    'manager' => Laramore\Fields\Constraint\ConstraintManager::class,
+    'manager' => ConstraintManager::class,
 
     'classes' => [
-        'index' => Laramore\Fields\Constraint\Index::class,
-        'unique' => Laramore\Fields\Constraint\Unique::class,
-        'foreign' => Laramore\Fields\Constraint\Foreign::class,
-        'primary' => Laramore\Fields\Constraint\Primary::class,
+        BaseIndexableConstraint::PRIMARY => Primary::class,
+        BaseIndexableConstraint::INDEX => Index::class,
+        BaseIndexableConstraint::UNIQUE => Unique::class,
+        BaseRelationalConstraint::FOREIGN => Foreign::class,
+        BaseRelationalConstraint::MORPH => Morph::class,
     ],
 
     'configurations' => [
+        'primary' => [
+            'type' => BaseIndexableConstraint::PRIMARY,
+        ],
         'index' => [
-            'type' => Laramore\Fields\Constraint\BaseConstraint::INDEX,
+            'type' => BaseIndexableConstraint::INDEX,
         ],
         'unique' => [
-            'type' => Laramore\Fields\Constraint\BaseConstraint::UNIQUE,
+            'type' => BaseIndexableConstraint::UNIQUE,
         ],
         'foreign' => [
-            'type' => Laramore\Fields\Constraint\BaseConstraint::FOREIGN,
+            'type' => BaseRelationalConstraint::FOREIGN,
         ],
-        'primary' => [
-            'type' => Laramore\Fields\Constraint\BaseConstraint::PRIMARY,
+        'morph' => [
+            'type' => BaseRelationalConstraint::MORPH,
         ],
     ],
 ];
