@@ -43,10 +43,8 @@
 
     <!-- Comment rules -->
     <rule ref="Generic.Commenting.Todo" />
-    <rule ref="Squiz.Commenting.BlockComment" />
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
-    <rule ref="Squiz.Commenting.InlineComment" />
     <rule ref="Squiz.Commenting.PostStatementComment" />
     <rule ref="Squiz.Commenting.FileComment">
         <type>warning</type>
