@@ -55,7 +55,7 @@ interface LaramoreBuilder extends Proxied
      * Execute the query as a "select" statement.
      *
      * @param  array|mixed $columns
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @return \Laramore\Contracts\Eloquent\LaramoreCollection|static[]
      */
     public function get($columns=['*']);
 
