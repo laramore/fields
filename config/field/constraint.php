@@ -20,7 +20,6 @@ return [
         BaseIndexableConstraint::INDEX => Index::class,
         BaseIndexableConstraint::UNIQUE => Unique::class,
         BaseRelationalConstraint::FOREIGN => Foreign::class,
-        BaseRelationalConstraint::MORPH => Morph::class,
     ],
 
     'configurations' => [
@@ -35,9 +34,6 @@ return [
         ],
         'foreign' => [
             'type' => BaseRelationalConstraint::FOREIGN,
-        ],
-        'morph' => [
-            'type' => BaseRelationalConstraint::MORPH,
         ],
     ],
 ];
