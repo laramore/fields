@@ -13,7 +13,7 @@ namespace Laramore\Traits\Field;
 use Laramore\Facades\Operator;
 use Laramore\Contracts\Eloquent\LaramoreBuilder;
 
-trait HasSingleOneRelation
+trait HasOneRelation
 {
     use ModelRelation, ReversedRelation, IndexableConstraints, RelationalConstraints;
 

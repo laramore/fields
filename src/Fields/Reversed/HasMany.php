@@ -16,12 +16,12 @@ use Laramore\Contracts\{
     Field\ManyRelationField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
 };
 use Laramore\Facades\Operator;
-use Laramore\Traits\Field\HasSingleOneRelation;
+use Laramore\Traits\Field\HasOneRelation;
 
 class HasMany extends BaseField implements ManyRelationField
 {
-    use HasSingleOneRelation {
-        HasSingleOneRelation::cast as public castModel;
+    use HasOneRelation {
+        HasOneRelation::cast as public castModel;
     }
 
     /**

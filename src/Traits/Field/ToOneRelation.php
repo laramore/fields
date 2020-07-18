@@ -20,8 +20,9 @@ use Laramore\Contracts\Eloquent\{
 use Laramore\Contracts\Field\{
     Field, RelationField, Constraint\Constraint
 };
+use Laramore\Fields\Constraint\Morph;
 
-trait ToSingleOneRelation
+trait ToOneRelation
 {
     use ModelRelation, IndexableConstraints, RelationalConstraints;
 
@@ -157,7 +158,7 @@ trait ToSingleOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getConstraintHandler()->getSource([$this->getField('id')]);
+        return $this->getConstraintHandler()->get($this->sourceConstraintName);
     }
 
     /**
@@ -181,7 +182,10 @@ trait ToSingleOneRelation
     {
         $this->needsToBeOwned();
 
-        return $this->getTargetModel()::getMeta()->getPrimary();
+        /** @var Morph */
+        $source = $this->getSource();
+
+        return $source->getTarget();
     }
 
     /**
@@ -199,9 +203,11 @@ trait ToSingleOneRelation
 
         parent::owned();
 
-        $target = $this->getTarget();
-
-        $this->foreign(($this->templates['relation'] ?? null), $target, [$this->getField('id')]);
+        $this->foreign(
+            ($this->templates['relation'] ?? null),
+            $this->getTargetModel()::getMeta()->getPrimary(),
+            [$this->getField('id')]
+        );
     }
 
     /**
@@ -346,7 +352,9 @@ trait ToSingleOneRelation
             return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));
         }
 
-        return $this->getField('id')->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+        $idValue = $this->getValue('id', $value);
+
+        return $this->getField('id')->addBuilderOperation($builder, 'where', $operator, $idValue, $boolean);
     }
 
     /**
