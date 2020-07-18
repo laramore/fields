@@ -26,6 +26,8 @@ trait IndexableConstraints
     {
         $this->needsToBeUnlocked();
 
+        $fields = \is_array($fields) ? [$this, ...$fields] : [$this, $fields];
+
         $this->getConstraintHandler()->create(BaseIndexableConstraint::PRIMARY, $name, $fields);
 
         return $this;
@@ -42,6 +44,8 @@ trait IndexableConstraints
     {
         $this->needsToBeUnlocked();
 
+        $fields = \is_array($fields) ? [$this, ...$fields] : [$this, $fields];
+
         $this->getConstraintHandler()->create(BaseIndexableConstraint::INDEX, $name, $fields);
 
         return $this;
@@ -57,6 +61,8 @@ trait IndexableConstraints
     public function unique(string $name=null, $fields=[])
     {
         $this->needsToBeUnlocked();
+
+        $fields = \is_array($fields) ? [$this, ...$fields] : [$this, $fields];
 
         $this->getConstraintHandler()->create(BaseIndexableConstraint::UNIQUE, $name, $fields);
 

@@ -18,6 +18,13 @@ use Laramore\Fields\Constraint\BaseRelationalConstraint;
 trait RelationalConstraints
 {
     /**
+     * Source constraint name.
+     *
+     * @var string
+     */
+    protected $sourceConstraintName;
+
+    /**
      * Define a foreign constraint.
      *
      * @param  string              $name
@@ -29,8 +36,11 @@ trait RelationalConstraints
     {
         $this->needsToBeUnlocked();
 
+        $fields = \is_array($fields) ? [$this, ...$fields] : [$this, $fields];
+
         $constraint = $this->getConstraintHandler()->create(BaseRelationalConstraint::FOREIGN, $name, $fields);
         $constraint->setTarget($target);
+        $this->sourceConstraintName = $constraint->getName();
 
         return $this;
     }

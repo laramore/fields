@@ -57,25 +57,12 @@ abstract class BaseIndexableConstraint extends BaseConstraint implements Indexab
     }
 
     /**
-     * Find a model by its primary key.
-     *
-     * @param  mixed $id
-     * @param  mixed $columns
-     * @return \Laramore\Eloquent\LaramoreModel|null
-     */
-    public function find($id, $columns=['*'])
-    {
-        return null;
-    }
-
-    /**
      * Call the constraint by find the right value.
      *
      * @param mixed ...$args
-     * @return \Laramore\Eloquent\LaramoreModel|null
+     * @return void
      */
     public function __invoke(...$args)
     {
-        return $this->find(...$args);
     }
 }

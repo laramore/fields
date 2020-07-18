@@ -573,4 +573,18 @@ abstract class BaseField implements Field, Configured
     {
         return $this->getNative();
     }
+
+    /**
+     * Clone this field.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->owner = null;
+        $this->model = null;
+        $this->locked = false;
+
+        $this->setConstraintHandler();
+    }
 }

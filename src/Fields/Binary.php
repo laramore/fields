@@ -53,6 +53,6 @@ class Binary extends BaseAttribute
      */
     public function serialize($value)
     {
-        return is_null($value) ? $value : (string) $value;
+        return \is_null($value) ? $value : (string) $value;
     }
 }

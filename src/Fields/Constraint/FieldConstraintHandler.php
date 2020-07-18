@@ -14,7 +14,7 @@ use Laramore\Contracts\{
     Owned, Configured
 };
 use Laramore\Contracts\Field\{
-    Field, Constraint\Constraint, Constraint\RelationalConstraint
+    Field, Constraint\Constraint
 };
 use Laramore\Observers\BaseObserver;
 use Laramore\Traits\IsOwned;
@@ -137,72 +137,11 @@ class FieldConstraintHandler extends BaseConstraintHandler implements Configured
     public function create($type, string $name=null, $fields=[], int $priority=BaseConstraint::MEDIUM_PRIORITY,
                            string $class=null)
     {
-        $fields = \is_array($fields) ? [$this->getField(), ...$fields] : [$this->getField(), $fields];
+        $fields = \is_array($fields) ? $fields : [$fields];
         $class = $class ?: $this->getConfig('classes.'.$type);
 
         $this->add($constraint = $class::constraint($fields, $name, $priority));
 
         return $constraint;
-    }
-
-    /**
-     * Return the sourced constraint.
-     *
-     * @param array $attributes
-     * @return RelationalConstraint
-     */
-    public function getSource(array $attributes=[]): RelationalConstraint
-    {
-        $sourceFields = [$this->getField(), ...$attributes];
-
-        /** @var RelationalConstraint */
-        foreach ($this->getConstraints() as $sourceable) {
-            dump($sourceable);
-            if (!($sourceable instanceof RelationalConstraint)) {
-                continue;
-            }
-
-            /** @var RelationalConstraint $sourceable */
-            $intersec = \array_diff(
-                $sourceable->getAttributes(),
-                $sourceFields
-            );
-
-            if (\count($intersec) === 0) {
-                return $sourceable;
-            }
-        }
-
-        throw new \Exception('No source found. A field used as a source must have a primary, unique or index constraint');
-    }
-
-    /**
-     * Return the targeted constraint.
-     *
-     * @param array $attributes
-     * @return Constraint
-     */
-    public function getTarget(array $attributes=[]): Constraint
-    {
-        $targetFields = [$this->getField(), ...$attributes];
-
-        /** @var Constraint */
-        foreach ($this->getConstraints() as $targetable) {
-            if ($targetable instanceof RelationalConstraint) {
-                continue;
-            }
-
-            /** @var Constraint $targetable */
-            $intersec = \array_diff(
-                $targetable->getAttributes(),
-                $targetFields
-            );
-
-            if (\count($intersec) === 0) {
-                return $targetable;
-            }
-        }
-
-        throw new \Exception('No target found. A field used as a target must have a primary, unique or index constraint');
     }
 }

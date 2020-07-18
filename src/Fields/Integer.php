@@ -24,7 +24,7 @@ class Integer extends BaseAttribute
      */
     public function dry($value)
     {
-        return is_null($value) ? $value : (int) $value;
+        return \is_null($value) ? $value : (int) $value;
     }
 
     /**
@@ -35,7 +35,7 @@ class Integer extends BaseAttribute
      */
     public function hydrate($value)
     {
-        return is_null($value) ? $value : (int) $value;
+        return \is_null($value) ? $value : (int) $value;
     }
 
     /**

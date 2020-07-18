@@ -148,7 +148,7 @@ abstract class BaseConstraint extends BaseObserver implements Constraint, Config
 
         return $tableName.'_'.implode('_', \array_map(function (AttributeField $field) {
             return $field->getAttname();
-        }, $this->getAttributes())).'_'.$this->constraintType;
+        }, $this->getAttributes())).'_'.$this->getConstraintType();
     }
 
     /**

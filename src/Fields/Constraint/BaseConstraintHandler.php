@@ -52,6 +52,73 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
     }
 
     /**
+     * Return if an observe exists with the given name.
+     *
+     * @param  string $name
+     * @param  string $type
+     * @return boolean
+     */
+    public function has(string $name, string $type=null): bool
+    {
+        if (\is_null($type)) {
+            foreach ($this->observers as $types) {
+                foreach ($types as $observer) {
+                    if ($observer->getName() === $name) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            foreach ($this->observers[$type] as $observer) {
+                if ($observer->getName() === $name) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the first observer with the given name.
+     *
+     * @param  string $name
+     * @param  string $type
+     * @return BaseObserver
+     */
+    public function get(string $name, string $type=null)
+    {
+        if (\is_null($type)) {
+            foreach ($this->observers as $types) {
+                foreach ($types as $observer) {
+                    if ($observer->getName() === $name) {
+                        return $observer;
+                    }
+                }
+            }
+        } else {
+            foreach ($this->observers[$type] as $observer) {
+                if ($observer->getName() === $name) {
+                    return $observer;
+                }
+            }
+        }
+
+        throw new \Exception("The observer `$name` does not exist");
+    }
+
+    /**
+     * Return the number of the handled observers.
+     *
+     * @param  string $type
+     * @return integer
+     */
+    public function count(string $type=null): int
+    {
+        return \count($this->all($type));
+    }
+
+    /**
      * Return the list of constraints.
      *
      * @param  string $type
@@ -159,20 +226,4 @@ abstract class BaseConstraintHandler extends BaseHandler implements Configured
     {
         return $this->all(BaseRelationalConstraint::FOREIGN);
     }
-
-    /**
-     * Return the sourced constraint.
-     *
-     * @param array $attributes
-     * @return void
-     */
-    abstract public function getSource(array $attributes);
-
-    /**
-     * Return the targeted constraint.
-     *
-     * @param array $attributes
-     * @return void
-     */
-    abstract public function getTarget(array $attributes);
 }

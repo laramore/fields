@@ -191,6 +191,32 @@ abstract class BaseComposed extends BaseField implements ComposedField
     }
 
     /**
+     * Return the field value contained in model or array.
+     *
+     * @param string                                           $name
+     * @param \Laramore\Contracts\Eloquent\LaramoreModel|array $model
+     * @return mixed
+     */
+    public function getValue(string $name, $model)
+    {
+        $field = $this->getField($name);
+
+        if ($model instanceof LaramoreModel) {
+            return $field->get($model);
+        }
+
+        if (\is_array($model)) {
+            if (Arr::isAssoc($model)) {
+                return $model[$field->getName()];
+            }
+
+            return $model[\array_search($field, $this->fields)];
+        }
+
+        throw new \Exception('Cannot find field in value');
+    }
+
+    /**
      * Add a option to the resource.
      *
      * @param string|OptionElement $option

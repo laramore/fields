@@ -50,7 +50,7 @@ class UniqueId extends Integer implements UniqueField
             throw new \LogicException('An incremental field cannot have co-unique fields');
         }
 
-        $this->getConstraintHandler()->getUnique()->setName($name);
+        $this->getConstraintHandler()->getUniques()[0]->setName($name);
 
         return $this;
     }
