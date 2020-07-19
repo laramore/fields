@@ -127,7 +127,7 @@ interface Field extends Locked, Owned
     /**
      * Indicate if the field has a value.
      *
-     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\ArrayAccess $model
+     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\\ArrayAccess $model
      * @return mixed
      */
     public function has($model);
@@ -135,7 +135,7 @@ interface Field extends Locked, Owned
     /**
      * Get the value definied by the field.
      *
-     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\ArrayAccess $model
+     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\\ArrayAccess $model
      * @return mixed
      */
     public function get($model);
@@ -143,7 +143,7 @@ interface Field extends Locked, Owned
     /**
      * Set the value for the field.
      *
-     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\ArrayAccess $model
+     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\\ArrayAccess $model
      * @param  mixed                                                         $value
      * @return mixed
      */
@@ -152,7 +152,7 @@ interface Field extends Locked, Owned
     /**
      * Reset the value for the field.
      *
-     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\ArrayAccess $model
+     * @param  LaramoreModel|array|\Illuminate\Contracts\Support\\ArrayAccess $model
      * @return mixed
      */
     public function reset($model);

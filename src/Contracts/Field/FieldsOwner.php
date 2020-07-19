@@ -64,7 +64,7 @@ interface FieldsOwner
      * Return the has value for a specific field.
      *
      * @param Field                           $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function hasFieldValue(Field $field, $model);
@@ -73,7 +73,7 @@ interface FieldsOwner
      * Return the get value for a specific field.
      *
      * @param Field                           $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function getFieldValue(Field $field, $model);
@@ -82,7 +82,7 @@ interface FieldsOwner
      * Return the set value for a specific field.
      *
      * @param Field                           $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @param mixed                           $value
      * @return mixed
      */
@@ -92,7 +92,7 @@ interface FieldsOwner
      * Reset the value with the default value for a specific field.
      *
      * @param Field                           $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function resetFieldValue(Field $field, $model);
@@ -101,7 +101,7 @@ interface FieldsOwner
      * Retrieve values from the relation field.
      *
      * @param ExtraField                      $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function retrieveFieldValue(ExtraField $field, $model);

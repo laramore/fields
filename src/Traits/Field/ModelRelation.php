@@ -40,7 +40,7 @@ trait ModelRelation
     /**
      * Indicate if the field has a value.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function has($model)
@@ -49,7 +49,7 @@ trait ModelRelation
             return $model->hasRelationValue($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return isset($model[$this->getName()]);
             }
@@ -61,7 +61,7 @@ trait ModelRelation
     /**
      * Get the value definied by the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function get($model)
@@ -70,7 +70,7 @@ trait ModelRelation
             return $model->getRelationValue($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return $model[$this->getName()];
             }
@@ -80,7 +80,7 @@ trait ModelRelation
     /**
      * Set the value for the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @param  mixed                           $value
      * @return mixed
      */
@@ -90,7 +90,7 @@ trait ModelRelation
             return $model->setRelationValue($this->getName(), $value);
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return $model[$this->getName()] = $value;
             }
@@ -100,7 +100,7 @@ trait ModelRelation
     /**
      * Reet the value for the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function reset($model)
@@ -113,7 +113,7 @@ trait ModelRelation
             return $model->unsetRelation($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 unset($model[$this->getName()]);
             }
@@ -123,7 +123,7 @@ trait ModelRelation
     /**
      * Retrieve values from the relation field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function retrieve($model)

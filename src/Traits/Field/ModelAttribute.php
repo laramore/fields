@@ -18,7 +18,7 @@ trait ModelAttribute
     /**
      * Indicate if the field has a value.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function has($model)
@@ -27,7 +27,7 @@ trait ModelAttribute
             return $model->hasAttributeValue($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return isset($model[$this->getName()]);
             }
@@ -39,7 +39,7 @@ trait ModelAttribute
     /**
      * Get the value definied by the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function get($model)
@@ -48,7 +48,7 @@ trait ModelAttribute
             return $model->getAttributeValue($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return $model[$this->getName()];
             }
@@ -58,7 +58,7 @@ trait ModelAttribute
     /**
      * Set the value for the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @param  mixed                           $value
      * @return mixed
      */
@@ -68,7 +68,7 @@ trait ModelAttribute
             return $model->setAttributeValue($this->getName(), $value);
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 return $model[$this->getName()] = $value;
             }
@@ -78,7 +78,7 @@ trait ModelAttribute
     /**
      * Reet the value for the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function reset($model)
@@ -91,7 +91,7 @@ trait ModelAttribute
             return $model->unsetAttribute($this->getName());
         }
 
-        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+        if (\is_array($model) || ($model instanceof \ArrayAccess)) {
             if (Arr::isAssoc($model)) {
                 unset($model[$this->getName()]);
             }

@@ -43,7 +43,7 @@ class ManyToOne extends BaseComposed implements RelationField
     /**
      * Reet the value for the field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function reset($model)

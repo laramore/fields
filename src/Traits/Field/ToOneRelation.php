@@ -361,7 +361,7 @@ trait ToOneRelation
      * Return the set value for a specific field.
      *
      * @param Field                           $field
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @param mixed                           $value
      * @return mixed
      */

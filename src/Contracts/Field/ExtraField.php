@@ -19,7 +19,7 @@ interface ExtraField extends Field
     /**
      * Retrieve values from the relation field.
      *
-     * @param LaramoreModel|array|ArrayAccess $model
+     * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
     public function retrieve($model);
