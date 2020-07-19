@@ -13,16 +13,16 @@ namespace Laramore\Fields;
 use Illuminate\Support\Str;
 use Laramore\Elements\OperatorElement;
 use Laramore\Contracts\{
-    Field\AttributeField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
+    Field\AttributeField, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
 };
 use Laramore\Fields\Constraint\BaseRelationalConstraint;
 use Laramore\Traits\Field\{
-    IndexableConstraints, RelationalConstraints
+    ModelAttribute, IndexableConstraints, RelationalConstraints
 };
 
 abstract class BaseAttribute extends BaseField implements AttributeField
 {
-    use IndexableConstraints, RelationalConstraints;
+    use ModelAttribute, IndexableConstraints, RelationalConstraints;
 
     /**
      * AttributeField name of this field.
@@ -99,57 +99,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
                 }
             }
         }
-    }
-
-    /**
-     * Indicate if the field has a value.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function has(LaramoreModel $model)
-    {
-        return $model->hasAttributeValue($this->getName());
-    }
-
-    /**
-     * Get the value definied by the field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function get(LaramoreModel $model)
-    {
-        return $model->getAttributeValue($this->getName());
-    }
-
-    /**
-     * Set the value for the field.
-     *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
-     * @return mixed
-     */
-    public function set(LaramoreModel $model, $value)
-    {
-        return $model->setAttributeValue($this->getName(), $value);
-    }
-
-    /**
-     * Reet the value for the field.
-     *
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function reset(LaramoreModel $model)
-    {
-        if ($this->hasDefault()) {
-            $model->setAttributeValue($this->getName(), $value = $this->getDefault());
-
-            return $value;
-        }
-
-        $model->unsetAttribute($this->getName());
     }
 
     /**

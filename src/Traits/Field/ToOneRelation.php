@@ -360,14 +360,14 @@ trait ToOneRelation
     /**
      * Return the set value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
-     * @param mixed         $value
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @param mixed                           $value
      * @return mixed
      */
-    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    public function setFieldValue(Field $field, $model, $value)
     {
-        if ($model->hasAttributeValue($field->getName()) && $this->getFieldValue($field, $model) !== $value) {
+        if ($field->has($model) && $field->get($model) !== $value) {
             $this->reset($model);
         }
 

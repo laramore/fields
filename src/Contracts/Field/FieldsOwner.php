@@ -11,7 +11,7 @@
 namespace Laramore\Contracts\Field;
 
 use Laramore\Contracts\{
-    Proxied, Eloquent\LaramoreModel, Field\Field, Field\AttributeField, Field\RelationField, Field\ExtraField
+    Eloquent\LaramoreBuilder, Eloquent\LaramoreModel, Field\Field, Field\AttributeField, Field\RelationField, Field\ExtraField
 };
 
 interface FieldsOwner
@@ -63,39 +63,48 @@ interface FieldsOwner
     /**
      * Return the has value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function hasFieldValue(Field $field, LaramoreModel $model);
+    public function hasFieldValue(Field $field, $model);
 
     /**
      * Return the get value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function getFieldValue(Field $field, LaramoreModel $model);
+    public function getFieldValue(Field $field, $model);
 
     /**
      * Return the set value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
-     * @param mixed         $value
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @param mixed                           $value
      * @return mixed
      */
-    public function setFieldValue(Field $field, LaramoreModel $model, $value);
+    public function setFieldValue(Field $field, $model, $value);
 
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function resetFieldValue(Field $field, LaramoreModel $model);
+    public function resetFieldValue(Field $field, $model);
+
+    /**
+     * Retrieve values from the relation field.
+     *
+     * @param ExtraField                      $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @return mixed
+     */
+    public function retrieveFieldValue(ExtraField $field, $model);
 
     /**
      * Return the get value for a relation field.
@@ -105,15 +114,6 @@ interface FieldsOwner
      * @return mixed
      */
     public function relateFieldValue(RelationField $field, LaramoreModel $model);
-
-    /**
-     * Retrieve values from the relation field.
-     *
-     * @param ExtraField    $field
-     * @param  LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieveFieldValue(ExtraField $field, LaramoreModel $model);
 
     /**
      * Reverbate the relation value for a specific field.
@@ -129,13 +129,13 @@ interface FieldsOwner
      * Return generally a Builder after adding to it a condition.
      *
      * @param Field                       $field
-     * @param Proxied                     $builder
+     * @param LaramoreBuilder             $builder
      * @param OperatorElement|string|null $operator
      * @param mixed                       $value
      * @param mixed                       ...$args
      * @return mixed
      */
-    public function whereFieldValue(Field $field, Proxied $builder, $operator, $value=null, ...$args);
+    public function whereFieldValue(Field $field, LaramoreBuilder $builder, $operator, $value=null, ...$args);
 
     /**
      * Serialize a value for a specific field.

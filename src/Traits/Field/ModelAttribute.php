@@ -1,6 +1,6 @@
 <?php
 /**
- * Add management for extra fields.
+ * Add management for attribute fields.
  *
  * @author Samy Nastuzzi <samy@nastuzzi.fr>
  *
@@ -13,7 +13,7 @@ namespace Laramore\Traits\Field;
 use Illuminate\Support\Arr;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 
-trait ModelExtra
+trait ModelAttribute
 {
     /**
      * Indicate if the field has a value.
@@ -24,7 +24,7 @@ trait ModelExtra
     public function has($model)
     {
         if ($model instanceof LaramoreModel) {
-            return $model->hasExtraValue($this->getName());
+            return $model->hasAttributeValue($this->getName());
         }
 
         if (\is_array($model) || ($model instanceof ArrayAccess)) {
@@ -45,7 +45,7 @@ trait ModelExtra
     public function get($model)
     {
         if ($model instanceof LaramoreModel) {
-            return $model->getExtraValue($this->getName());
+            return $model->getAttributeValue($this->getName());
         }
 
         if (\is_array($model) || ($model instanceof ArrayAccess)) {
@@ -65,7 +65,7 @@ trait ModelExtra
     public function set($model, $value)
     {
         if ($model instanceof LaramoreModel) {
-            return $model->setExtraValue($this->getName(), $value);
+            return $model->setAttributeValue($this->getName(), $value);
         }
 
         if (\is_array($model) || ($model instanceof ArrayAccess)) {
@@ -88,7 +88,7 @@ trait ModelExtra
         }
 
         if ($model instanceof LaramoreModel) {
-            return $model->unsetExtra($this->getName());
+            return $model->unsetAttribute($this->getName());
         }
 
         if (\is_array($model) || ($model instanceof ArrayAccess)) {
