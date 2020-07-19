@@ -333,11 +333,11 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the has value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function hasFieldValue(Field $field, LaramoreModel $model)
+    public function hasFieldValue(Field $field, $model)
     {
         return $this->getOwner()->hasFieldValue($field, $model);
     }
@@ -345,11 +345,11 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the get value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function getFieldValue(Field $field, LaramoreModel $model)
+    public function getFieldValue(Field $field, $model)
     {
         return $this->getOwner()->getFieldValue($field, $model);
     }
@@ -357,12 +357,12 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the set value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
-     * @param mixed         $value
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @param mixed                           $value
      * @return mixed
      */
-    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    public function setFieldValue(Field $field, $model, $value)
     {
         return $this->getOwner()->setFieldValue($field, $model, $value);
     }
@@ -370,13 +370,25 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function resetFieldValue(Field $field, LaramoreModel $model)
+    public function resetFieldValue(Field $field, $model)
     {
         return $this->getOwner()->resetFieldValue($field, $model);
+    }
+
+    /**
+     * Return the get value for a relation field.
+     *
+     * @param  ExtraField                      $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @return mixed
+     */
+    public function retrieveFieldValue(ExtraField $field, $model)
+    {
+        return $this->getOwner()->retrieveFieldValue($field, $model);
     }
 
     /**
@@ -389,18 +401,6 @@ abstract class BaseComposed extends BaseField implements ComposedField
     public function relateFieldValue(RelationField $field, LaramoreModel $model)
     {
         return $this->getOwner()->relateFieldValue($field, $model);
-    }
-
-    /**
-     * Return the get value for a relation field.
-     *
-     * @param ExtraField    $field
-     * @param LaramoreModel $model
-     * @return mixed
-     */
-    public function retrieveFieldValue(ExtraField $field, LaramoreModel $model)
-    {
-        return $this->getOwner()->retrieveFieldValue($field, $model);
     }
 
     /**

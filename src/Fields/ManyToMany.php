@@ -365,14 +365,14 @@ class ManyToMany extends BaseComposed implements ManyRelationField
     /**
      * Return the set value for a specific field.
      *
-     * @param Field         $field
-     * @param LaramoreModel $model
-     * @param mixed         $value
+     * @param Field                           $field
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @param mixed                           $value
      * @return mixed
      */
-    public function setFieldValue(Field $field, LaramoreModel $model, $value)
+    public function setFieldValue(Field $field, $model, $value)
     {
-        if ($this->getFieldValue($field, $model) !== $value) {
+        if ($field->get($model) !== $value) {
             $this->reset($model);
         }
 

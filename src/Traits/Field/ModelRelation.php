@@ -10,6 +10,7 @@
 
 namespace Laramore\Traits\Field;
 
+use Illuminate\Support\Arr;
 use Laramore\Contracts\Eloquent\LaramoreModel;
 
 trait ModelRelation
@@ -39,63 +40,99 @@ trait ModelRelation
     /**
      * Indicate if the field has a value.
      *
-     * @param  LaramoreModel $model
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function has(LaramoreModel $model)
+    public function has($model)
     {
-        return $model->hasRelationValue($this->getName());
+        if ($model instanceof LaramoreModel) {
+            return $model->hasRelationValue($this->getName());
+        }
+
+        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+            if (Arr::isAssoc($model)) {
+                return isset($model[$this->getName()]);
+            }
+        }
+
+        return false;
     }
 
     /**
      * Get the value definied by the field.
      *
-     * @param  LaramoreModel $model
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function get(LaramoreModel $model)
+    public function get($model)
     {
-        return $model->getRelationValue($this->getName());
+        if ($model instanceof LaramoreModel) {
+            return $model->getRelationValue($this->getName());
+        }
+
+        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+            if (Arr::isAssoc($model)) {
+                return $model[$this->getName()];
+            }
+        }
     }
 
     /**
      * Set the value for the field.
      *
-     * @param  LaramoreModel $model
-     * @param  mixed         $value
+     * @param LaramoreModel|array|ArrayAccess $model
+     * @param  mixed                           $value
      * @return mixed
      */
-    public function set(LaramoreModel $model, $value)
+    public function set($model, $value)
     {
-        return $model->setRelationValue($this->getName(), $value);
+        if ($model instanceof LaramoreModel) {
+            return $model->setRelationValue($this->getName(), $value);
+        }
+
+        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+            if (Arr::isAssoc($model)) {
+                return $model[$this->getName()] = $value;
+            }
+        }
     }
 
     /**
      * Reet the value for the field.
      *
-     * @param  LaramoreModel $model
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function reset(LaramoreModel $model)
+    public function reset($model)
     {
         if ($this->hasDefault()) {
-            $model->setRelationValue($this->getName(), $value = $this->getDefault());
-
-            return $value;
+            return $this->set($model, $this->getDefault());
         }
 
-        $model->unsetRelation($this->getName());
+        if ($model instanceof LaramoreModel) {
+            return $model->unsetRelation($this->getName());
+        }
+
+        if (\is_array($model) || ($model instanceof ArrayAccess)) {
+            if (Arr::isAssoc($model)) {
+                unset($model[$this->getName()]);
+            }
+        }
     }
 
     /**
      * Retrieve values from the relation field.
      *
-     * @param  LaramoreModel $model
+     * @param LaramoreModel|array|ArrayAccess $model
      * @return mixed
      */
-    public function retrieve(LaramoreModel $model)
+    public function retrieve($model)
     {
-        return $this->relate($model)->getResults();
+        if ($model instanceof LaramoreModel) {
+            return $this->relate($model)->getResults();
+        }
+
+        return $this->getDefault();
     }
 
     /**
