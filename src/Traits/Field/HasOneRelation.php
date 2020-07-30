@@ -31,10 +31,7 @@ trait HasOneRelation
             return $value;
         }
 
-        $model = new $modelClass;
-        $model->setAttributeValue($model->getKeyName(), $value);
-
-        return $model;
+        return new $modelClass($value);
     }
 
     /**
@@ -52,36 +49,34 @@ trait HasOneRelation
      * Add a where null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @param  boolean         $not
      * @param  \Closure        $callback
      * @return LaramoreBuilder
      */
-    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and',
+    public function whereNull(LaramoreBuilder $builder, string $boolean='and',
                               bool $not=false, \Closure $callback=null): LaramoreBuilder
     {
         if ($not) {
-            return $this->whereNotNull($builder, $value, $boolean, null, 1, $callback);
+            return $this->whereNotNull($builder, $boolean, null, 1, $callback);
         }
 
-        return $builder->doesntHave($this->name, $boolean, $callback);
+        return $builder->doesntHave($this->getName(), $boolean, $callback);
     }
 
     /**
      * Add a where not null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @param  mixed           $operator
      * @param  integer         $count
      * @param  \Closure        $callback
      * @return LaramoreBuilder
      */
-    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and',
+    public function whereNotNull(LaramoreBuilder $builder, string $boolean='and',
                                  $operator=null, int $count=1, \Closure $callback=null): LaramoreBuilder
     {
-        return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->getName(), (string) ($operator ?? Operator::supEq()), $count, $boolean, $callback);
     }
 }

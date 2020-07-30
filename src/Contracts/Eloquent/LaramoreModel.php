@@ -433,6 +433,17 @@ interface LaramoreModel extends Proxied, ArrayAccess, Arrayable, Jsonable, JsonS
     public function hasMany($related, $foreignKey=null, $localKey=null);
 
     /**
+     * Define a polymorphic, inverse one-to-one or many relationship.
+     *
+     * @param  string|mixed $name
+     * @param  string|mixed $type
+     * @param  string|mixed $id
+     * @param  string|mixed $ownerKey
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function morphTo($name=null, $type=null, $id=null, $ownerKey=null);
+
+    /**
      * Get a new query builder that doesn't have any global scopes or eager loading.
      *
      * @return \Illuminate\Database\Eloquent\Builder|static

@@ -10,10 +10,11 @@
 
 namespace Laramore\Fields\Reversed;
 
+use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Fields\BaseField;
 use Laramore\Contracts\{
-    Field\ManyRelationField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder, Eloquent\LaramoreCollection
+    Field\ManyRelationField, Eloquent\LaramoreModel, Eloquent\LaramoreBuilder
 };
 use Laramore\Facades\Operator;
 use Laramore\Traits\Field\HasOneRelation;
@@ -28,11 +29,11 @@ class HasMany extends BaseField implements ManyRelationField
      * Cast the value to a correct collection.
      *
      * @param mixed $value
-     * @return LaramoreCollection
+     * @return Collection
      */
     public function cast($value)
     {
-        if ($value instanceof LaramoreCollection) {
+        if ($value instanceof Collection) {
             return $value;
         }
 
@@ -46,31 +47,33 @@ class HasMany extends BaseField implements ManyRelationField
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
-     * @param  boolean            $notIn
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        $attname = $this->getTargetModel()::getMeta()->getPrimary()->attname;
+        [$op, $bool] = $notIn ? [Operator::notEqual(), 'and'] : [Operator::equal(), 'or'];
 
-        return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
-            return $query->whereIn($attname, $value);
-        });
+        return $builder->where(function ($subQuery) use ($value, $op, $bool) {
+            return $value->map(function ($subValue) use ($subQuery, $op, $bool) {
+                return $this->where($subQuery, $op, $subValue, $bool);
+            });
+        }, $boolean);
     }
 
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -88,11 +91,13 @@ class HasMany extends BaseField implements ManyRelationField
     public function where(LaramoreBuilder $builder, OperatorElement $operator, $value=null,
                           string $boolean='and', int $count=null): LaramoreBuilder
     {
-        $attname = $this->on::getMeta()->getPrimary()->getNative();
+        $attribute = $this->getTargetModel()::getMeta()->getPrimary()->getAttribute();
 
-        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? \count($value)),
-            function ($query) use ($attname, $value) {
-                return $query->whereIn($attname, $value);
+        return $this->whereNotNull($builder, $boolean, $operator, ($count ?? \count($value)),
+            function ($query) use ($attribute, $value) {
+                return $attribute->whereIn($query, $value->map(function ($subValue) use ($attribute) {
+                    return $attribute->get($subValue);
+                }));
             }
         );
     }
@@ -133,7 +138,9 @@ class HasMany extends BaseField implements ManyRelationField
         }
 
         $modelClass = $this->getTargetModel();
-        $foreignAttname = $this->getTarget()->getAttribute()->getNative();
+
+        $foreignField = $this->getTargetAttribute()->getAttribute();
+        $foreignAttname = $foreignField->getNative();
 
         $primaryField = $modelClass::getMeta()->getPrimary()->getAttribute();
         $primaryAttname = $primaryField->getNative();
@@ -142,7 +149,12 @@ class HasMany extends BaseField implements ManyRelationField
         $valueIds = $value->map(function ($subModel) use ($primaryAttname) {
             return $subModel->getAttribute($primaryAttname);
         });
-        $default = \is_null($this->getDefault()) ? null : $this->getDefault()->getAttribute($foreignAttname);
+
+        $default = $this->getDefault();
+
+        if (!\is_null($default)) {
+            $default = $foreignField->get($default);
+        }
 
         $primaryField->addBuilderOperation(
             $modelClass::where($foreignAttname, Operator::equal(), $foreignId),

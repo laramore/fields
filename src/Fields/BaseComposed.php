@@ -191,32 +191,6 @@ abstract class BaseComposed extends BaseField implements ComposedField
     }
 
     /**
-     * Return the field value contained in model or array.
-     *
-     * @param string                                           $name
-     * @param \Laramore\Contracts\Eloquent\LaramoreModel|array $model
-     * @return mixed
-     */
-    public function getValue(string $name, $model)
-    {
-        $field = $this->getField($name);
-
-        if ($model instanceof LaramoreModel) {
-            return $field->get($model);
-        }
-
-        if (\is_array($model)) {
-            if (Arr::isAssoc($model)) {
-                return $model[$field->getName()];
-            }
-
-            return $model[\array_search($field, $this->fields)];
-        }
-
-        throw new \Exception('Cannot find field in value');
-    }
-
-    /**
      * Add a option to the resource.
      *
      * @param string|OptionElement $option
@@ -333,7 +307,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the has value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
@@ -345,7 +319,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the get value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
@@ -357,9 +331,9 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the set value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
-     * @param mixed                           $value
+     * @param mixed                            $value
      * @return mixed
      */
     public function setFieldValue(Field $field, $model, $value)
@@ -370,7 +344,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Reset the value with the default value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */
@@ -382,7 +356,7 @@ abstract class BaseComposed extends BaseField implements ComposedField
     /**
      * Return the get value for a relation field.
      *
-     * @param  ExtraField                      $field
+     * @param  ExtraField                       $field
      * @param LaramoreModel|array|\ArrayAccess $model
      * @return mixed
      */

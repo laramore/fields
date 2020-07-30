@@ -50,8 +50,10 @@ trait ModelRelation
         }
 
         if (\is_array($model) || ($model instanceof \ArrayAccess)) {
-            if (Arr::isAssoc($model)) {
+            if (\is_object($model) || Arr::isAssoc($model)) {
                 return isset($model[$this->getName()]);
+            } else if (isset($model[0])) {
+                return $model[0];
             }
         }
 
@@ -71,7 +73,7 @@ trait ModelRelation
         }
 
         if (\is_array($model) || ($model instanceof \ArrayAccess)) {
-            if (Arr::isAssoc($model)) {
+            if (\is_object($model) || Arr::isAssoc($model)) {
                 return $model[$this->getName()];
             }
         }
@@ -81,7 +83,7 @@ trait ModelRelation
      * Set the value for the field.
      *
      * @param LaramoreModel|array|\ArrayAccess $model
-     * @param  mixed                           $value
+     * @param  mixed                            $value
      * @return mixed
      */
     public function set($model, $value)
@@ -91,7 +93,7 @@ trait ModelRelation
         }
 
         if (\is_array($model) || ($model instanceof \ArrayAccess)) {
-            if (Arr::isAssoc($model)) {
+            if (\is_object($model) || Arr::isAssoc($model)) {
                 return $model[$this->getName()] = $value;
             }
         }
@@ -114,7 +116,7 @@ trait ModelRelation
         }
 
         if (\is_array($model) || ($model instanceof \ArrayAccess)) {
-            if (Arr::isAssoc($model)) {
+            if (\is_object($model) || Arr::isAssoc($model)) {
                 unset($model[$this->getName()]);
             }
         }

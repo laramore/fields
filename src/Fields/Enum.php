@@ -239,7 +239,7 @@ class Enum extends BaseAttribute
      */
     public function cast($value)
     {
-        if (is_null($value) || ($value instanceof EnumElement)) {
+        if (\is_null($value) || ($value instanceof EnumElement)) {
             return $value;
         }
 

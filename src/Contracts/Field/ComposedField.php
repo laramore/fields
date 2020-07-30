@@ -10,16 +10,6 @@
 
 namespace Laramore\Contracts\Field;
 
-use Illuminate\Support\Arr;
-
 interface ComposedField extends ExtraField, FieldsOwner
 {
-    /**
-     * Return the field value contained in model or array.
-     *
-     * @param string                                           $name
-     * @param \Laramore\Contracts\Eloquent\LaramoreModel|array $model
-     * @return mixed
-     */
-    public function getValue(string $name, $model);
 }

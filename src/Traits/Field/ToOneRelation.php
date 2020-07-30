@@ -10,12 +10,11 @@
 
 namespace Laramore\Traits\Field;
 
+use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
-use Laramore\Facades\{
-    Operator, Option
-};
+use Laramore\Facades\Option;
 use Laramore\Contracts\Eloquent\{
-    LaramoreModel, LaramoreBuilder, LaramoreCollection
+    LaramoreModel, LaramoreBuilder
 };
 use Laramore\Contracts\Field\{
     Field, RelationField, Constraint\Constraint
@@ -218,17 +217,13 @@ trait ToOneRelation
      */
     public function cast($value)
     {
-        $model = $this->getTargetModel();
-        $name = $this->getTarget()->getAttribute()->getName();
+        $modelClass = $this->getTargetModel();
 
-        if (\is_null($value) || $value instanceof $model || \is_array($value) || $value instanceof LaramoreCollection) {
+        if (\is_null($value) || ($value instanceof $modelClass)) {
             return $value;
         }
 
-        $model = new $model;
-        $model->setAttributeValue($name, $value);
-
-        return $model;
+        return new $modelClass($value);
     }
 
     /**
@@ -252,10 +247,7 @@ trait ToOneRelation
      */
     public function reverbate(LaramoreModel $model, $value)
     {
-        $this->getField('id')->set(
-            $model,
-            \is_null($value) ? null : $this->getTarget()->getAttribute()->get($value)
-        );
+        $this->getField('id')->set($model, $this->getTarget()->getAttribute()->get($value));
 
         return $value;
     }
@@ -285,53 +277,56 @@ trait ToOneRelation
      * Add a where null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @param  boolean         $not
      * @return LaramoreBuilder
      */
-    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and', bool $not=false): LaramoreBuilder
+    public function whereNull(LaramoreBuilder $builder, string $boolean='and', bool $not=false): LaramoreBuilder
     {
-        return $this->getField('id')->addBuilderOperation($builder, 'whereNull', $boolean, $not);
+        return $this->getField('id')->whereNull($builder, $boolean, $not);
     }
 
     /**
      * Add a where not null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotNull(LaramoreBuilder $builder, string $boolean='and'): LaramoreBuilder
     {
-        return $this->whereNull($builder, $value, $boolean, true);
+        return $this->whereNull($builder, $boolean, true);
     }
 
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
-     * @param  boolean            $notIn
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->getField('id')->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
+        $attribute = $this->getTarget()->getAttribute();
+        $value = $value->map(function ($subValue) use ($attribute) {
+            return $attribute->get($subValue);
+        });
+
+        return $this->getField('id')->whereIn($builder, $value, $boolean, $notIn);
     }
 
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -348,21 +343,17 @@ trait ToOneRelation
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        if ($operator->needs === 'collection') {
-            return $this->whereIn($builder, $value, $boolean, ($operator === Operator::notIn()));
-        }
+        $idValue = $this->getTarget()->getAttribute()->get($value);
 
-        $idValue = $this->getValue('id', $value);
-
-        return $this->getField('id')->addBuilderOperation($builder, 'where', $operator, $idValue, $boolean);
+        return $this->getField('id')->where($builder, $operator, $idValue, $boolean);
     }
 
     /**
      * Return the set value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
-     * @param mixed                           $value
+     * @param mixed                            $value
      * @return mixed
      */
     public function setFieldValue(Field $field, $model, $value)
