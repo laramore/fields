@@ -204,7 +204,7 @@ class ManyToMany extends BaseComposed implements ManyRelationField
     {
         $offMeta = $this->getMeta();
         $offName = Str::snake($offMeta->getModelClassName());
-        $onName = Str::snake(Str::singular($this->name));
+        $onName = Str::snake(Str::singular($this->getName()));
         $namespaceName = $this->getConfig('pivot_namespace');
         $pivotClassName = ucfirst($offName).ucfirst($onName);
         $pivotClass = "$namespaceName\\$pivotClassName";
@@ -295,7 +295,7 @@ class ManyToMany extends BaseComposed implements ManyRelationField
             $this->uniqueRelation = $name ?: true;
         } else {
             $this->uniqueRelation = true;
-            $this->pivotMeta->unique([$this->pivotSource, $this->pivotTarget], $name);
+            $this->pivotMeta->unique([$this->getPivotSource(), $this->getPivotTarget()], $name);
         }
 
         return $this;
@@ -365,9 +365,9 @@ class ManyToMany extends BaseComposed implements ManyRelationField
     /**
      * Return the set value for a specific field.
      *
-     * @param Field                           $field
+     * @param Field                            $field
      * @param LaramoreModel|array|\ArrayAccess $model
-     * @param mixed                           $value
+     * @param mixed                            $value
      * @return mixed
      */
     public function setFieldValue(Field $field, $model, $value)

@@ -20,7 +20,7 @@ use Laramore\Fields\BaseField;
 
 class BelongsToMany extends BaseField implements ManyRelationField
 {
-    use ReversedRelation, ManyToManyRelation;
+    use ManyToManyRelation, ReversedRelation;
 
     /**
      * Return the pivot meta.
@@ -39,7 +39,7 @@ class BelongsToMany extends BaseField implements ManyRelationField
      */
     public function getPivotSource(): RelationField
     {
-        return $this->getReversedField()->getPivotSource();
+        return $this->getReversedField()->getPivotTarget();
     }
 
     /**
@@ -49,6 +49,6 @@ class BelongsToMany extends BaseField implements ManyRelationField
      */
     public function getPivotTarget(): RelationField
     {
-        return $this->getReversedField()->getPivotTarget();
+        return $this->getReversedField()->getPivotSource();
     }
 }

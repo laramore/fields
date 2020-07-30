@@ -10,6 +10,7 @@
 
 namespace Laramore\Traits\Field;
 
+use Illuminate\Support\Collection;
 use Laramore\Elements\OperatorElement;
 use Laramore\Facades\Operator;
 use Laramore\Contracts\{
@@ -45,7 +46,7 @@ trait ManyToManyRelation
      */
     public function cast($value)
     {
-        if ($value instanceof LaramoreCollection) {
+        if ($value instanceof Collection) {
             return $value;
         }
 
@@ -64,16 +65,13 @@ trait ManyToManyRelation
      */
     public function castModel($value)
     {
-        $model = $this->getTargetModel();
+        $modelClass = $this->getTargetModel();
 
-        if ($value instanceof $model) {
+        if ($value instanceof $modelClass) {
             return $value;
         }
 
-        $model = new $model;
-        $model->setAttributeValue($model->getKeyName(), $value);
-
-        return $model;
+        return new $modelClass($value);
     }
 
     /**
@@ -153,67 +151,65 @@ trait ManyToManyRelation
      * Add a where null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @param  boolean         $notIn
      * @param  \Closure|null   $callback
      * @return LaramoreBuilder
      */
-    public function whereNull(LaramoreBuilder $builder, $value=null, string $boolean='and',
+    public function whereNull(LaramoreBuilder $builder, string $boolean='and',
                               bool $notIn=false, \Closure $callback=null): LaramoreBuilder
     {
         if ($notIn) {
-            return $this->whereNotNull($builder, $value, $boolean, null, 0, $callback);
+            return $this->whereNotNull($builder, $boolean, null, 1, $callback);
         }
 
-        return $builder->doesntHave($this->name, $boolean, $callback);
+        return $builder->doesntHave($this->getName(), $boolean, $callback);
     }
 
     /**
      * Add a where not null condition from this field.
      *
      * @param  LaramoreBuilder $builder
-     * @param  mixed           $value
      * @param  string          $boolean
      * @param  mixed           $operator
      * @param  integer         $count
      * @param  \Closure|null   $callback
      * @return LaramoreBuilder
      */
-    public function whereNotNull(LaramoreBuilder $builder, $value=null, string $boolean='and', $operator=null,
+    public function whereNotNull(LaramoreBuilder $builder, string $boolean='and', $operator=null,
                                  int $count=1, \Closure $callback=null): LaramoreBuilder
     {
-        return $builder->has($this->name, (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
+        return $builder->has($this->getName(), (string) ($operator ?? Operator::supOrEq()), $count, $boolean, $callback);
     }
 
     /**
      * Add a where in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
-     * @param  boolean            $notIn
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
+     * @param  boolean         $notIn
      * @return LaramoreBuilder
      */
-    public function whereIn(LaramoreBuilder $builder, LaramoreCollection $value=null,
+    public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        $attname = $this->getSource()->getAttribute()->getNative();
+        $attribute = $this->getSource()->getAttribute();
 
-        return $this->whereNull($builder, $value, $boolean, $notIn, function ($query) use ($attname, $value) {
-            return $query->whereIn($attname, $value);
+        return $this->whereNull($builder, $boolean, $notIn, function ($subBuilder) use ($attribute, $value) {
+            return $attribute->whereIn($subBuilder, $value);
         });
     }
 
     /**
      * Add a where not in condition from this field.
      *
-     * @param  LaramoreBuilder    $builder
-     * @param  LaramoreCollection $value
-     * @param  string             $boolean
+     * @param  LaramoreBuilder $builder
+     * @param  Collection      $value
+     * @param  string          $boolean
      * @return LaramoreBuilder
      */
-    public function whereNotIn(LaramoreBuilder $builder, LaramoreCollection $value=null, string $boolean='and'): LaramoreBuilder
+    public function whereNotIn(LaramoreBuilder $builder, Collection $value=null, string $boolean='and'): LaramoreBuilder
     {
         return $this->whereIn($builder, $value, $boolean, true);
     }
@@ -233,7 +229,7 @@ trait ManyToManyRelation
     {
         $attname = $this->getSource()->getAttribute()->getNative();
 
-        return $this->whereNotNull($builder, $value, $boolean, $operator, ($count ?? count($value)),
+        return $this->whereNotNull($builder, $boolean, $operator, ($count ?? \count($value)),
             function ($query) use ($attname, $value) {
                 return $query->whereIn($attname, $value);
             }
