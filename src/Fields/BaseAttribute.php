@@ -155,7 +155,7 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     public function whereIn(LaramoreBuilder $builder, Collection $value=null,
                             string $boolean='and', bool $notIn=false): LaramoreBuilder
     {
-        return $this->addBuilderOperation($builder, 'whereIn', $value, $boolean, $notIn);
+        return $this->addBuilderOperation($builder, 'whereIn', $this->dry($value), $boolean, $notIn);
     }
 
     /**
@@ -183,6 +183,6 @@ abstract class BaseAttribute extends BaseField implements AttributeField
     public function where(LaramoreBuilder $builder, OperatorElement $operator,
                           $value=null, string $boolean='and'): LaramoreBuilder
     {
-        return $this->addBuilderOperation($builder, 'where', $operator, $value, $boolean);
+        return $this->addBuilderOperation($builder, 'where', $operator, $this->dry($value), $boolean);
     }
 }
